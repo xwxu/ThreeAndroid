@@ -1,0 +1,2 @@
+include ':three:threelib', ':three:threelib', ':app'
+project(':three:threelib').projectDir = new File(settingsDir, '../../three/threelib')
