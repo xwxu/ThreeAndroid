@@ -170,8 +170,10 @@ public class ThreeRenderer implements GLSurfaceView.Renderer {
 //        parameters.vertexColors = VertexColors;
 //        MeshPhongMaterial material = new MeshPhongMaterial( parameters );
 
-        MeshNormalMaterial material = new MeshNormalMaterial(new MeshNormalParameters());
-        //MeshBasicMaterial material = new MeshBasicMaterial(new MeshBasicParameters());
+        //MeshNormalMaterial material = new MeshNormalMaterial(new MeshNormalParameters());
+        MeshBasicParameters parameters = new MeshBasicParameters();
+        parameters.vertexColors = VertexColors;
+        MeshBasicMaterial material = new MeshBasicMaterial(parameters);
 
         //BoxBufferGeometry boxGeo = new BoxBufferGeometry(200, 200, 200, 10, 10,10);
         mesh = new Mesh( geometry, material );

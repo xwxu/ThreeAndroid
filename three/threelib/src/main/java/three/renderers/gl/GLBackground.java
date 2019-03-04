@@ -8,7 +8,7 @@ import three.scenes.Scene;
 import three.textures.Texture;
 
 public class GLBackground {
-    public Color clearColor = new Color(0.5f,0.5f,0);
+    public Color clearColor = new Color(0.0f,0.0f,0);
     public int clearAlpha = 0;
 
     Texture currentBackground = null;

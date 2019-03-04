@@ -11,8 +11,6 @@ import three.math.Color;
 
 public class Line extends Object3D {
     public String type;
-    public AbstractGeometry geometry;
-    public Material material;
 
     public Line(){
         super();

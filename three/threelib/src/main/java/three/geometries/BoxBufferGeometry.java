@@ -1,25 +1,40 @@
 package three.geometries;
 
-import java.util.ArrayList;
-
 import three.bufferAttribute.Float32BufferAttribute;
 import three.core.BufferGeometry;
 import three.math.Vector3;
 
 public class BoxBufferGeometry extends BufferGeometry {
 
-    ArrayList<Integer> indices = new ArrayList<>();
-    ArrayList<Float> vertices = new ArrayList<>();
-    ArrayList<Float> normals = new ArrayList<>();
-    ArrayList<Float> uvs  = new ArrayList<>();
+    private int[] indices;
+    private float[] vertices;
+    private float[] normals;
+    private float[] uvs;
 
-    int groupStart = 0;
-    int numberOfVertices = 0;
+    private int groupStart = 0;
+    private int numberOfVertices = 0;
+    private int vertexIndex = 0;
+    private int uvIndex = 0;
+    private int indexCounter = 0;
 
     public BoxBufferGeometry(float width, float height, float depth,
                              int widthSegments, int heightSegments, int depthSegments){
 
         super();
+
+        int indexCount = (widthSegments * heightSegments + widthSegments * depthSegments + heightSegments * depthSegments) * 2 * 6;
+        this.indices = new int[ indexCount ];
+
+        int vertexCount = (widthSegments + 1) * (heightSegments + 1) * 6 +
+                (widthSegments + 1) * (depthSegments + 1) * 6 +
+                (heightSegments + 1) * (depthSegments + 1) * 6;
+        this.vertices = new float[vertexCount];
+        this.normals = new float[vertexCount];
+
+        int uvCount = vertexCount / 3 * 2;
+        this.uvs = new float[uvCount];
+
+
         BuildPlane( 2, 1, 0, - 1, - 1, depth, height, width, depthSegments, heightSegments, 0 ); // px
         BuildPlane( 2, 1, 0, 1, - 1, depth, height, - width, depthSegments, heightSegments, 1 ); // nx
         BuildPlane( 0, 2, 1, 1, 1, width, depth, height, widthSegments, depthSegments, 2 ); // py
@@ -27,34 +42,16 @@ public class BoxBufferGeometry extends BufferGeometry {
         BuildPlane( 0, 1, 2, 1, - 1, width, height, depth, widthSegments, heightSegments, 4 ); // pz
         BuildPlane( 0, 1, 2, - 1, - 1, width, height, - depth, widthSegments, heightSegments, 5 ); // nz
 
-        int[] indexArray = new int[indices.size()];
-        for(int i = 0; i < indices.size(); ++i){
-            indexArray[i] = indices.get(i);
-        }
-        this.SetIndex( indexArray );
 
-        float[] vertexArray = new float[vertices.size()];
-        for(int i = 0; i < vertices.size(); ++i){
-            vertexArray[i] = vertices.get(i);
-        }
-        this.AddAttribute( "position", new Float32BufferAttribute( vertexArray, 3 ) );
-
-        float[] normalArray = new float[normals.size()];
-        for(int i = 0; i < normals.size(); ++i){
-            normalArray[i] = normals.get(i);
-        }
-        this.AddAttribute( "normal", new Float32BufferAttribute( normalArray, 3 ) );
-
-        float[] uvArray = new float[uvs.size()];
-        for(int i = 0; i < uvs.size(); ++i){
-            uvArray[i] = uvs.get(i);
-        }
-        this.AddAttribute( "uv", new Float32BufferAttribute( uvArray, 2 ) );
+        this.SetIndex( indices );
+        this.AddAttribute( "position", new Float32BufferAttribute( this.vertices, 3 ) );
+        this.AddAttribute( "normal", new Float32BufferAttribute( this.normals, 3 ) );
+        this.AddAttribute( "uv", new Float32BufferAttribute( this.uvs, 2 ) );
     }
 
 
-    void BuildPlane(int u, int v, int w, int udir, int vdir, float width, float height, float depth,
-                    int gridX, int gridY, int materialIndex){
+    private void BuildPlane(int u, int v, int w, int udir, int vdir, float width, float height, float depth,
+                            int gridX, int gridY, int materialIndex){
 
         float segmentWidth = width / gridX;
         float segmentHeight = height / gridY;
@@ -84,9 +81,9 @@ public class BoxBufferGeometry extends BufferGeometry {
                 vector.SetComponent(w, depthHalf);
 
                 // now apply vector to vertex buffer
-                vertices.add( vector.x );
-                vertices.add( vector.y );
-                vertices.add( vector.z );
+                vertices[vertexIndex] = vector.x;
+                vertices[vertexIndex+1] = vector.y;
+                vertices[vertexIndex+2] = vector.z;
 
                 // set values to correct vector component
                 vector.SetComponent(u, 0);
@@ -94,16 +91,19 @@ public class BoxBufferGeometry extends BufferGeometry {
                 vector.SetComponent(w, depth > 0 ? 1 : - 1);
 
                 // now apply vector to normal buffer
-                normals.add( vector.x );
-                normals.add( vector.y );
-                normals.add( vector.z );
+                normals[vertexIndex] = vector.x;
+                normals[vertexIndex+1] = vector.y;
+                normals[vertexIndex+2] = vector.z;
 
                 // uvs
-                uvs.add( (float)ix / gridX );
-                uvs.add( 1 - (float)( iy / gridY ) );
+                uvs[uvIndex] =(float)ix / gridX;
+                uvs[uvIndex + 1] = 1 - (float)( iy / gridY );
 
                 // counters
                 vertexCounter += 1;
+                vertexIndex += 3;
+                uvIndex += 2;
+
             }
         }
 
@@ -116,15 +116,16 @@ public class BoxBufferGeometry extends BufferGeometry {
                 int d = numberOfVertices + ( ix + 1 ) + gridX1 * iy;
 
                 // faces
-                indices.add( a );
-                indices.add( b );
-                indices.add( d );
-                indices.add( b );
-                indices.add( c );
-                indices.add( d );
+                indices[indexCounter] = a;
+                indices[indexCounter + 1] = b;
+                indices[indexCounter + 2] = d;
+                indices[indexCounter + 3] = b;
+                indices[indexCounter + 4] = c;
+                indices[indexCounter + 5] = d;
 
                 // increase counter
                 groupCount += 6;
+                indexCounter += 6;
             }
         }
 

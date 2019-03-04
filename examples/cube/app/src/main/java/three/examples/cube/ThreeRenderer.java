@@ -1,4 +1,4 @@
-package three.examples.buffergeometrylines;
+package three.examples.cube;
 
 import android.opengl.GLSurfaceView;
 
@@ -36,23 +36,20 @@ public class ThreeRenderer implements GLSurfaceView.Renderer {
     private GLRenderer renderer;
     private PerspectiveCamera camera;
     private Scene scene;
-    private Line line;
+    private Mesh mesh;
 
     @Override
     public void onSurfaceCreated(GL10 gl, EGLConfig config) {
 
         RendererParameters rendererParameters = new RendererParameters();
-        rendererParameters.premultipliedAlpha = false;
         renderer = new GLRenderer(rendererParameters);
-        renderer.gammaInput = true;
-        renderer.gammaOutput = true;
 
-        camera = new PerspectiveCamera( 27, 0.7f, 1, 3500 );
-        camera.position.z = 2500;
+        camera = new PerspectiveCamera( 70, 0.7f, 1, 1000 );
+        camera.position.z = 400;
 
         scene = new Scene();
         //scene.background = new Color( 0x050505 );
-        //scene.fog = new Fog(  new Color( 0x050505 ), 2000, 3500 );
+        scene.fog = new Fog(  new Color( 0x050505 ), 2000, 3500 );
 
         scene.Add( new AmbientLight( new Color (0x444444 ), 1 ));
 
@@ -64,49 +61,14 @@ public class ThreeRenderer implements GLSurfaceView.Renderer {
         light2.position.Set( 0, - 1, 0 );
         scene.Add( light2 );
 
-        int segments = 5000;
 
-        BufferGeometry geometry = new BufferGeometry();
+        BufferGeometry geometry = new BoxBufferGeometry( 200, 200, 200, 1, 1, 1 );
+        MeshBasicParameters parameters = new MeshBasicParameters();
+        parameters.color = new Color(0x11dd11);
+        MeshBasicMaterial material = new MeshBasicMaterial(parameters);
 
-        float[] positions = new float[segments * 3];
-        float[] colors = new float[segments * 3];
-
-        int pointer = 0;
-
-        Color color = new Color();
-
-        int r = 800;
-
-        for ( int i = 0; i < segments; i ++ ) {
-
-            float x = (float) Math.random() * r - r / 2;
-            float y = (float) Math.random() * r - r / 2;
-            float z = (float) Math.random() * r - r / 2;
-
-            // positions
-            positions[pointer] = x;
-            positions[pointer+1] = y;
-            positions[pointer+2] = z;
-
-            // colors
-            colors[pointer] = ( x / r ) + 0.5f;
-            colors[pointer+1] = ( y / r ) + 0.5f;
-            colors[pointer+2] = ( z / r ) + 0.5f;
-
-            pointer += 3;
-        }
-
-        geometry.AddAttribute( "position", new Float32BufferAttribute( positions, 3 ) );
-        geometry.AddAttribute( "color", new Float32BufferAttribute( colors, 3 ) );
-
-        geometry.ComputeBoundingSphere();
-
-        LineBasicParameters parameters = new LineBasicParameters();
-        parameters.vertexColors = VertexColors;
-        LineBasicMaterial material = new LineBasicMaterial(parameters);
-
-        line = new Line( geometry, material );
-        scene.Add( line );
+        mesh = new Mesh( geometry, material );
+        scene.Add( mesh );
     }
 
     @Override
@@ -122,7 +84,7 @@ public class ThreeRenderer implements GLSurfaceView.Renderer {
         try {
             //mesh.rotation.x += 0.25;
             //mesh.rotation.y += 0.5;
-            line.RotateOnAxis(new Vector3(0,1,0), 0.1f);
+            mesh.RotateOnAxis(new Vector3(0,1,0), 0.1f);
             renderer.Render(scene, camera, null, true);
         } catch (IllegalAccessException e) {
         }

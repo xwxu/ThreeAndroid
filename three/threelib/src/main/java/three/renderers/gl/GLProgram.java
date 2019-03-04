@@ -1,6 +1,7 @@
 package three.renderers.gl;
 
 import android.opengl.GLES20;
+import android.text.TextUtils;
 
 import java.nio.IntBuffer;
 import java.util.ArrayList;
@@ -131,7 +132,7 @@ public class GLProgram {
         if ( material instanceof RawShaderMaterial) {
             ArrayList<String> vertex = new ArrayList();
             vertex.add(customDefines);
-            prefixVertex = String.join("\n", vertex);
+            prefixVertex = TextUtils.join("\n", vertex);
 
             if ( !prefixVertex.isEmpty() ) {
                 prefixVertex += "\n";
@@ -139,7 +140,7 @@ public class GLProgram {
 
             ArrayList<String> fragment = new ArrayList();
             fragment.add(customDefines);
-            prefixFragment = String.join("\n", fragment);
+            prefixFragment = TextUtils.join("\n", fragment);
 
             if ( !prefixFragment.isEmpty() ) {
                 prefixFragment += "\n";
@@ -216,7 +217,7 @@ public class GLProgram {
             vertex.add("#endif");
             vertex.add("\n");
 
-            prefixVertex = String.join("\n", vertex);
+            prefixVertex = TextUtils.join("\n", vertex);
 
             ArrayList<String> fragment = new ArrayList();
             fragment.add("#extension GL_OES_standard_derivatives : enable");
@@ -270,7 +271,7 @@ public class GLProgram {
             fragment.add(parameters.depthPacking ? "#define DEPTH_PACKING " + material.depthPacking : "");
             fragment.add("\n");
 
-            prefixFragment = String.join("\n", fragment);
+            prefixFragment = TextUtils.join("\n", fragment);
         }
 
         vertexShader = ParseIncludes( vertexShader );
@@ -421,7 +422,7 @@ public class GLProgram {
             chunks.add("#define " + name + " " + value);
         }
 
-        String result = String.join("\n", chunks); // min sdk version: 26
+        String result = TextUtils.join("\n", chunks); // min sdk version: 26
         return result;
     }
 
@@ -500,6 +501,10 @@ public class GLProgram {
         String bracket = "\\{[\\w\\W]+\\}";
         Pattern patternBracket = Pattern.compile(bracket);
 
+        int index = 0;
+        String[] split = p.split(string);
+        String res = split[0];
+
         while(matcher.find()){
             String newContent = "";
             String group = matcher.group();
@@ -527,12 +532,16 @@ public class GLProgram {
                     }
                 }
 
-                string = matcher.replaceFirst(newContent);
+                res += newContent;
+                index++;
+                if(index < split.length){
+                    res += split[index];
+                }
             }
-            matcher.reset(string);
+
         }
 
-        return string;
+        return res;
     }
 
 

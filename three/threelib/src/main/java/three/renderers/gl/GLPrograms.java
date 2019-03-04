@@ -54,7 +54,7 @@ public class GLPrograms {
         shaderIDs.put("MeshStandardMaterial", "physical");
         shaderIDs.put("MeshPhysicalMaterial", "physical");
         shaderIDs.put("MeshMatcapMaterial", "matcap");
-        shaderIDs.put("MeshMatcapMaterial", "basic");
+        shaderIDs.put("LineBasicMaterial", "basic");
         shaderIDs.put("LineDashedMaterial", "dashed");
         shaderIDs.put("PointsMaterial", "points");
         shaderIDs.put("ShadowMaterial", "shadow");
@@ -201,7 +201,7 @@ public class GLPrograms {
         for ( int p = 0, pl = programs.size(); p < pl; p ++ ) {
             GLProgram programInfo = programs.get(p);
 
-            if ( programInfo.code == code ) {
+            if (programInfo.code.equals(code)) {
                 program = programInfo;
                 ++ program.usedTimes;
                 break;
