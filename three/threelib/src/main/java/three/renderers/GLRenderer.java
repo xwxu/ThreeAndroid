@@ -184,7 +184,7 @@ public class GLRenderer {
         info = new GLInfo();
         properties = new GLProperties();
         capabilities = new GLCapabilities();
-        textures = new GLTextures();
+        textures = new GLTextures(state, properties, info);
         attributes = new GLAttributes();
         geometries = new GLGeometries(attributes, info);
         objects = new GLObjects(geometries, info);
@@ -756,22 +756,22 @@ public class GLRenderer {
         }
 
         Field mapField = material.GetProperty("map");
-        if ( mapField != null ) {
+        if ( material.CheckFieldValid("map") ) {
             uniforms.Put("map", mapField.get(material));
         }
 
         Field alphaMapField = material.GetProperty("alphaMap");
-        if ( alphaMapField != null ) {
+        if ( material.CheckFieldValid("alphaMap") ) {
             uniforms.Put("alphaMap", alphaMapField.get(material));
         }
 
         Field specularMapField = material.GetProperty("specularMap");
-        if ( specularMapField != null ) {
+        if ( material.CheckFieldValid("specularMap") ) {
             uniforms.Put("specularMap", specularMapField.get(material));
         }
 
         Field envMapField = material.GetProperty("envMap");
-        if ( envMapField != null ) {
+        if ( material.CheckFieldValid("envMap") ) {
             Texture envMap = (Texture) envMapField.get(material);
             uniforms.Put("envMap", envMap);
 
@@ -796,7 +796,7 @@ public class GLRenderer {
         }
 
         Field lightMapField = material.GetProperty("lightMap");
-        if ( lightMapField != null ) {
+        if ( material.CheckFieldValid("lightMap") ) {
             Field lightMapIntensityField = material.GetProperty("lightMapIntensity");
             float lightMapIntensity = (float) lightMapIntensityField.get(material);
             uniforms.Put("lightMap", lightMapField.get(material));
@@ -804,7 +804,7 @@ public class GLRenderer {
         }
 
         Field aoMapField = material.GetProperty("aoMap");
-        if ( aoMapField != null ) {
+        if ( material.CheckFieldValid("aoMap") ) {
             Field aoMapIntensityField = material.GetProperty("aoMapIntensity");
             float aoMapIntensity = (float) aoMapIntensityField.get(material);
             uniforms.Put("aoMap", alphaMapField.get(material));

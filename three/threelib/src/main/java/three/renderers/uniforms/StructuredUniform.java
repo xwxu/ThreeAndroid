@@ -13,6 +13,7 @@ public class StructuredUniform extends UniformContainer {
 
     @Override
     public void SetValue(Object value, GLRenderer renderer){
+
         ArrayList<AbstractUniform> seq = this.seq;
 
         for ( int i = 0, n = seq.size(); i != n; ++ i ) {
@@ -20,11 +21,15 @@ public class StructuredUniform extends UniformContainer {
 
             if(value instanceof UniformsObject){
                 UniformsObject uniforms = (UniformsObject) value;
-                u.SetValue(uniforms.Get(u.id), renderer);
+                Object uniformObj = uniforms.Get(u.id);
+                if(uniformObj != null){
+                    u.SetValue(uniformObj, renderer);
+                }
 
             }else{
                 ArrayList<UniformsObject> uniformList = (ArrayList<UniformsObject>) value;
-                u.SetValue( uniformList.get(Integer.parseInt(u.id)), renderer );
+                int index = Integer.parseInt(u.id);
+                u.SetValue( uniformList.get(index), renderer );
             }
 
         }

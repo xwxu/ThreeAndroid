@@ -2,7 +2,6 @@ package three.renderers.gl;
 
 import android.opengl.GLES20;
 
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 
 import three.math.Matrix3;
@@ -16,7 +15,7 @@ import three.renderers.uniforms.PureArrayUniform;
 import three.renderers.uniforms.SingleUniform;
 import three.renderers.uniforms.StructuredUniform;
 import three.renderers.uniforms.UniformContainer;
-import three.util.ActiveInfo;
+import three.util.ActiveUniformInfo;
 
 public class GLUniforms extends UniformContainer {
 
@@ -37,7 +36,7 @@ public class GLUniforms extends UniformContainer {
             byte[] trimed = GLUtils.TrimZero(nameBuf);
             String name = new String(trimed);
             int addr = GLES20.glGetUniformLocation(program, name);
-            ActiveInfo activeInfo = new ActiveInfo();
+            ActiveUniformInfo activeInfo = new ActiveUniformInfo();
             activeInfo.name = name;
             activeInfo.type = typeBuf[0];
             activeInfo.size = sizeBuf[0];
@@ -53,7 +52,7 @@ public class GLUniforms extends UniformContainer {
     *  pureArray: ddg[1]
     *  structure: lights[0].position
     * */
-    public void ParseUniform(ActiveInfo activeInfo, int addr, UniformContainer container){
+    public void ParseUniform(ActiveUniformInfo activeInfo, int addr, UniformContainer container){
         String path = activeInfo.name;
 
         while (true){
@@ -68,8 +67,14 @@ public class GLUniforms extends UniformContainer {
             }else if(leftBracket == 0){ // [1].xx
                 if(dot > 0){
                     String id = path.substring(leftBracket+1, rightBracket);
-                    UniformContainer next = new StructuredUniform(id);
-                    AddUniform(container, next);
+                    UniformContainer next;
+                    if(container.map.containsKey(id)){
+                        next = (UniformContainer) container.map.get(id);
+                    }else{
+                        next = new StructuredUniform(id);
+                        AddUniform(container, next);
+                    }
+
                     container = next;
                     path = path.substring(rightBracket+2);
                 }
@@ -83,8 +88,15 @@ public class GLUniforms extends UniformContainer {
 
                 }else{
                     String id = path.substring(0, leftBracket);
-                    UniformContainer next = new StructuredUniform(id);
-                    AddUniform(container, next);
+
+                    UniformContainer next;
+                    if(container.map.containsKey(id)){
+                        next = (UniformContainer) container.map.get(id);
+                    }else{
+                        next = new StructuredUniform(id);
+                        AddUniform(container, next);
+                    }
+
                     container = next;
                     path = path.substring(leftBracket);
                 }

@@ -162,18 +162,18 @@ public class ThreeRenderer implements GLSurfaceView.Renderer {
 
         geometry.ComputeBoundingSphere();
 
-//        MeshPhongParameters parameters = new MeshPhongParameters();
-//        parameters.color = new Color(0xaaaaaa);
-//        parameters.specular = new Color(0xffffff);
-//        parameters.shininess = 250.0f;
-//        parameters.side = DoubleSide;
-//        parameters.vertexColors = VertexColors;
-//        MeshPhongMaterial material = new MeshPhongMaterial( parameters );
+        MeshPhongParameters parameters = new MeshPhongParameters();
+        parameters.color = new Color(0xaaaaaa);
+        parameters.specular = new Color(0xffffff);
+        parameters.shininess = 250.0f;
+        parameters.side = DoubleSide;
+        parameters.vertexColors = VertexColors;
+        MeshPhongMaterial material = new MeshPhongMaterial( parameters );
 
         //MeshNormalMaterial material = new MeshNormalMaterial(new MeshNormalParameters());
-        MeshBasicParameters parameters = new MeshBasicParameters();
-        parameters.vertexColors = VertexColors;
-        MeshBasicMaterial material = new MeshBasicMaterial(parameters);
+//        MeshBasicParameters parameters = new MeshBasicParameters();
+//        parameters.vertexColors = VertexColors;
+//        MeshBasicMaterial material = new MeshBasicMaterial(parameters);
 
         //BoxBufferGeometry boxGeo = new BoxBufferGeometry(200, 200, 200, 10, 10,10);
         mesh = new Mesh( geometry, material );

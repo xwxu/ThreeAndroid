@@ -16,15 +16,15 @@ import three.math.Vector4;
 import three.renderers.GLRenderer;
 import three.textures.CubeTexture;
 import three.textures.Texture;
-import three.util.ActiveInfo;
+import three.util.ActiveUniformInfo;
 
 public class SingleUniform extends AbstractUniform{
 
     public ArrayList cache = new ArrayList();
-    public int addr;
-    public ActiveInfo activeInfo;
+    private int addr;
+    private ActiveUniformInfo activeInfo;
 
-    public SingleUniform(String id, ActiveInfo activeInfo, int addr){
+    public SingleUniform(String id, ActiveUniformInfo activeInfo, int addr){
         super(id);
         this.addr = addr;
         this.activeInfo = activeInfo;
@@ -59,7 +59,7 @@ public class SingleUniform extends AbstractUniform{
                 break;
             case GLES20.GL_INT:
             case GLES20.GL_BOOL:
-                SetValue1i((int)value);
+                SetValue1i(value);
                 break;
             case GLES20.GL_INT_VEC2:
             case GLES20.GL_BOOL_VEC2:
@@ -88,7 +88,8 @@ public class SingleUniform extends AbstractUniform{
 
         if ( !cache.isEmpty() && (int)cache.get(0) != unit ) {
             GLES20.glUniform1i(this.addr, unit);
-            cache.add(0, unit);
+            cache.clear();
+            cache.add( unit);
         }
 
         renderer.SetTexture2D( value != null ? value : new Texture(), unit );
@@ -102,18 +103,25 @@ public class SingleUniform extends AbstractUniform{
 
         GLES20.glUniform1f(this.addr, v);
 
-        cache.add(0, v);
+        cache.clear();
+        cache.add( v);
     }
 
     // uniform int v
-    public void SetValue1i(int v){
+    public void SetValue1i(Object v){
         ArrayList cache = this.cache;
 
-        if ( !cache.isEmpty() && (int)cache.get(0) == v ) return;
+        if ( !cache.isEmpty() && cache.get(0) == v ) return;
 
-        GLES20.glUniform1i(this.addr, v);
+        if(v instanceof Boolean){
+            int value = (boolean)v ? 1 : 0;
+            GLES20.glUniform1i(this.addr, value);
+        }else {
+            GLES20.glUniform1i(this.addr, (int)v);
+        }
 
-        cache.add(0, v);
+        cache.clear();
+        cache.add( v);
     }
 
     // uniform vec2 v
@@ -124,8 +132,9 @@ public class SingleUniform extends AbstractUniform{
             (cache.size() == 2 && ((float)cache.get(0) != v.x || (float)cache.get(1) != v.y ))) {
             GLES20.glUniform2f(this.addr, v.x, v.y);
 
-            cache.add(0, v.x);
-            cache.add(1, v.y);
+            cache.clear();
+            cache.add( v.x);
+            cache.add( v.y);
         }
     }
 
@@ -135,29 +144,42 @@ public class SingleUniform extends AbstractUniform{
 
         if(v instanceof Vector3){
             Vector3 vec = (Vector3)v;
+//            float[] array = new float[3];
+//            vec.ToArray(array, 0);
+//            GLES20.glUniform3fv(this.addr, 1, array, 0);
+//            UniformContainer.CopyArray(cache, array);
+
             if ( cache.isEmpty() ||
                 ( cache.size() == 3 && ((float)cache.get(0) != vec.x || (float)cache.get(1) != vec.y || (float)cache.get(2) != vec.z ))) {
                 GLES20.glUniform3f(this.addr, vec.x, vec.y, vec.z);
 
-                cache.add(0, vec.x);
-                cache.add(1, vec.y);
-                cache.add(2, vec.z);
+                cache.clear();
+                cache.add(vec.x);
+                cache.add(vec.y);
+                cache.add(vec.z);
             }
 
         }else if(v instanceof Color){
             Color color = (Color)v;
             if ( cache.isEmpty() ||
                 ( cache.size() == 3 && ((float)cache.get(0) != color.r || (float)cache.get(1) != color.g || (float)cache.get(2) != color.b ))) {
-                GLES20.glUniform3f(this.addr, color.r, color.g, color.b);
 
-                cache.add(0, color.r);
-                cache.add(1, color.g);
-                cache.add(2, color.b);
+                //GLES20.glUniform3f(this.addr, color.r, color.g, color.b);
+                float[] floats = new float[3];
+                floats[0] = color.r;
+                floats[1] = color.g;
+                floats[2] = color.b;
+                GLES20.glUniform3fv(this.addr, 1, floats, 0);
+
+                cache.clear();
+                cache.add(color.r);
+                cache.add(color.g);
+                cache.add(color.b);
             }
 
         }else{
             float[] floats = (float[])v;
-            GLES20.glUniform2fv(this.addr, 1, floats, 0);
+            GLES20.glUniform3fv(this.addr, 1, floats, 0);
             UniformContainer.CopyArray(cache, floats);
         }
 
@@ -173,10 +195,11 @@ public class SingleUniform extends AbstractUniform{
                 || (float)cache.get(2) != v.z || (float)cache.get(3) != v.w))) {
             GLES20.glUniform4f(this.addr, v.x, v.y, v.z, v.w);
 
-            cache.add(0, v.x);
-            cache.add(1, v.y);
-            cache.add(2, v.z);
-            cache.add(3, v.z);
+            cache.clear();
+            cache.add( v.x);
+            cache.add( v.y);
+            cache.add( v.z);
+            cache.add( v.w);
         }
     }
 

@@ -12,16 +12,16 @@ import three.math.Vector4;
 import three.renderers.GLRenderer;
 import three.textures.CubeTexture;
 import three.textures.Texture;
-import three.util.ActiveInfo;
+import three.util.ActiveUniformInfo;
 
 public class PureArrayUniform extends AbstractUniform{
 
     public int addr;
     public ArrayList cache = new ArrayList();
     public int size;
-    private ActiveInfo activeInfo;
+    private ActiveUniformInfo activeInfo;
 
-    public PureArrayUniform(String id, ActiveInfo activeInfo, int addr){
+    public PureArrayUniform(String id, ActiveUniformInfo activeInfo, int addr){
         super(id);
         this.addr = addr;
         this.activeInfo = activeInfo;

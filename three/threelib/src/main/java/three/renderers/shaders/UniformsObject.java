@@ -9,11 +9,12 @@ public class UniformsObject {
     public HashMap<String, UniformState> uniforms = new HashMap<>();
 
     public Object Get(String name){
-        UniformState u = uniforms.get(name);
-        if(u != null){
-            return  u.value;
+        if(uniforms.containsKey(name)){
+            UniformState u = uniforms.get(name);
+            return u.value;
+        }else{
+            return null;
         }
-        return null;
     }
 
     public void Put(String name, Object object){

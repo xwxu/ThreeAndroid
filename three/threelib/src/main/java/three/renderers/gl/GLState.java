@@ -1,5 +1,6 @@
 package three.renderers.gl;
 
+import android.graphics.Bitmap;
 import android.opengl.GLES20;
 
 import java.nio.ByteBuffer;
@@ -8,6 +9,7 @@ import java.util.HashMap;
 
 import three.materials.Material;
 import three.math.Vector4;
+import three.util.BoundTexture;
 import three.util.ColorBuffer;
 import three.util.DepthBuffer;
 import three.util.StencilBuffer;
@@ -51,6 +53,8 @@ public class GLState {
     public float currentPolygonOffsetFactor;
     public float currentPolygonOffsetUnits;
     public int maxTextures;
+    public int currentTextureSlot = -1;
+    public HashMap<Integer, BoundTexture> currentBoundTextures = new HashMap<>();
     public Vector4 currentScissor;
     public Vector4 currentViewport;
     public HashMap<Integer, Integer> emptyTextures = new HashMap<>();
@@ -336,6 +340,42 @@ public class GLState {
         }
     }
 
+    public void ActiveTexture(int slot){
+        if ( slot == -1 ) slot = GLES20.GL_TEXTURE0 + maxTextures - 1;
+
+        if ( currentTextureSlot != slot ) {
+            GLES20.glActiveTexture( slot );
+            currentTextureSlot = slot;
+        }
+    }
+
+    public void BindTexture(int glType, int glTexture){
+        if ( currentTextureSlot == -1 ) {
+            ActiveTexture(-1);
+        }
+
+        BoundTexture boundTexture = currentBoundTextures.get(currentTextureSlot);
+
+        if ( boundTexture == null ) {
+            boundTexture = new BoundTexture();
+            currentBoundTextures.put(currentTextureSlot, boundTexture);
+        }
+
+        if ( boundTexture.type != glType || boundTexture.texture != glTexture ) {
+
+            int textureSlot = glTexture > 0 ? glTexture : emptyTextures.get(glType);
+            GLES20.glBindTexture( glType, textureSlot );
+            boundTexture.type = glType;
+            boundTexture.texture = glTexture;
+
+        }
+    }
+
+    public void TexImage2D(int target, int level, int internalFormat, int type, Bitmap image) {
+        //GLES20.glTexImage2D(target, level, internalFormat, glFormat, );
+        android.opengl.GLUtils.texImage2D(target, level, internalFormat, image, type, 0);
+    }
+
     public void Scissor( Vector4 scissor){
         if (!currentScissor.Equals( scissor )) {
             GLES20.glScissor((int)scissor.x, (int)scissor.y, (int)scissor.z, (int)scissor.w);
@@ -369,5 +409,6 @@ public class GLState {
         depthBuffer.Reset();
         stencilBuffer.Reset();
     }
+
 
 }
