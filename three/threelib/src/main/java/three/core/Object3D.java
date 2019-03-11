@@ -12,6 +12,8 @@ import three.math.Matrix4;
 import three.math.Matrix3;
 import three.math.Quaternion;
 import three.math.Vector3;
+import three.renderers.GLRenderer;
+import three.scenes.Scene;
 import three.util.Intersect;
 
 public class Object3D extends Observable {
@@ -359,5 +361,7 @@ public class Object3D extends Observable {
 
         return this;
     }
+
+    public void OnBeforeRender(GLRenderer renderer, Scene scene, Camera camera){}
 
 }

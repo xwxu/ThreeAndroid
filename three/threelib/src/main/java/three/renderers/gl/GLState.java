@@ -3,6 +3,7 @@ package three.renderers.gl;
 import android.graphics.Bitmap;
 import android.opengl.GLES20;
 
+import java.nio.Buffer;
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 import java.util.HashMap;
@@ -374,6 +375,10 @@ public class GLState {
     public void TexImage2D(int target, int level, int internalFormat, int type, Bitmap image) {
         //GLES20.glTexImage2D(target, level, internalFormat, glFormat, );
         android.opengl.GLUtils.texImage2D(target, level, internalFormat, image, type, 0);
+    }
+
+    public void TexImage2D(int target, int level, int internalFormat, int width, int height, int border, int format, int type, Buffer pixels){
+        GLES20.glTexImage2D(target, level, internalFormat, width, height, border, format, type, pixels);
     }
 
     public void Scissor( Vector4 scissor){

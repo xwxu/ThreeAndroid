@@ -29,9 +29,10 @@ public class GLUniforms extends UniformContainer {
 
         int[] sizeBuf = new int[1];
         int[] typeBuf = new int[1];
-        byte[] nameBuf = new byte[30];
+        // NOTE: allocate enough space for name
+        byte[] nameBuf = new byte[40];
         for ( int i = 0; i < n[0]; ++ i ) {
-            GLES20.glGetActiveUniform( program, i, 30, null, 0,  sizeBuf, 0, typeBuf, 0, nameBuf, 0 );
+            GLES20.glGetActiveUniform( program, i, 40, null, 0,  sizeBuf, 0, typeBuf, 0, nameBuf, 0 );
 
             byte[] trimed = GLUtils.TrimZero(nameBuf);
             String name = new String(trimed);
@@ -44,7 +45,6 @@ public class GLUniforms extends UniformContainer {
 
         }
     }
-
 
 
     /*

@@ -112,7 +112,7 @@ public class GLLights {
                 }
 
                 directionalShadowMap.add(shadowMap);
-                directionalShadowMatrix.add(dirlight.shadow.matrix);
+                directionalShadowMatrix.add(((DirectionalLight)dirlight).shadow.matrix);
                 directional.add(uniforms);
 
                 directionalLength ++;
@@ -142,7 +142,7 @@ public class GLLights {
                 }
 
                 spotShadowMap.add(shadowMap);
-                spotShadowMatrix.add(light.shadow.matrix);
+                spotShadowMatrix.add(((SpotLight)light).shadow.matrix);
                 spot.add(uniforms);
 
                 spotLength ++;
@@ -198,7 +198,7 @@ public class GLLights {
                 }
 
                 pointShadowMap.add(shadowMap);
-                pointShadowMatrix.add(light.shadow.matrix);
+                pointShadowMatrix.add(((PointLight)light).shadow.matrix);
                 point.add(uniforms);
 
                 pointLength ++;

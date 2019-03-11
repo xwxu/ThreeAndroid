@@ -6,8 +6,6 @@ import java.lang.reflect.Field;
 import java.nio.FloatBuffer;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
 
 import three.bufferAttribute.BufferAttribute;
 import three.bufferAttribute.Float32BufferAttribute;
@@ -77,6 +75,7 @@ import three.util.MaterialProperties;
 import three.util.Parameters;
 import three.util.RenderItem;
 import three.util.RendererParameters;
+import three.util.TextureProperties;
 
 import static three.constants.BackSide;
 import static three.constants.LinearToneMapping;
@@ -117,7 +116,7 @@ public class GLRenderer {
     public int maxMorphNormals = 4;
     private int _framebuffer;
     private GLRenderTarget _currentRenderTarget = null;
-    private int _currentFrameBuffer = -1;
+    private int _currentFramebuffer = -1;
     private int _currentMaterialId = -1;
 
     // cache for render frame
@@ -200,8 +199,47 @@ public class GLRenderer {
 
 
     public void SetRenderTarget(GLRenderTarget renderTarget){
-        //TODO
-        //GLES20.glBindFramebuffer(1, _framebuffer);
+        _currentRenderTarget = renderTarget;
+
+        if ( renderTarget != null && properties.GetRenderTarget( renderTarget ).__glFramebuffer < 0 ) {
+            textures.SetupRenderTarget( renderTarget );
+        }
+
+        int framebuffer = _framebuffer;
+        boolean isCube = false;
+
+        if ( renderTarget != null ) {
+            int __glFramebuffer = properties.GetRenderTarget( renderTarget ).__glFramebuffer;
+            if ( renderTarget instanceof GLRenderTargetCube ) {
+                // todo
+            } else {
+                framebuffer = __glFramebuffer;
+            }
+            _currentViewport.Copy( renderTarget.viewport );
+            _currentScissor.Copy( renderTarget.scissor );
+            _currentScissorTest = renderTarget.scissorTest;
+
+        } else {
+            _currentViewport.Copy( _viewport ).MultiplyScalar( _pixelRatio );
+            _currentScissor.Copy( _scissor ).MultiplyScalar( _pixelRatio );
+            _currentScissorTest = _scissorTest;
+        }
+
+        if ( _currentFramebuffer != framebuffer ) {
+            GLES20.glBindFramebuffer( GLES20.GL_FRAMEBUFFER, framebuffer );
+            _currentFramebuffer = framebuffer;
+        }
+
+        state.Viewport( _currentViewport );
+        state.Scissor( _currentScissor );
+        state.SetScissorTest( _currentScissorTest );
+
+        if ( isCube ) {
+            TextureProperties textureProperties = properties.GetTexture( renderTarget.texture );
+//            GLES20.glFramebufferTexture2D( GLES20.GL_FRAMEBUFFER, GLES20.GL_COLOR_ATTACHMENT0,
+//                    GLES20.GL_TEXTURE_CUBE_MAP_POSITIVE_X + renderTarget.activeCubeFace, textureProperties.__glTexture, renderTarget.activeMipMapLevel );
+        }
+
     }
 
     private float GetTargetPixelRatio(){
@@ -313,6 +351,7 @@ public class GLRenderer {
     }
 
     private void RenderObject(Object3D object, Scene scene, Camera camera, BufferGeometry geometry, Material material, GeoMatGroup group) throws IllegalAccessException {
+        object.OnBeforeRender(this, scene, camera);
         currentRenderState = renderStates.Get( scene, camera );
 
         object.modelViewMatrix.MultiplyMatrices( camera.matrixWorldInverse, object.matrixWorld );
@@ -399,11 +438,13 @@ public class GLRenderer {
         if ( drawCount == 0 ) return;
 
         if ( object instanceof Mesh ) {
-            MeshMaterial meshmat = (MeshMaterial)material;
-            if (material.wireframe) {
 
-                state.SetLineWidth( meshmat.wireframeLinewidth * GetTargetPixelRatio() );
-                renderer.SetMode( GLES20.GL_LINES );
+            if (material.wireframe) {
+                if(material instanceof MeshMaterial){
+                    MeshMaterial meshmat = (MeshMaterial)material;
+                    state.SetLineWidth( meshmat.wireframeLinewidth * GetTargetPixelRatio() );
+                    renderer.SetMode( GLES20.GL_LINES );
+                }
 
             } else {
                 switch ( ((Mesh)object).drawMode ) {

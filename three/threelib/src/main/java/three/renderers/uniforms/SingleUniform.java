@@ -144,13 +144,10 @@ public class SingleUniform extends AbstractUniform{
 
         if(v instanceof Vector3){
             Vector3 vec = (Vector3)v;
-//            float[] array = new float[3];
-//            vec.ToArray(array, 0);
-//            GLES20.glUniform3fv(this.addr, 1, array, 0);
-//            UniformContainer.CopyArray(cache, array);
 
             if ( cache.isEmpty() ||
                 ( cache.size() == 3 && ((float)cache.get(0) != vec.x || (float)cache.get(1) != vec.y || (float)cache.get(2) != vec.z ))) {
+
                 GLES20.glUniform3f(this.addr, vec.x, vec.y, vec.z);
 
                 cache.clear();
@@ -164,12 +161,7 @@ public class SingleUniform extends AbstractUniform{
             if ( cache.isEmpty() ||
                 ( cache.size() == 3 && ((float)cache.get(0) != color.r || (float)cache.get(1) != color.g || (float)cache.get(2) != color.b ))) {
 
-                //GLES20.glUniform3f(this.addr, color.r, color.g, color.b);
-                float[] floats = new float[3];
-                floats[0] = color.r;
-                floats[1] = color.g;
-                floats[2] = color.b;
-                GLES20.glUniform3fv(this.addr, 1, floats, 0);
+                GLES20.glUniform3f(this.addr, color.r, color.g, color.b);
 
                 cache.clear();
                 cache.add(color.r);
