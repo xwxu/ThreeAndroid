@@ -1,8 +1,6 @@
 package three.textures;
 
 import android.graphics.Bitmap;
-import android.opengl.GLES20;
-import android.opengl.GLUtils;
 
 import three.math.Math_;
 import three.math.Matrix3;
@@ -22,7 +20,7 @@ public class Texture {
     private static final int DEFAULT_MAPPING = UVMapping;
 
     public int id = textureId ++;
-    public String uuid = Math_.GenerateUUID();
+    public String uuid = Math_.generateUUID();
     public String name = "";
 
     public Bitmap image;
@@ -64,19 +62,19 @@ public class Texture {
 
         this.image = image;
         this.mapping = mapping;
-        this.wrapS = wrapS;
-        this.wrapT = wrapT;
-        this.magFilter = magFilter;
-        this.minFilter = minFilter;
-        this.format = format;
-        this.type = type;
-        this.anisotropy = anisotropy;
-        this.encoding = encoding;
+        this.wrapS = wrapS != 0 ? wrapS : ClampToEdgeWrapping;
+        this.wrapT = wrapT != 0 ? wrapT : ClampToEdgeWrapping;
+        this.magFilter = magFilter != 0 ? magFilter : LinearFilter;
+        this.minFilter = minFilter != 0 ? minFilter : LinearMipMapLinearFilter;
+        this.format = format != 0 ? format : RGBAFormat;
+        this.type = type != 0 ? type : UnsignedByteType;
+        this.anisotropy = anisotropy != 0.0 ? anisotropy : 1;
+        this.encoding = encoding != 0 ? encoding : LinearEncoding;
     }
 
 
 
-    public void UpdateMatrix(){
+    public void updateMatrix(){
         //GLUtils.texImage2D();
         //GLES20.glTexImage2D();
     }
@@ -85,7 +83,7 @@ public class Texture {
         return this;
     }
 
-    public Texture Copy(Texture source){
+    public Texture copy(Texture source){
         this.name = source.name;
 
         this.image = source.image;
@@ -104,13 +102,13 @@ public class Texture {
         this.format = source.format;
         this.type = source.type;
 
-        this.offset.Copy( source.offset );
-        this.repeat.Copy( source.repeat );
-        this.center.Copy( source.center );
+        this.offset.copy( source.offset );
+        this.repeat.copy( source.repeat );
+        this.center.copy( source.center );
         this.rotation = source.rotation;
 
         this.matrixAutoUpdate = source.matrixAutoUpdate;
-        this.matrix.Copy( source.matrix );
+        this.matrix.copy( source.matrix );
 
         this.generateMipmaps = source.generateMipmaps;
         this.premultiplyAlpha = source.premultiplyAlpha;

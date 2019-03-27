@@ -29,8 +29,8 @@ public class MeshDepthMaterial extends MeshMaterial {
 
     }
 
-    public MeshDepthMaterial Copy(MeshDepthMaterial source){
-        super.Copy(source);
+    public MeshDepthMaterial copy(MeshDepthMaterial source){
+        super.copy(source);
         this.depthPacking = source.depthPacking;
 
         this.skinning = source.skinning;

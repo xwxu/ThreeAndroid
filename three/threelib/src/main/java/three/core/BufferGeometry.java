@@ -1,6 +1,5 @@
 package three.core;
 
-import java.nio.FloatBuffer;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -44,11 +43,11 @@ public class BufferGeometry extends AbstractGeometry{
 
     }
 
-    public BufferAttribute GetIndex(){
+    public BufferAttribute getIndex(){
         return this.index;
     }
 
-    public void SetIndex(BufferAttribute index){
+    public void setIndex(BufferAttribute index){
         if(index instanceof Uint16BufferAttribute){
             //this.index = (Uint16BufferAttribute) index;
         }else if(index instanceof Uint32BufferAttribute){
@@ -56,17 +55,17 @@ public class BufferGeometry extends AbstractGeometry{
         }
     }
 
-//    public void SetIndex(short[] index){
+//    public void setIndex(short[] index){
 //        this.index = new Uint16BufferAttribute(index, 1);
 //    }
 
-    public void SetIndex(int[] index){
+    public void setIndex(int[] index){
         this.index = new Uint32BufferAttribute(index, 1);
     }
 
-    public BufferGeometry AddAttribute(String name, BufferAttribute attribute){
-        if ( name == "index" ) {
-            this.SetIndex( attribute );
+    public BufferGeometry addAttribute(String name, BufferAttribute attribute){
+        if (name.equals("index")) {
+            this.setIndex( attribute );
             return this;
         }
 
@@ -74,15 +73,15 @@ public class BufferGeometry extends AbstractGeometry{
         return this;
     }
 
-    public BufferAttribute GetAttribute(String name){
+    public BufferAttribute getAttribute(String name){
         return this.attributes.get(name);
     }
 
-    public BufferAttribute RemoveAttribute(String name){
+    public BufferAttribute removeAttribute(String name){
         return this.attributes.remove(name);
     }
 
-    public void AddGroup(int start, int count, int materialIndex){
+    public void addGroup(int start, int count, int materialIndex){
         GeoMatGroup group = new GeoMatGroup();
         group.start = start;
         group.count = count;
@@ -90,89 +89,89 @@ public class BufferGeometry extends AbstractGeometry{
         this.groups.add(group);
     }
 
-    public void ClearGroups(){
+    public void clearGroups(){
         this.groups.clear();
     }
 
-    public void SetDrawRange(int start, int count){
+    public void setDrawRange(int start, int count){
         this.drawRange.start = start;
         this.drawRange.count = count;
     }
 
-    public void ApplyMatrix(Matrix4 matrix){
+    public void applyMatrix(Matrix4 matrix){
         Float32BufferAttribute position = (Float32BufferAttribute) this.attributes.get("position");
 
         if ( position != null ) {
-            matrix.ApplyToBufferAttribute( position );
+            matrix.applyToBufferAttribute( position );
             position.needsUpdate(true);
         }
 
         Float32BufferAttribute normal = (Float32BufferAttribute) this.attributes.get("normal");
 
         if ( normal != null ) {
-            Matrix3 normalMatrix = new Matrix3().GetNormalMatrix( matrix );
-            normalMatrix.ApplyToBufferAttribute( normal );
+            Matrix3 normalMatrix = new Matrix3().getNormalMatrix( matrix );
+            normalMatrix.applyToBufferAttribute( normal );
             normal.needsUpdate(true);
 
         }
 
         if ( this.boundingBox != null ) {
-            this.ComputeBoundingBox();
+            this.computeBoundingBox();
         }
 
         if ( this.boundingSphere != null ) {
-            this.ComputeBoundingSphere();
+            this.computeBoundingSphere();
         }
     }
 
-    public void RotateX(float angle){
+    public void rotateX(float angle){
         // rotate geometry around world x-axis
         Matrix4 m1 = new Matrix4();
-        m1.MakeRotationX( angle );
-        this.ApplyMatrix( m1 );
+        m1.makeRotationX( angle );
+        this.applyMatrix( m1 );
     }
 
-    public void RotateY(float angle){
+    public void rotateY(float angle){
         // rotate geometry around world Y-axis
         Matrix4 m1 = new Matrix4();
-        m1.MakeRotationY( angle );
-        this.ApplyMatrix( m1 );
+        m1.makeRotationY( angle );
+        this.applyMatrix( m1 );
     }
 
-    public void RotateZ(float angle){
+    public void rotateZ(float angle){
         // rotate geometry around world Z-axis
         Matrix4 m1 = new Matrix4();
-        m1.MakeRotationZ( angle );
-        this.ApplyMatrix( m1 );
+        m1.makeRotationZ( angle );
+        this.applyMatrix( m1 );
     }
 
-    public void Translate(float x, float y, float z){
+    public void translate(float x, float y, float z){
         Matrix4 m1 = new Matrix4();
-        m1.MakeTranslation( x, y, z );
-        this.ApplyMatrix( m1 );
+        m1.makeTranslation( x, y, z );
+        this.applyMatrix( m1 );
     }
 
-    public void Scale(float x, float y, float z){
+    public void scale(float x, float y, float z){
         Matrix4 m1 = new Matrix4();
-        m1.MakeScale( x, y, z );
-        this.ApplyMatrix( m1 );
+        m1.makeScale( x, y, z );
+        this.applyMatrix( m1 );
     }
 
-    public void LookAt(Vector3 vector){
+    public void lookAt(Vector3 vector){
         Object3D obj = new Object3D();
-        obj.LookAt( vector );
-        obj.UpdateMatrix();
-        this.ApplyMatrix( obj.matrix );
+        obj.lookAt( vector );
+        obj.updateMatrix();
+        this.applyMatrix( obj.matrix );
     }
 
-    public void Center(){
+    public void center(){
         Vector3 offset = new Vector3();
-        this.ComputeBoundingBox();
-        this.boundingBox.GetCenter( offset ).Negate();
-        this.Translate( offset.x, offset.y, offset.z );
+        this.computeBoundingBox();
+        this.boundingBox.getCenter( offset ).negate();
+        this.translate( offset.x, offset.y, offset.z );
     }
 
-    public BufferGeometry SetFromObject(Object3D object){
+    public BufferGeometry setFromObject(Object3D object){
         if(!(object.geometry instanceof Geometry)){
             return null;
         }
@@ -183,12 +182,12 @@ public class BufferGeometry extends AbstractGeometry{
             Float32BufferAttribute positions = new Float32BufferAttribute( geometry.vertices.size() * 3, 3 );
             Float32BufferAttribute colors = new Float32BufferAttribute( geometry.colors.size() * 3, 3 );
 
-            this.AddAttribute( "position", positions.CopyVector3sArray( geometry.vertices ) );
-            this.AddAttribute( "color", colors.CopyColorsArray( geometry.colors ) );
+            this.addAttribute( "position", positions.copyVector3SArray( geometry.vertices ) );
+            this.addAttribute( "color", colors.copyColorsArray( geometry.colors ) );
 
             if ( geometry.lineDistances != null && geometry.lineDistances.size() == geometry.vertices.size() ) {
                 Float32BufferAttribute lineDistances = new Float32BufferAttribute( geometry.lineDistances.size(), 1 );
-                this.AddAttribute( "lineDistance", lineDistances.CopyArray( geometry.lineDistances ) );
+                this.addAttribute( "lineDistance", lineDistances.copyArray( geometry.lineDistances ) );
             }
 
             if ( geometry.boundingSphere != null ) {
@@ -196,19 +195,19 @@ public class BufferGeometry extends AbstractGeometry{
             }
 
             if ( geometry.boundingBox != null ) {
-                this.boundingBox = geometry.boundingBox.Clone();
+                this.boundingBox = geometry.boundingBox.clone();
             }
 
         } else if ( object instanceof Mesh) {
             if ( geometry != null ) {
-                this.FromGeometry( geometry );
+                this.fromGeometry( geometry );
             }
         }
 
         return this;
     }
 
-    public BufferGeometry SetFromPoints(ArrayList<Vector3> points){
+    public BufferGeometry setFromPoints(ArrayList<Vector3> points){
         float[] position = new float[points.size() * 3];
 
         for ( int i = 0, l = points.size(); i < l; i ++ ) {
@@ -218,14 +217,14 @@ public class BufferGeometry extends AbstractGeometry{
             position[i*3+2] = point.z;
         }
 
-        this.AddAttribute( "position", new Float32BufferAttribute( position, 3 ) );
+        this.addAttribute( "position", new Float32BufferAttribute( position, 3 ) );
 
         return this;
     }
 
     // mesh has normal, uv, groups attribute
     // other objects
-    public BufferGeometry UpdateFromObject(Object3D object){
+    public BufferGeometry updateFromObject(Object3D object){
         Geometry geometry = (Geometry) object.geometry;
 
         if ( object instanceof Mesh ) {
@@ -237,7 +236,7 @@ public class BufferGeometry extends AbstractGeometry{
             }
 
             if ( direct == null ) {
-                return this.FromGeometry( geometry );
+                return this.fromGeometry( geometry );
             }
 
             direct.verticesNeedUpdate = geometry.verticesNeedUpdate;
@@ -258,7 +257,7 @@ public class BufferGeometry extends AbstractGeometry{
                 attribute = (Float32BufferAttribute) this.attributes.get("position");
 
                 if ( attribute != null ) {
-                    attribute.CopyVector3sArray( direct.vertices );
+                    attribute.copyVector3SArray( direct.vertices );
                     attribute.needsUpdate(true);
                 }
                 direct.verticesNeedUpdate = false;
@@ -268,7 +267,7 @@ public class BufferGeometry extends AbstractGeometry{
                 attribute = (Float32BufferAttribute) this.attributes.get("normal");
 
                 if ( attribute != null ) {
-                    attribute.CopyVector3sArray( direct.normals );
+                    attribute.copyVector3SArray( direct.normals );
                     attribute.needsUpdate(true);
                 }
 
@@ -279,7 +278,7 @@ public class BufferGeometry extends AbstractGeometry{
                 attribute = (Float32BufferAttribute) this.attributes.get("color");
 
                 if ( attribute != null ) {
-                    attribute.CopyColorsArray( direct.colors );
+                    attribute.copyColorsArray( direct.colors );
                     attribute.needsUpdate(true);
                 }
 
@@ -290,7 +289,7 @@ public class BufferGeometry extends AbstractGeometry{
                 attribute = (Float32BufferAttribute) this.attributes.get("uv");
 
                 if ( attribute != null ) {
-                    attribute.CopyVector2sArray( direct.uvs );
+                    attribute.copyVector2SArray( direct.uvs );
                     attribute.needsUpdate(true);
                 }
 
@@ -299,7 +298,7 @@ public class BufferGeometry extends AbstractGeometry{
 
 
             if ( direct.groupsNeedUpdate ) {
-                direct.ComputeGroups( geometry );
+                direct.computeGroups( geometry );
                 this.groups = direct.groups;
 
                 direct.groupsNeedUpdate = false;
@@ -313,7 +312,7 @@ public class BufferGeometry extends AbstractGeometry{
             attribute = (Float32BufferAttribute) this.attributes.get("position");
 
             if ( attribute != null ) {
-                attribute.CopyVector3sArray( geometry.vertices );
+                attribute.copyVector3SArray( geometry.vertices );
                 attribute.needsUpdate(true);
             }
 
@@ -325,7 +324,7 @@ public class BufferGeometry extends AbstractGeometry{
             attribute = (Float32BufferAttribute) this.attributes.get("color");
 
             if ( attribute != null ) {
-                attribute.CopyColorsArray( geometry.colors );
+                attribute.copyColorsArray( geometry.colors );
                 attribute.needsUpdate(true);
             }
 
@@ -337,7 +336,7 @@ public class BufferGeometry extends AbstractGeometry{
             attribute = (Float32BufferAttribute) this.attributes.get("lineDistance");
 
             if ( attribute != null ) {
-                attribute.CopyArray( geometry.lineDistances );
+                attribute.copyArray( geometry.lineDistances );
                 attribute.needsUpdate(true);
             }
 
@@ -347,29 +346,29 @@ public class BufferGeometry extends AbstractGeometry{
         return this;
     }
 
-    public BufferGeometry FromGeometry(Geometry geometry) {
-        geometry._directGeometry = new DirectGeometry().FromGeometry( geometry );
-        return this.FromDirectGeometry( geometry._directGeometry );
+    public BufferGeometry fromGeometry(Geometry geometry) {
+        geometry._directGeometry = new DirectGeometry().fromGeometry( geometry );
+        return this.fromDirectGeometry( geometry._directGeometry );
     }
 
-    public BufferGeometry FromDirectGeometry(DirectGeometry geometry) {
+    public BufferGeometry fromDirectGeometry(DirectGeometry geometry) {
 
-        this.AddAttribute( "position", new Float32BufferAttribute( geometry.vertices.size() * 3, 3 ).CopyVector3sArray( geometry.vertices ) );
+        this.addAttribute( "position", new Float32BufferAttribute( geometry.vertices.size() * 3, 3 ).copyVector3SArray( geometry.vertices ) );
 
         if ( geometry.normals.size() > 0 ) {
-            this.AddAttribute( "normal", new Float32BufferAttribute( geometry.normals.size() * 3, 3 ).CopyVector3sArray( geometry.normals ) );
+            this.addAttribute( "normal", new Float32BufferAttribute( geometry.normals.size() * 3, 3 ).copyVector3SArray( geometry.normals ) );
         }
 
         if ( geometry.colors.size() > 0 ) {
-            this.AddAttribute( "color", new Float32BufferAttribute( geometry.colors.size() * 3, 3 ).CopyColorsArray( geometry.colors ) );
+            this.addAttribute( "color", new Float32BufferAttribute( geometry.colors.size() * 3, 3 ).copyColorsArray( geometry.colors ) );
         }
 
         if ( geometry.uvs.size() > 0 ) {
-            this.AddAttribute( "uv", new Float32BufferAttribute( geometry.uvs.size() * 2, 2 ).CopyVector2sArray( geometry.uvs ) );
+            this.addAttribute( "uv", new Float32BufferAttribute( geometry.uvs.size() * 2, 2 ).copyVector2SArray( geometry.uvs ) );
         }
 
         if ( geometry.uvs2.size() > 0 ) {
-            this.AddAttribute( "uv2", new Float32BufferAttribute( geometry.uvs2.size() * 2, 2 ).CopyVector2sArray( geometry.uvs2 ) );
+            this.addAttribute( "uv2", new Float32BufferAttribute( geometry.uvs2.size() * 2, 2 ).copyVector2SArray( geometry.uvs2 ) );
         }
 
         this.groups = geometry.groups;
@@ -379,26 +378,26 @@ public class BufferGeometry extends AbstractGeometry{
         }
 
         if ( geometry.boundingBox != null ) {
-            this.boundingBox = geometry.boundingBox.Clone();
+            this.boundingBox = geometry.boundingBox.clone();
         }
 
         return this;
     }
 
-    public void ComputeBoundingBox(){
+    public void computeBoundingBox(){
         if(this.boundingBox == null){
             this.boundingBox = new Box3();
         }
         Float32BufferAttribute position = (Float32BufferAttribute)this.attributes.get("position");
 
         if ( position != null ) {
-            this.boundingBox.SetFromBufferAttribute( position );
+            this.boundingBox.setFromBufferAttribute( position );
         } else {
-            this.boundingBox.MakeEmpty();
+            this.boundingBox.makeEmpty();
         }
     }
 
-    public void ComputeBoundingSphere(){
+    public void computeBoundingSphere(){
         if(this.boundingSphere == null){
             this.boundingSphere = new Sphere();
         }
@@ -409,29 +408,29 @@ public class BufferGeometry extends AbstractGeometry{
         if(position != null){
             Vector3 center = this.boundingSphere.center;
 
-            box.SetFromBufferAttribute( position );
-            box.GetCenter( center );
+            box.setFromBufferAttribute( position );
+            box.getCenter( center );
 
             // hoping to find a boundingSphere with a radius smaller than the
             // boundingSphere of the boundingBox: sqrt(3) smaller in the best case
             float maxRadiusSq = 0;
 
             for ( int i = 0, il = position.count; i < il; i ++ ) {
-                vector.x = position.GetX( i );
-                vector.y = position.GetY( i );
-                vector.z = position.GetZ( i );
-                maxRadiusSq = Math.max( maxRadiusSq, center.DistanceToSquared( vector ) );
+                vector.x = position.getX( i );
+                vector.y = position.getY( i );
+                vector.z = position.getZ( i );
+                maxRadiusSq = Math.max( maxRadiusSq, center.distanceToSquared( vector ) );
             }
 
             this.boundingSphere.radius = (float) Math.sqrt( maxRadiusSq );
         }
     }
 
-    public BufferGeometry Clone(){
-        return new BufferGeometry().Copy(this);
+    public BufferGeometry clone(){
+        return new BufferGeometry().copy(this);
     }
 
-    public BufferGeometry Copy(BufferGeometry source){
+    public BufferGeometry copy(BufferGeometry source){
         this.index = null;
         this.attributes.clear();
 
@@ -444,7 +443,7 @@ public class BufferGeometry extends AbstractGeometry{
         // index
         BufferAttribute index = source.index;
         if ( index != null ) {
-            this.SetIndex( index.Clone() );
+            this.setIndex( index.clone() );
         }
 
         Iterator iterator = source.attributes.entrySet().iterator();
@@ -460,7 +459,7 @@ public class BufferGeometry extends AbstractGeometry{
         Box3 boundingBox = source.boundingBox;
 
         if ( boundingBox != null ) {
-            this.boundingBox = boundingBox.Clone();
+            this.boundingBox = boundingBox.clone();
         }
 
         // bounding sphere

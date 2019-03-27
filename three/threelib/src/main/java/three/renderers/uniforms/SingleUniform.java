@@ -31,60 +31,60 @@ public class SingleUniform extends AbstractUniform{
     }
 
     @Override
-    public void SetValue(Object value, GLRenderer renderer){
+    public void setValue(Object value, GLRenderer renderer){
         switch(activeInfo.type){
             case GLES20.GL_FLOAT:
-                SetValue1f((float)value);
+                setValue1F((float)value);
                 break;
             case GLES20.GL_FLOAT_VEC2:
-                SetValue2fv((Vector2)value);
+                setValue2Fv((Vector2)value);
                 break;
             case GLES20.GL_FLOAT_VEC3:
-                SetValue3fv(value);
+                setValue3Fv(value);
                 break;
             case GLES20.GL_FLOAT_VEC4:
-                SetValue4fv((Vector4)value);
+                setValue4Fv((Vector4)value);
                 break;
             case GLES20.GL_FLOAT_MAT3:
-                SetValue3fm((Matrix3)value);
+                setValue3fm((Matrix3)value);
                 break;
             case GLES20.GL_FLOAT_MAT4:
-                SetValue4fm((Matrix4)value);
+                setValue4fm((Matrix4)value);
                 break;
             case GLES20.GL_SAMPLER_2D:
-                SetValueT1((Texture)value, renderer);
+                setValueT1((Texture)value, renderer);
                 break;
             case GLES20.GL_SAMPLER_CUBE:
-                SetValueT6((CubeTexture)value, renderer);
+                setValueT6((CubeTexture)value, renderer);
                 break;
             case GLES20.GL_INT:
             case GLES20.GL_BOOL:
-                SetValue1i(value);
+                setValue1I(value);
                 break;
             case GLES20.GL_INT_VEC2:
             case GLES20.GL_BOOL_VEC2:
-                SetValue2iv((int[])value);
+                setValue2iv((int[])value);
                 break;
             case GLES20.GL_INT_VEC3:
             case GLES20.GL_BOOL_VEC3:
-                SetValue3iv((int[])value);
+                setValue3iv((int[])value);
                 break;
             case GLES20.GL_INT_VEC4:
             case GLES20.GL_BOOL_VEC4:
-                SetValue4iv((int[])value);
+                setValue4iv((int[])value);
                 break;
 
         }
     }
 
     // uniform samplercube
-    private void SetValueT6(CubeTexture value, GLRenderer renderer) {
+    private void setValueT6(CubeTexture value, GLRenderer renderer) {
     }
 
     // uniform sampler2d
-    public void SetValueT1(Texture value, GLRenderer renderer) {
+    public void setValueT1(Texture value, GLRenderer renderer) {
         ArrayList cache = this.cache;
-        int unit = renderer.AllocTextureUnit();
+        int unit = renderer.allocTextureUnit();
 
         if ( !cache.isEmpty() && (int)cache.get(0) != unit ) {
             GLES20.glUniform1i(this.addr, unit);
@@ -92,11 +92,11 @@ public class SingleUniform extends AbstractUniform{
             cache.add( unit);
         }
 
-        renderer.SetTexture2D( value != null ? value : new Texture(), unit );
+        renderer.setTexture2D( value != null ? value : new Texture(), unit );
     }
 
     // uniform float v;
-    public void SetValue1f(float v){
+    public void setValue1F(float v){
         ArrayList cache = this.cache;
 
         if ( !cache.isEmpty() && (float)cache.get(0) == v ) return;
@@ -108,7 +108,7 @@ public class SingleUniform extends AbstractUniform{
     }
 
     // uniform int v
-    public void SetValue1i(Object v){
+    public void setValue1I(Object v){
         ArrayList cache = this.cache;
 
         if ( !cache.isEmpty() && cache.get(0) == v ) return;
@@ -125,7 +125,7 @@ public class SingleUniform extends AbstractUniform{
     }
 
     // uniform vec2 v
-    public void SetValue2fv(Vector2 v){
+    public void setValue2Fv(Vector2 v){
         ArrayList cache = this.cache;
 
         if ( cache.isEmpty() ||
@@ -139,7 +139,7 @@ public class SingleUniform extends AbstractUniform{
     }
 
     // uniform vec3 v
-    public void SetValue3fv(Object v){
+    public void setValue3Fv(Object v){
         ArrayList cache = this.cache;
 
         if(v instanceof Vector3){
@@ -172,13 +172,13 @@ public class SingleUniform extends AbstractUniform{
         }else{
             float[] floats = (float[])v;
             GLES20.glUniform3fv(this.addr, 1, floats, 0);
-            UniformContainer.CopyArray(cache, floats);
+            UniformContainer.copyArray(cache, floats);
         }
 
     }
 
     // uniform vec4 v
-    public void SetValue4fv(Vector4 v){
+    public void setValue4Fv(Vector4 v){
         ArrayList cache = this.cache;
 
         if ( cache.isEmpty() ||
@@ -196,11 +196,11 @@ public class SingleUniform extends AbstractUniform{
     }
 
     // uniform mat3 v
-    public void SetValue3fm(Matrix3 v){
+    public void setValue3fm(Matrix3 v){
         ArrayList cache = this.cache;
         float[] elements = v.elements;
 
-        if ( UniformContainer.ArraysEqual(cache, elements) ) return;
+        if ( UniformContainer.arraysEqual(cache, elements) ) return;
 
         ByteBuffer bb = ByteBuffer.allocateDirect(9 * 4);
         bb.order(ByteOrder.nativeOrder());
@@ -210,15 +210,15 @@ public class SingleUniform extends AbstractUniform{
 
         GLES20.glUniformMatrix3fv(this.addr, 1, false, mat3array);
 
-        UniformContainer.CopyArray( cache, elements );
+        UniformContainer.copyArray( cache, elements );
     }
 
     //  uniform mat4 v
-    public void SetValue4fm(Matrix4 v){
+    public void setValue4fm(Matrix4 v){
         ArrayList cache = this.cache;
         float[] elements = v.elements;
 
-        if ( UniformContainer.ArraysEqual(cache, elements) ) return;
+        if ( UniformContainer.arraysEqual(cache, elements) ) return;
 
         ByteBuffer bb = ByteBuffer.allocateDirect(16 * 4);
         bb.order(ByteOrder.nativeOrder());
@@ -228,34 +228,34 @@ public class SingleUniform extends AbstractUniform{
 
         GLES20.glUniformMatrix4fv(this.addr, 1, false, mat4array);
 
-        UniformContainer.CopyArray( cache, elements );
+        UniformContainer.copyArray( cache, elements );
     }
 
     // uniform ivec2
-    public void SetValue2iv(int[] v){
+    public void setValue2iv(int[] v){
         ArrayList cache = this.cache;
 
-        if(UniformContainer.ArraysEqual(cache, v)) return;
+        if(UniformContainer.arraysEqual(cache, v)) return;
 
         GLES20.glUniform2iv(this.addr, 1, v, 0);
 
-        UniformContainer.CopyArray(cache, v);
+        UniformContainer.copyArray(cache, v);
     }
 
     // uniform ivec3
-    public void SetValue3iv(int[] v){
+    public void setValue3iv(int[] v){
         ArrayList cache = this.cache;
 
-        if(UniformContainer.ArraysEqual(cache, v)) return;
+        if(UniformContainer.arraysEqual(cache, v)) return;
 
         GLES20.glUniform3iv(this.addr, 1, v, 0);
     }
 
     // uniform ivec4
-    public void SetValue4iv(int[] v){
+    public void setValue4iv(int[] v){
         ArrayList cache = this.cache;
 
-        if(UniformContainer.ArraysEqual(cache, v)) return;
+        if(UniformContainer.arraysEqual(cache, v)) return;
 
         GLES20.glUniform4iv(this.addr, 1, v, 0);
     }

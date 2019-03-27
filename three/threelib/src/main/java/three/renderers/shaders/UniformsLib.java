@@ -1,8 +1,6 @@
 package three.renderers.shaders;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.HashMap;
 
 import three.math.Color;
 import three.math.Matrix3;
@@ -32,75 +30,75 @@ public class UniformsLib {
     public UniformsObject sprite = new UniformsObject();
 
     public UniformsLib(){
-        common.Put("diffuse", new Color(0xeeeeee));
-        common.Put("opacity", 1.0f);
-        common.Put("map", null);
-        common.Put("uvTransform", new Matrix3());
-        common.Put("alphamap", null);
+        common.put("diffuse", new Color(0xeeeeee));
+        common.put("opacity", 1.0f);
+        common.put("map", null);
+        common.put("uvTransform", new Matrix3());
+        common.put("alphamap", null);
 
-        specularmap.Put("specularMap", null);
+        specularmap.put("specularMap", null);
 
-        envmap.Put("envMap", null);
-        envmap.Put("flipEnvMap", -1);
-        envmap.Put("reflectivity", 1.0f);
-        envmap.Put("refractionRatio", 0.98f);
-        envmap.Put("maxMipLevel", 0);
+        envmap.put("envMap", null);
+        envmap.put("flipEnvMap", -1);
+        envmap.put("reflectivity", 1.0f);
+        envmap.put("refractionRatio", 0.98f);
+        envmap.put("maxMipLevel", 0);
 
-        aomap.Put("aoMap", null);
-        aomap.Put("aoMapIntensity", 1.0f);
+        aomap.put("aoMap", null);
+        aomap.put("aoMapIntensity", 1.0f);
 
-        lightmap.Put("maxMipLevel", null);
-        lightmap.Put("maxMipLevel", 1);
+        lightmap.put("maxMipLevel", null);
+        lightmap.put("maxMipLevel", 1);
 
-        emissivemap.Put("emissiveMap", null);
+        emissivemap.put("emissiveMap", null);
 
-        bumpmap.Put("bumpMap", null);
-        bumpmap.Put("bumpScale", 1.0f);
+        bumpmap.put("bumpMap", null);
+        bumpmap.put("bumpScale", 1.0f);
 
-        normalmap.Put("normalMap", null);
-        normalmap.Put("normalScale", new Vector2( 1, 1 ));
+        normalmap.put("normalMap", null);
+        normalmap.put("normalScale", new Vector2( 1, 1 ));
 
-        displacementmap.Put("displacementMap", null);
-        displacementmap.Put("displacementScale", 1.0f);
-        displacementmap.Put("displacementBias", 0.0f);
+        displacementmap.put("displacementMap", null);
+        displacementmap.put("displacementScale", 1.0f);
+        displacementmap.put("displacementBias", 0.0f);
 
-        roughnessmap.Put("roughnessMap", null);
+        roughnessmap.put("roughnessMap", null);
 
-        metalnessmap.Put("metalnessMap", null);
+        metalnessmap.put("metalnessMap", null);
 
-        gradientmap.Put("gradientMap", null);
+        gradientmap.put("gradientMap", null);
 
-        fog.Put("fogDensity", 0.00025f);
-        fog.Put("fogNear", 1.0f);
-        fog.Put("fogFar", 2000.0f);
-        fog.Put("fogColor", new Color( 0xffffff ));
+        fog.put("fogDensity", 0.00025f);
+        fog.put("fogNear", 1.0f);
+        fog.put("fogFar", 2000.0f);
+        fog.put("fogColor", new Color( 0xffffff ));
 
-        lights.Put("ambientLightColor", new ArrayList<>());
-        lights.Put("directionalLights", new ArrayList<DirectionalLightUniform>());
-        lights.Put("directionalShadowMap", new ArrayList<>());
-        lights.Put("directionalShadowMatrix", new ArrayList<>());
-        lights.Put("spotLights", new ArrayList<SpotLightUniform>());
-        lights.Put("spotShadowMap", new ArrayList<>());
-        lights.Put("spotShadowMatrix", new ArrayList<>());
-        lights.Put("pointLights", new ArrayList<PointLightUniform>());
-        lights.Put("pointShadowMap", new ArrayList<>());
-        lights.Put("pointShadowMatrix", new ArrayList<>());
-        lights.Put("hemisphereLights", new ArrayList<HemisphereLightUniform>());
-        lights.Put("rectAreaLights", new ArrayList<RectAreaLightUniform>());
+        lights.put("ambientLightColor", new ArrayList<>());
+        lights.put("directionalLights", new ArrayList<DirectionalLightUniform>());
+        lights.put("directionalShadowMap", new ArrayList<>());
+        lights.put("directionalShadowMatrix", new ArrayList<>());
+        lights.put("spotLights", new ArrayList<SpotLightUniform>());
+        lights.put("spotShadowMap", new ArrayList<>());
+        lights.put("spotShadowMatrix", new ArrayList<>());
+        lights.put("pointLights", new ArrayList<PointLightUniform>());
+        lights.put("pointShadowMap", new ArrayList<>());
+        lights.put("pointShadowMatrix", new ArrayList<>());
+        lights.put("hemisphereLights", new ArrayList<HemisphereLightUniform>());
+        lights.put("rectAreaLights", new ArrayList<RectAreaLightUniform>());
 
-        points.Put("diffuse", new Color( 0xeeeeee ));
-        points.Put("opacity", 1.0f);
-        points.Put("size", 1.0f);
-        points.Put("scale", 1.0f);
-        points.Put("map", null);
-        points.Put("uvTransform", new Matrix3());
+        points.put("diffuse", new Color( 0xeeeeee ));
+        points.put("opacity", 1.0f);
+        points.put("size", 1.0f);
+        points.put("scale", 1.0f);
+        points.put("map", null);
+        points.put("uvTransform", new Matrix3());
 
-        sprite.Put("diffuse", new Color( 0xeeeeee ));
-        sprite.Put("opacity", 1.0f);
-        sprite.Put("center", new Vector2( 0.5f, 0.5f ));
-        sprite.Put("rotation", 0.0f);
-        sprite.Put("map", null);
-        sprite.Put("uvTransform", new Matrix3());
+        sprite.put("diffuse", new Color( 0xeeeeee ));
+        sprite.put("opacity", 1.0f);
+        sprite.put("center", new Vector2( 0.5f, 0.5f ));
+        sprite.put("rotation", 0.0f);
+        sprite.put("map", null);
+        sprite.put("uvTransform", new Matrix3());
 
     }
 

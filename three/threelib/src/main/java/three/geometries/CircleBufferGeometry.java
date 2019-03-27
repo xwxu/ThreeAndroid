@@ -32,7 +32,7 @@ public class CircleBufferGeometry extends BufferGeometry {
         int uvCount = 2;
 
         for ( int s = 0, i = 3; s <= segments; s ++, i += 3 ) {
-            float segment = thetaStart + s / segments * thetaLength;
+            float segment = thetaStart + (float) s / segments * thetaLength;
 
             // vertex
             vertex.x = radius * (float) Math.cos( segment );
@@ -65,9 +65,9 @@ public class CircleBufferGeometry extends BufferGeometry {
             indexCount += 3;
         }
 
-        this.SetIndex( indices );
-        this.AddAttribute( "position", new Float32BufferAttribute( vertices, 3 ) );
-        this.AddAttribute( "normal", new Float32BufferAttribute( normals, 3 ) );
-        this.AddAttribute( "uv", new Float32BufferAttribute( uvs, 2 ) );
+        this.setIndex( indices );
+        this.addAttribute( "position", new Float32BufferAttribute( vertices, 3 ) );
+        this.addAttribute( "normal", new Float32BufferAttribute( normals, 3 ) );
+        this.addAttribute( "uv", new Float32BufferAttribute( uvs, 2 ) );
     }
 }

@@ -54,9 +54,9 @@ public class MeshLambertMaterial extends MeshMaterial {
         morphNormals = parameters.morphNormals;
     }
 
-    public MeshLambertMaterial Copy(MeshLambertMaterial source){
-        super.Copy(source);
-        this.color.Copy( source.color );
+    public MeshLambertMaterial copy(MeshLambertMaterial source){
+        super.copy(source);
+        this.color.copy( source.color );
 
         this.map = source.map;
 
@@ -66,7 +66,7 @@ public class MeshLambertMaterial extends MeshMaterial {
         this.aoMap = source.aoMap;
         this.aoMapIntensity = source.aoMapIntensity;
 
-        this.emissive.Copy( source.emissive );
+        this.emissive.copy( source.emissive );
         this.emissiveMap = source.emissiveMap;
         this.emissiveIntensity = source.emissiveIntensity;
 

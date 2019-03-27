@@ -32,37 +32,37 @@ public class PerspectiveCamera extends Camera{
         this.aspect = aspect;
         this.near = near;
         this.far = far;
-        this.UpdateProjectionMatrix();
+        this.updateProjectionMatrix();
     }
 
-    public void SetFocalLength(float focalLength){
-        float vExtentSlope = 0.5f * this.GetFilmHeight() / focalLength;
+    public void setFocalLength(float focalLength){
+        float vExtentSlope = 0.5f * this.getFilmHeight() / focalLength;
 
         this.fov = Math_.RAD2DEG * 2 * (float) Math.atan( vExtentSlope );
-        this.UpdateProjectionMatrix();
+        this.updateProjectionMatrix();
     }
 
-    public float GetFocalLength(){
+    public float getFocalLength(){
         float vExtentSlope = (float) Math.tan( Math_.DEG2RAD * 0.5 * this.fov );
 
-        return 0.5f * this.GetFilmHeight() / vExtentSlope;
+        return 0.5f * this.getFilmHeight() / vExtentSlope;
     }
 
-    public float GetEffectiveFOV(){
+    public float getEffectiveFOV(){
         return Math_.RAD2DEG * 2 * (float) Math.atan(
                 Math.tan( Math_.DEG2RAD * 0.5 * this.fov ) / this.zoom );
     }
 
 
-    public float GetFilmWidth(){
+    public float getFilmWidth(){
         return this.filmGauge * Math.min( this.aspect, 1 );
     }
 
-    public float GetFilmHeight(){
+    public float getFilmHeight(){
         return this.filmGauge / Math.max( this.aspect, 1 );
     }
 
-    public void SetViewOffset(int fullWidth, int fullHeight,
+    public void setViewOffset(int fullWidth, int fullHeight,
                               int x, int y, int width, int height){
         if ( this.view == null ) {
             this.view = new ViewInfo();
@@ -76,19 +76,19 @@ public class PerspectiveCamera extends Camera{
         this.view.width = width;
         this.view.height = height;
 
-        this.UpdateProjectionMatrix();
+        this.updateProjectionMatrix();
     }
 
-    public void ClearViewOffset(){
+    public void clearViewOffset(){
         if ( this.view != null ) {
             this.view.enabled = false;
         }
 
-        this.UpdateProjectionMatrix();
+        this.updateProjectionMatrix();
     }
 
 
-    public void UpdateProjectionMatrix() {
+    public void updateProjectionMatrix() {
         float near = this.near;
         float top = near * (float) Math.tan( Math_.DEG2RAD * 0.5f * this.fov ) / this.zoom;
         float height = 2 * top;
@@ -107,10 +107,10 @@ public class PerspectiveCamera extends Camera{
         }
 
         int skew = this.filmOffset;
-        if ( skew != 0 ) left += near * skew / this.GetFilmWidth();
+        if ( skew != 0 ) left += near * skew / this.getFilmWidth();
 
-        this.projectionMatrix.MakePerspective( left, left + width, top, top - height, near, this.far );
-        this.projectionMatrixInverse.GetInverse( this.projectionMatrix );
+        this.projectionMatrix.makePerspective( left, left + width, top, top - height, near, this.far );
+        this.projectionMatrixInverse.getInverse( this.projectionMatrix );
 
     }
 }

@@ -74,9 +74,9 @@ public class PlaneBufferGeometry extends BufferGeometry {
             }
         }
 
-        this.SetIndex( indices );
-        this.AddAttribute( "position", new Float32BufferAttribute( vertices, 3 ) );
-        this.AddAttribute( "normal", new Float32BufferAttribute( normals, 3 ) );
-        this.AddAttribute( "uv", new Float32BufferAttribute( uvs, 2 ) );
+        this.setIndex( indices );
+        this.addAttribute( "position", new Float32BufferAttribute( vertices, 3 ) );
+        this.addAttribute( "normal", new Float32BufferAttribute( normals, 3 ) );
+        this.addAttribute( "uv", new Float32BufferAttribute( uvs, 2 ) );
     }
 }

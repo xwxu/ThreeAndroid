@@ -13,13 +13,13 @@ public class GLIndexedBufferRenderer extends GLBufferRenderer {
         super(info, capabilities);
     }
 
-    public void SetIndex(BufferData value){
+    public void setIndex(BufferData value){
         type = value.type;
         bytesPerElement = value.bytesPerElement;
     }
 
-    public void Render(int start, int count){
+    public void render(int start, int count){
         GLES20.glDrawElements(mode, count, type, start * bytesPerElement);
-        info.Update(count, mode, 0);
+        info.update(count, mode, 0);
     }
 }

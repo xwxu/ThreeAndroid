@@ -8,9 +8,9 @@ public class RectAreaLightUniform extends UniformsObject {
 
     public RectAreaLightUniform(){
         super();
-        this.Put("color", new Color());
-        this.Put("position", new Vector3());
-        this.Put("halfWidth", new Vector3());
-        this.Put("halfHeight", new Vector3());
+        this.put("color", new Color());
+        this.put("position", new Vector3());
+        this.put("halfWidth", new Vector3());
+        this.put("halfHeight", new Vector3());
     }
 }

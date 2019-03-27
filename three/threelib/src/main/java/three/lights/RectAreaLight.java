@@ -21,8 +21,8 @@ public class RectAreaLight extends Light {
         this.height = height;
     }
 
-    public RectAreaLight Copy(RectAreaLight source){
-        super.Copy(source);
+    public RectAreaLight copy(RectAreaLight source){
+        super.copy(source);
         this.width = source.width;
         this.height = source.height;
 

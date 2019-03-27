@@ -21,21 +21,21 @@ public class Color {
     }
 
     public Color(int hex) {
-        this.SetHex(hex);
+        this.setHex(hex);
     }
 
-    public Color Set(int value){
+    public Color set(int value){
         return this;
     }
 
-    public Color SetScalar(float scalar){
+    public Color setScalar(float scalar){
         this.r = scalar;
         this.g = scalar;
         this.b = scalar;
         return this;
     }
 
-    public Color SetHex(int hex){
+    public Color setHex(int hex){
 
         this.r = (float) ( hex >> 16 & 255 ) / 255;
         this.g = (float) ( hex >> 8 & 255 ) / 255;
@@ -44,43 +44,43 @@ public class Color {
         return this;
     }
 
-    public Color SetRGB(float r, float g, float b){
+    public Color setRGB(float r, float g, float b){
         this.r = r;
         this.g = g;
         this.b = b;
         return this;
     }
 
-    public Color SetHSL(int value){
+    public Color setHSL(int value){
         return this;
     }
 
-    public Color Clone(){
+    public Color clone(){
         return new Color(this.r, this.g, this.b);
     }
 
-    public Color Copy(Color color){
+    public Color copy(Color color){
         this.r = color.r;
         this.g = color.g;
         this.b = color.b;
         return this;
     }
 
-    public Color CopyGammaToLinear(Color color, float gammaFactor){
+    public Color copyGammaToLinear(Color color, float gammaFactor){
         this.r = color.r;
         this.g = color.g;
         this.b = color.b;
         return this;
     }
 
-    public Color CopyLinearToGamma(Color color, float gammaFactor){
+    public Color copyLinearToGamma(Color color, float gammaFactor){
         this.r = color.r;
         this.g = color.g;
         this.b = color.b;
         return this;
     }
 
-    public Color FromArray(float[] array, int offset){
+    public Color fromArray(float[] array, int offset){
         this.r = array[ offset ];
         this.g = array[ offset + 1 ];
         this.b = array[ offset + 2 ];
@@ -88,7 +88,7 @@ public class Color {
         return this;
     }
 
-    public float[] ToArray(float[] array, int offset){
+    public float[] toArray(float[] array, int offset){
         array[ offset ] = this.r;
         array[ offset + 1 ] = this.g;
         array[ offset + 2 ] = this.b;
@@ -96,7 +96,7 @@ public class Color {
         return array;
     }
 
-    public Color MultiplyScalar(float s) {
+    public Color multiplyScalar(float s) {
         this.r *= s;
         this.g *= s;
         this.b *= s;

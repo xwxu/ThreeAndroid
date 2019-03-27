@@ -40,22 +40,22 @@ public class Mesh extends Object3D {
         this.drawMode = constants.TrianglesDrawMode;
     }
 
-    public void SetDrawMode(int value){
+    public void setDrawMode(int value){
         this.drawMode = value;
     }
 
-    public void SetMaterials(ArrayList<Material> materials){
+    public void setMaterials(ArrayList<Material> materials){
         this.materials = materials;
     }
 
-    public Mesh Copy(Mesh source){
-        super.Copy(source, false);
+    public Mesh copy(Mesh source){
+        super.copy(source, false);
         this.drawMode = source.drawMode;
         return this;
     }
 
     @Override
-    public void Raycast(Raycaster raycaster, ArrayList<Intersect> intersects){
+    public void raycast(Raycaster raycaster, ArrayList<Intersect> intersects){
         Matrix4 inverseMatrix = new Matrix4();
         Ray ray = new Ray();
         Sphere sphere = new Sphere();
@@ -81,21 +81,21 @@ public class Mesh extends Object3D {
 
         Intersect intersection;
 
-        inverseMatrix.GetInverse( matrixWorld );
-        ray.Copy( raycaster.ray ).ApplyMatrix4( inverseMatrix );
+        inverseMatrix.getInverse( matrixWorld );
+        ray.copy( raycaster.set).applyMatrix4( inverseMatrix );
 
         if(this.geometry instanceof BufferGeometry){
             BufferGeometry bufferGeometry = (BufferGeometry)(this.geometry);
             if(bufferGeometry.boundingSphere == null){
-                bufferGeometry.ComputeBoundingSphere();
+                bufferGeometry.computeBoundingSphere();
             }
-            sphere.Copy( bufferGeometry.boundingSphere );
-            sphere.ApplyMatrix4( matrixWorld );
-            if ( !raycaster.ray.IntersectsSphere( sphere ) ) return;
+            sphere.copy( bufferGeometry.boundingSphere );
+            sphere.applyMatrix4( matrixWorld );
+            if ( !raycaster.set.intersectsSphere( sphere ) ) return;
 
             // Check boundingBox before continuing
             if ( bufferGeometry.boundingBox != null ) {
-                if ( !ray.IntersectsBox( bufferGeometry.boundingBox ) ) return;
+                if ( !ray.intersectsBox( bufferGeometry.boundingBox ) ) return;
             }
 
             Uint32BufferAttribute index = bufferGeometry.index;
@@ -115,11 +115,11 @@ public class Mesh extends Object3D {
                         int end = Math.min( ( group.start + group.count ), ( drawRange.start + drawRange.count ) );
 
                         for ( int j = start; j < end; j += 3 ) {
-                            int a = index.GetX( j );
-                            int b = index.GetX( j + 1 );
-                            int c = index.GetX( j + 2 );
+                            int a = index.getX( j );
+                            int b = index.getX( j + 1 );
+                            int c = index.getX( j + 2 );
 
-                            intersection = CheckBufferGeometryIntersection( vA, vB, vC, uvA, uvB, uvC, intersectionPoint,
+                            intersection = checkBufferGeometryIntersection( vA, vB, vC, uvA, uvB, uvC, intersectionPoint,
                                     this, groupMaterial, raycaster, ray, position, uv, a, b, c );
 
                             if ( intersection != null ) {
@@ -133,11 +133,11 @@ public class Mesh extends Object3D {
                     int end = Math.min( index.count, ( drawRange.start + drawRange.count ) );
 
                     for ( int i = start; i < end; i += 3 ) {
-                        int a = (int)index.GetX( i );
-                        int b = (int)index.GetX( i + 1 );
-                        int c = (int)index.GetX( i + 2 );
+                        int a = (int)index.getX( i );
+                        int b = (int)index.getX( i + 1 );
+                        int c = (int)index.getX( i + 2 );
 
-                        intersection = CheckBufferGeometryIntersection( vA, vB, vC, uvA, uvB, uvC, intersectionPoint,
+                        intersection = checkBufferGeometryIntersection( vA, vB, vC, uvA, uvB, uvC, intersectionPoint,
                                 this, material, raycaster, ray, position, uv, a, b, c );
 
                         if ( intersection != null) {
@@ -162,7 +162,7 @@ public class Mesh extends Object3D {
                             int a = j;
                             int b = j + 1;
                             int c = j + 2;
-                            intersection = CheckBufferGeometryIntersection( vA, vB, vC, uvA, uvB, uvC, intersectionPoint,
+                            intersection = checkBufferGeometryIntersection( vA, vB, vC, uvA, uvB, uvC, intersectionPoint,
                                     this, groupMaterial, raycaster, ray, position, uv, a, b, c );
 
                             if ( intersection != null) {
@@ -179,7 +179,7 @@ public class Mesh extends Object3D {
                         int a = i;
                         int b = i + 1;
                         int c = i + 2;
-                        intersection = CheckBufferGeometryIntersection( vA, vB, vC, uvA, uvB, uvC, intersectionPoint,
+                        intersection = checkBufferGeometryIntersection( vA, vB, vC, uvA, uvB, uvC, intersectionPoint,
                                 this, material, raycaster, ray, position, uv, a, b, c );
 
                         if ( intersection != null) {
@@ -193,15 +193,15 @@ public class Mesh extends Object3D {
         }else{
             Geometry geometry = (Geometry)this.geometry;
             if(geometry.boundingSphere == null){
-                geometry.ComputeBoundingSphere();
+                geometry.computeBoundingSphere();
             }
-            sphere.Copy( geometry.boundingSphere );
-            sphere.ApplyMatrix4( matrixWorld );
-            if ( !raycaster.ray.IntersectsSphere( sphere ) ) return;
+            sphere.copy( geometry.boundingSphere );
+            sphere.applyMatrix4( matrixWorld );
+            if ( !raycaster.set.intersectsSphere( sphere ) ) return;
 
             // Check boundingBox before continuing
             if ( geometry.boundingBox != null ) {
-                if ( !ray.IntersectsBox( geometry.boundingBox ) ) return;
+                if ( !ray.intersectsBox( geometry.boundingBox ) ) return;
             }
 
             Vector3 fvA, fvB, fvC;
@@ -222,15 +222,15 @@ public class Mesh extends Object3D {
                 fvB = vertices.get(face.b);
                 fvC = vertices.get(face.c);
 
-                intersection = CheckIntersection( this, faceMaterial, raycaster, ray, fvA, fvB, fvC, intersectionPoint );
+                intersection = checkIntersection( this, faceMaterial, raycaster, ray, fvA, fvB, fvC, intersectionPoint );
 
                 if ( intersection != null ) {
                     if ( faceVertexUvs.size() > 0 ) {
                         ArrayList<Vector2> uvs_f = faceVertexUvs.get(f);
-                        uvA.Copy( uvs_f.get(0) );
-                        uvB.Copy( uvs_f.get(1) );
-                        uvC.Copy( uvs_f.get(2) );
-                        intersection.uv = Triangle.GetUV( intersectionPoint, fvA, fvB, fvC, uvA, uvB, uvC, new Vector2() );
+                        uvA.copy( uvs_f.get(0) );
+                        uvB.copy( uvs_f.get(1) );
+                        uvC.copy( uvs_f.get(2) );
+                        intersection.uv = Triangle.getUV( intersectionPoint, fvA, fvB, fvC, uvA, uvB, uvC, new Vector2() );
                     }
 
                     intersection.face = face;
@@ -242,48 +242,48 @@ public class Mesh extends Object3D {
 
     }
 
-    private Intersect CheckIntersection(Object3D object, Material material, Raycaster raycaster,
+    private Intersect checkIntersection(Object3D object, Material material, Raycaster raycaster,
                                         Ray ray, Vector3 pA, Vector3 pB, Vector3 pC, Vector3 point){
         Vector3 intersect;
 
         if ( material.side == constants.BackSide ) {
-            intersect = ray.IntersectTriangle( pC, pB, pA, true, point );
+            intersect = ray.intersectTriangle( pC, pB, pA, true, point );
         } else {
-            intersect = ray.IntersectTriangle( pA, pB, pC, material.side != constants.DoubleSide, point );
+            intersect = ray.intersectTriangle( pA, pB, pC, material.side != constants.DoubleSide, point );
         }
 
         if ( intersect == null ) return null;
 
         Vector3 intersectionPointWorld = new Vector3();
-        intersectionPointWorld.Copy( point );
-        intersectionPointWorld.ApplyMatrix4( object.matrixWorld );
+        intersectionPointWorld.copy( point );
+        intersectionPointWorld.applyMatrix4( object.matrixWorld );
 
-        double distance = raycaster.ray.origin.DistanceTo( intersectionPointWorld );
+        double distance = raycaster.set.origin.distanceTo( intersectionPointWorld );
 
         if ( distance < raycaster.near || distance > raycaster.far ) return null;
 
         return new Intersect(distance, intersectionPointWorld.Clone(), object);
     }
 
-    private Intersect CheckBufferGeometryIntersection(Vector3 vA, Vector3 vB, Vector3 vC, Vector2 uvA, Vector2 uvB, Vector2 uvC,
+    private Intersect checkBufferGeometryIntersection(Vector3 vA, Vector3 vB, Vector3 vC, Vector2 uvA, Vector2 uvB, Vector2 uvC,
                                                       Vector3 intersectionPoint, Object3D object, Material material, Raycaster raycaster,
                                                       Ray ray, Float32BufferAttribute position, Float32BufferAttribute uv, int a, int b, int c){
-        vA.FromBufferAttribute( position, a, 0 );
-        vB.FromBufferAttribute( position, b, 0 );
-        vC.FromBufferAttribute( position, c, 0 );
+        vA.fromBufferAttribute( position, a, 0 );
+        vB.fromBufferAttribute( position, b, 0 );
+        vC.fromBufferAttribute( position, c, 0 );
 
-        Intersect intersection = CheckIntersection( object, material, raycaster, ray, vA, vB, vC, intersectionPoint );
+        Intersect intersection = checkIntersection( object, material, raycaster, ray, vA, vB, vC, intersectionPoint );
 
         if ( intersection != null ) {
             if ( uv != null ) {
-                uvA.FromBufferAttribute( uv, a, 0 );
-                uvB.FromBufferAttribute( uv, b, 0 );
-                uvC.FromBufferAttribute( uv, c, 0 );
-                intersection.uv = Triangle.GetUV( intersectionPoint, vA, vB, vC, uvA, uvB, uvC, new Vector2() );
+                uvA.fromBufferAttribute( uv, a, 0 );
+                uvB.fromBufferAttribute( uv, b, 0 );
+                uvC.fromBufferAttribute( uv, c, 0 );
+                intersection.uv = Triangle.getUV( intersectionPoint, vA, vB, vC, uvA, uvB, uvC, new Vector2() );
             }
 
             Face3 face = new Face3( a, b, c );
-            Triangle.GetNormal( vA, vB, vC, face.normal );
+            Triangle.getNormal( vA, vB, vC, face.normal );
             intersection.face = face;
         }
 
@@ -295,6 +295,6 @@ public class Mesh extends Object3D {
         mesh.geometry = this.geometry;
         mesh.material = this.material;
         mesh.materials = this.materials;
-        return mesh.Copy(this);
+        return mesh.copy(this);
     }
 }

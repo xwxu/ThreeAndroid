@@ -8,8 +8,8 @@ public class HemisphereLightUniform extends UniformsObject {
 
     public HemisphereLightUniform(){
         super();
-        this.Put("direction", new Vector3());
-        this.Put("skyColor", new Color());
-        this.Put("groundColor", new Color());
+        this.put("direction", new Vector3());
+        this.put("skyColor", new Color());
+        this.put("groundColor", new Color());
     }
 }

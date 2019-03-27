@@ -20,13 +20,11 @@ public class SpriteMaterial extends Material{
         sizeAttenuation = parameters.sizeAttenuation;
     }
 
-    public SpriteMaterial Copy(SpriteMaterial source){
-        super.Copy(source);
-        this.color.Copy( source.color );
+    public SpriteMaterial copy(SpriteMaterial source){
+        super.copy(source);
+        this.color.copy( source.color );
         this.map = source.map;
-
         this.rotation = source.rotation;
-
         this.sizeAttenuation = source.sizeAttenuation;
 
         return this;

@@ -26,7 +26,7 @@ public class GLClipping {
         uniform.needsUpdate = false;
     }
 
-    public boolean Init(ArrayList<Plane> planes, boolean enableLocalClipping, Camera camera){
+    public boolean init(ArrayList<Plane> planes, boolean enableLocalClipping, Camera camera){
         boolean enabled = planes.size() != 0 ||
                         enableLocalClipping ||
                         numGlobalPlanes != 0 ||
@@ -34,33 +34,33 @@ public class GLClipping {
 
         localClippingEnabled = enableLocalClipping;
 
-        globalState = ProjectPlanes( planes, camera, 0, false );
+        globalState = projectPlanes( planes, camera, 0, false );
         numGlobalPlanes = planes.size();
 
         return enabled;
     }
 
-    public void BeginShadows(){
+    public void beginShadows(){
         renderingShadows = true;
-        ProjectPlanes(null, null, 0, false);
+        projectPlanes(null, null, 0, false);
     }
 
-    public void EndShadows(){
+    public void endShadows(){
         renderingShadows = false;
-        ResetGlobalState();
+        resetGlobalState();
     }
 
     // cache..
-    public void SetState(ArrayList<Plane> planes, boolean clipIntersection, boolean clipShadows,
+    public void setState(ArrayList<Plane> planes, boolean clipIntersection, boolean clipShadows,
                          Camera camera, FloatBuffer cacheClippingState, boolean fromCache){
         if ( ! localClippingEnabled || planes == null || planes.size() == 0 || renderingShadows && ! clipShadows ) {
 
             // there's no local clipping
             if ( renderingShadows ) {
                 // there's no global clipping
-                ProjectPlanes( null, null, 0, false );
+                projectPlanes( null, null, 0, false );
             } else {
-                ResetGlobalState();
+                resetGlobalState();
             }
 
         } else {
@@ -69,7 +69,7 @@ public class GLClipping {
             FloatBuffer dstArray = cacheClippingState;
 
             uniform.value = dstArray; // ensure unique state
-            dstArray = ProjectPlanes( planes, camera, lGlobal, fromCache );
+            dstArray = projectPlanes( planes, camera, lGlobal, fromCache );
 
             for ( int i = 0; i != lGlobal; ++ i ) {
                 dstArray.put(i, globalState.get(i));
@@ -82,10 +82,10 @@ public class GLClipping {
         }
     }
 
-    private void ResetGlobalState() {
+    private void resetGlobalState() {
     }
 
-    private FloatBuffer ProjectPlanes(ArrayList<Plane> planes, Camera camera, int dstOffset, boolean skipTransform) {
+    private FloatBuffer projectPlanes(ArrayList<Plane> planes, Camera camera, int dstOffset, boolean skipTransform) {
         int nPlanes = planes != null ? planes.size() : 0;
         FloatBuffer dstArray = null;
 
@@ -95,15 +95,15 @@ public class GLClipping {
                 int flatSize = dstOffset + nPlanes * 4;
                 Matrix4 viewMatrix = camera.matrixWorldInverse;
 
-                viewNormalMatrix.GetNormalMatrix( viewMatrix );
+                viewNormalMatrix.getNormalMatrix( viewMatrix );
 
                 if ( dstArray == null || dstArray.capacity() < flatSize ) {
                     dstArray = FloatBuffer.allocate(flatSize);
                 }
 
                 for ( int i = 0, i4 = dstOffset; i != nPlanes; ++ i, i4 += 4 ) {
-                    plane.Copy( planes.get(i) ).ApplyMatrix4( viewMatrix, viewNormalMatrix );
-                    plane.normal.ToArray( dstArray.array(), i4 );
+                    plane.copy( planes.get(i) ).ApplyMatrix4( viewMatrix, viewNormalMatrix );
+                    plane.normal.toArray( dstArray.array(), i4 );
                     dstArray.put(i4 + 3, plane.constant);
                 }
             }

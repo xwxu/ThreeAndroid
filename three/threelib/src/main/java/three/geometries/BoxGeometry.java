@@ -9,8 +9,8 @@ public class BoxGeometry extends Geometry {
 
         super();
         this.type = "BoxGeometry";
-        this.FromBufferGeometry(
+        this.fromBufferGeometry(
                 new BoxBufferGeometry(width, height, depth, widthSegments, heightSegments, depthSegments));
-        this.MergeVertices();
+        this.mergeVertices();
     }
 }

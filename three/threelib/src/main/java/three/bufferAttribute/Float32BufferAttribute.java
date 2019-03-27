@@ -34,19 +34,19 @@ public class Float32BufferAttribute extends BufferAttribute {
         this.count = array.length / itemSize;
     }
 
-    public float GetX(int index){
+    public float getX(int index){
         return this.array.get(index * this.itemSize);
     }
 
-    public float GetY(int index){
+    public float getY(int index){
         return this.array.get(index * this.itemSize + 1);
     }
 
-    public float GetZ(int index){
+    public float getZ(int index){
         return this.array.get(index * this.itemSize + 2);
     }
 
-    public BufferAttribute SetXYZ(int index, float x, float y, float z){
+    public BufferAttribute setXYZ(int index, float x, float y, float z){
         index *= this.itemSize;
 
         this.array.put(index, x);
@@ -56,7 +56,7 @@ public class Float32BufferAttribute extends BufferAttribute {
         return this;
     }
 
-    public Float32BufferAttribute CopyColorsArray(ArrayList<Color> colors){
+    public Float32BufferAttribute copyColorsArray(ArrayList<Color> colors){
         FloatBuffer array = this.array;
         int offset = 0;
 
@@ -73,7 +73,7 @@ public class Float32BufferAttribute extends BufferAttribute {
         return this;
     }
 
-    public Float32BufferAttribute CopyVector2sArray(ArrayList<Vector2> vectors){
+    public Float32BufferAttribute copyVector2SArray(ArrayList<Vector2> vectors){
         FloatBuffer array = this.array;
         int offset = 0;
 
@@ -89,7 +89,7 @@ public class Float32BufferAttribute extends BufferAttribute {
         return this;
     }
 
-    public Float32BufferAttribute CopyVector3sArray(ArrayList<Vector3> vectors){
+    public Float32BufferAttribute copyVector3SArray(ArrayList<Vector3> vectors){
         FloatBuffer array = this.array;
         int offset = 0;
 
@@ -106,12 +106,12 @@ public class Float32BufferAttribute extends BufferAttribute {
         return this;
     }
 
-    public Float32BufferAttribute Set(float value, int offset){
+    public Float32BufferAttribute set(float value, int offset){
         this.array.put( offset, value);
         return this;
     }
 
-    public Float32BufferAttribute CopyArray(ArrayList lineDistances) {
+    public Float32BufferAttribute copyArray(ArrayList lineDistances) {
         return this;
     }
 }

@@ -5,7 +5,7 @@ import android.opengl.GLES20;
 import static  three.constants.*;
 
 public class GLUtils {
-    public static int Convert( int p){
+    public static int convert(int p){
 
         if ( p == RepeatWrapping ) return GLES20.GL_REPEAT;
         if ( p == ClampToEdgeWrapping ) return  GLES20.GL_CLAMP_TO_EDGE;
@@ -59,7 +59,7 @@ public class GLUtils {
         return 0;
     }
 
-    public static byte[] TrimZero(byte[] bytes){
+    public static byte[] trimZero(byte[] bytes){
         int pos = 0;
         for(int i =0; i < bytes.length; ++i){
             if(bytes[i] == 0){

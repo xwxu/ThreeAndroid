@@ -51,15 +51,15 @@ public class ThreeRenderer implements GLSurfaceView.Renderer {
         //scene.background = new Color( 0x050505 );
         scene.fog = new Fog(  new Color( 0x050505 ), 2000, 3500 );
 
-        scene.Add( new AmbientLight( new Color (0x444444 ), 1 ));
+        scene.add( new AmbientLight( new Color (0x444444 ), 1 ));
 
         DirectionalLight light1 = new DirectionalLight( new Color(0xffffff), 0.5f );
-        light1.position.Set( 1, 1, 1 );
-        scene.Add( light1 );
+        light1.position.set( 1, 1, 1 );
+        scene.add( light1 );
 
         DirectionalLight light2 = new DirectionalLight( new Color(0xffffff), 1.5f );
-        light2.position.Set( 0, - 1, 0 );
-        scene.Add( light2 );
+        light2.position.set( 0, - 1, 0 );
+        scene.add( light2 );
 
 
         BufferGeometry geometry = new BoxBufferGeometry( 200, 200, 200, 1, 1, 1 );
@@ -68,14 +68,14 @@ public class ThreeRenderer implements GLSurfaceView.Renderer {
         MeshBasicMaterial material = new MeshBasicMaterial(parameters);
 
         mesh = new Mesh( geometry, material );
-        scene.Add( mesh );
+        scene.add( mesh );
     }
 
     @Override
     public void onSurfaceChanged(GL10 gl, int width, int height) {
         camera.aspect = (float)width / height;
-        camera.UpdateProjectionMatrix();
-        renderer.SetSize(width, height);
+        camera.updateProjectionMatrix();
+        renderer.setSize(width, height);
 
     }
 
@@ -84,8 +84,8 @@ public class ThreeRenderer implements GLSurfaceView.Renderer {
         try {
             //mesh.rotation.x += 0.25;
             //mesh.rotation.y += 0.5;
-            mesh.RotateOnAxis(new Vector3(0,1,0), 0.1f);
-            renderer.Render(scene, camera, null, true);
+            mesh.rotateOnAxis(new Vector3(0,1,0), 0.1f);
+            renderer.render(scene, camera, null, true);
         } catch (IllegalAccessException e) {
         }
 

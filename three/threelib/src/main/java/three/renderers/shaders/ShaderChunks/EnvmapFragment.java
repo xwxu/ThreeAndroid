@@ -8,7 +8,7 @@ public class EnvmapFragment {
             "\n" +
             "\t\tvec3 cameraToVertex = normalize( vWorldPosition - cameraPosition );\n" +
             "\n" +
-            "\t\t// Transforming Normal Vectors with the Inverse Transformation\n" +
+            "\t\t// Transforming Normal Vectors with the inverse Transformation\n" +
             "\t\tvec3 worldNormal = inverseTransformDirection( normal, viewMatrix );\n" +
             "\n" +
             "\t\t#ifdef ENVMAP_MODE_REFLECTION\n" +

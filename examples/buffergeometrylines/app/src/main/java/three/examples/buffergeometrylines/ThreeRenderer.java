@@ -54,15 +54,15 @@ public class ThreeRenderer implements GLSurfaceView.Renderer {
         //scene.background = new Color( 0x050505 );
         //scene.fog = new Fog(  new Color( 0x050505 ), 2000, 3500 );
 
-        scene.Add( new AmbientLight( new Color (0x444444 ), 1 ));
+        scene.add( new AmbientLight( new Color (0x444444 ), 1 ));
 
         DirectionalLight light1 = new DirectionalLight( new Color(0xffffff), 0.5f );
-        light1.position.Set( 1, 1, 1 );
-        scene.Add( light1 );
+        light1.position.set( 1, 1, 1 );
+        scene.add( light1 );
 
         DirectionalLight light2 = new DirectionalLight( new Color(0xffffff), 1.5f );
-        light2.position.Set( 0, - 1, 0 );
-        scene.Add( light2 );
+        light2.position.set( 0, - 1, 0 );
+        scene.add( light2 );
 
         int segments = 5000;
 
@@ -96,24 +96,24 @@ public class ThreeRenderer implements GLSurfaceView.Renderer {
             pointer += 3;
         }
 
-        geometry.AddAttribute( "position", new Float32BufferAttribute( positions, 3 ) );
-        geometry.AddAttribute( "color", new Float32BufferAttribute( colors, 3 ) );
+        geometry.addAttribute( "position", new Float32BufferAttribute( positions, 3 ) );
+        geometry.addAttribute( "color", new Float32BufferAttribute( colors, 3 ) );
 
-        geometry.ComputeBoundingSphere();
+        geometry.computeBoundingSphere();
 
         LineBasicParameters parameters = new LineBasicParameters();
         parameters.vertexColors = VertexColors;
         LineBasicMaterial material = new LineBasicMaterial(parameters);
 
         line = new Line( geometry, material );
-        scene.Add( line );
+        scene.add( line );
     }
 
     @Override
     public void onSurfaceChanged(GL10 gl, int width, int height) {
         camera.aspect = (float)width / height;
-        camera.UpdateProjectionMatrix();
-        renderer.SetSize(width, height);
+        camera.updateProjectionMatrix();
+        renderer.setSize(width, height);
 
     }
 
@@ -122,8 +122,8 @@ public class ThreeRenderer implements GLSurfaceView.Renderer {
         try {
             //mesh.rotation.x += 0.25;
             //mesh.rotation.y += 0.5;
-            line.RotateOnAxis(new Vector3(0,1,0), 0.1f);
-            renderer.Render(scene, camera, null, true);
+            line.rotateOnAxis(new Vector3(0,1,0), 0.1f);
+            renderer.render(scene, camera, null, true);
         } catch (IllegalAccessException e) {
         }
 

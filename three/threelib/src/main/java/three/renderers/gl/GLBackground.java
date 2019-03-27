@@ -26,41 +26,36 @@ public class GLBackground {
         this.premultipliedAlpha = _premultipliedAlpha;
     }
 
-    public Color GetClearColor(){
+    public Color getClearColor(){
         return this.clearColor;
     }
 
-    private void SetClear(Color color, int alpha){
+    private void setClear(Color color, int alpha){
         state.colorBuffer.SetClear( color.r, color.g, color.b, alpha, premultipliedAlpha );
     }
 
-    public void SetClearColor(int color, int alpha){
-        this.clearColor.Set(color);
+    public void setClearColor(int color, int alpha){
+        this.clearColor.set(color);
         this.clearAlpha = alpha;
     }
 
-    public void Render(GLRenderList renderList, Scene scene, Camera camera, boolean forceClear){
+    public void render(GLRenderList renderList, Scene scene, Camera camera, boolean forceClear){
         Object background = scene.background;
 
         if ( background == null ) {
-
-            SetClear( clearColor, clearAlpha );
+            setClear( clearColor, clearAlpha );
             currentBackground = null;
             currentBackgroundVersion = 0;
 
         } else if ( background!= null && background instanceof Color ) {
-
-            //SetClear( background, 1 );
+            //setClear( background, 1 );
             forceClear = true;
             currentBackground = null;
             currentBackgroundVersion = 0;
-
         }
 
         if ( renderer.autoClear || forceClear ) {
-
-            renderer.Clear( renderer.autoClearColor, renderer.autoClearDepth, renderer.autoClearStencil );
-
+            renderer.clear( renderer.autoClearColor, renderer.autoClearDepth, renderer.autoClearStencil );
         }
     }
 }

@@ -7,9 +7,9 @@ public class GeometryTests {
     public void Dispose() {
 //        Geometry g = new Geometry();
 //        GLGeometries glGeometry = new GLGeometries();
-//        glGeometry.Get(null, g);
+//        glGeometry.get(null, g);
 //
-//        g.Dispose();
+//        g.dispose();
 
     }
 }

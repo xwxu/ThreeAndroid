@@ -6,7 +6,6 @@ import three.math.Color;
 public class LineBasicMaterial extends LineMaterial{
 
     public Color color;
-
     public String linecap;
     public String linejoin;
 
@@ -14,15 +13,13 @@ public class LineBasicMaterial extends LineMaterial{
         super(parameters);
         this.type = "LineBasicMaterial";
         this.color = parameters.color;
-
         this.linecap = parameters.linecap;
         this.linejoin = parameters.linejoin;
     }
 
-    public LineBasicMaterial Copy(LineBasicMaterial source){
-        super.Copy(source);
-        this.color.Copy( source.color );
-
+    public LineBasicMaterial copy(LineBasicMaterial source){
+        super.copy(source);
+        this.color.copy( source.color );
         this.linecap = source.linecap;
         this.linejoin = source.linejoin;
 

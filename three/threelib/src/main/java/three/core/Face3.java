@@ -1,8 +1,5 @@
 package three.core;
 
-import android.media.FaceDetector;
-
-import java.security.PublicKey;
 import java.util.ArrayList;
 
 import three.math.Color;
@@ -46,17 +43,17 @@ public class Face3 {
         this.materialIndex = materialIndex;
     }
 
-    public Face3 Clone(){
-        return new Face3().Copy(this);
+    public Face3 clone(){
+        return new Face3().copy(this);
     }
 
-    public Face3 Copy(Face3 source){
+    public Face3 copy(Face3 source){
         this.a = source.a;
         this.b = source.b;
         this.c = source.c;
 
-        this.normal.Copy( source.normal );
-        this.color.Copy( source.color );
+        this.normal.copy( source.normal );
+        this.color.copy( source.color );
 
         this.materialIndex = source.materialIndex;
 
@@ -65,7 +62,7 @@ public class Face3 {
         }
 
         for ( int i = 0, il = source.vertexColors.size(); i < il; i ++ ) {
-            this.vertexColors.set(i, source.vertexColors.get(i).Clone());
+            this.vertexColors.set(i, source.vertexColors.get(i).clone());
         }
 
         return this;

@@ -11,15 +11,14 @@ public class HemisphereLight extends Light {
     public HemisphereLight(Color skyColor, Color groundColor, float intensity){
         super(skyColor, intensity);
         this.type = "HemisphereLight";
-        this.position.Copy(Object3D.DefaultUp);
-        this.UpdateMatrix();
+        this.position.copy(Object3D.DefaultUp);
+        this.updateMatrix();
         this.groundColor = new Color(groundColor);
     }
 
-    public HemisphereLight Copy(HemisphereLight source){
-        super.Copy(source);
-        this.groundColor.Copy( source.groundColor );
-
+    public HemisphereLight copy(HemisphereLight source){
+        super.copy(source);
+        this.groundColor.copy( source.groundColor );
         return this;
     }
 }

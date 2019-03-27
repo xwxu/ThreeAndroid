@@ -1,6 +1,5 @@
 package three.math;
 
-import three.bufferAttribute.BufferAttribute;
 import three.bufferAttribute.Float32BufferAttribute;
 
 public class Vector2 {
@@ -17,24 +16,24 @@ public class Vector2 {
         this.y = y;
     }
 
-    public Vector2 Set(float x, float y){
+    public Vector2 set(float x, float y){
         this.x = x;
         this.y = y;
         return  this;
     }
 
-    public Vector2 SetScalar(float scalar){
+    public Vector2 setScalar(float scalar){
         this.x = scalar;
         this.y = scalar;
         return this;
     }
 
-    public Vector2 SetX(float x){
+    public Vector2 setX(float x){
         this.x = x;
         return this;
     }
 
-    public Vector2 SetY(float y){
+    public Vector2 setY(float y){
         this.y = y;
         return this;
     }
@@ -59,78 +58,78 @@ public class Vector2 {
         return new Vector2(this.x, this.y);
     }
 
-    public Vector2 Copy(Vector2 v){
+    public Vector2 copy(Vector2 v){
         this.x = v.x;
         this.y = v.y;
 
         return this;
     }
 
-    public Vector2 Add(Vector2 v){
+    public Vector2 add(Vector2 v){
         this.x += v.x;
         this.y += v.y;
         return this;
     }
 
-    public Vector2 AddScalar(float s){
+    public Vector2 addScalar(float s){
         this.x += s;
         this.y += s;
         return this;
     }
 
-    public Vector2 AddVectors(Vector2 a, Vector2 b){
+    public Vector2 addVectors(Vector2 a, Vector2 b){
         this.x = a.x + b.x;
         this.y = a.y + b.y;
         return this;
     }
 
-    public Vector2 AddScaledVector(Vector2 v, float s){
+    public Vector2 addScaledVector(Vector2 v, float s){
         this.x += v.x * s;
         this.y += v.y * s;
         return this;
     }
 
-    public Vector2 Sub(Vector2 v){
+    public Vector2 sub(Vector2 v){
         this.x -= v.x;
         this.y -= v.y;
         return this;
     }
 
-    public Vector2 SubScalar(float s){
+    public Vector2 subScalar(float s){
         this.x -= s;
         this.y -= s;
         return this;
     }
 
-    public Vector2 SubVectors(Vector2 a, Vector2 b){
+    public Vector2 subVectors(Vector2 a, Vector2 b){
         this.x = a.x - b.x;
         this.y = a.y - b.y;
         return this;
     }
 
-    public Vector2 Multiply(Vector2 v){
+    public Vector2 multiply(Vector2 v){
         this.x *= v.x;
         this.y *= v.y;
         return this;
     }
 
-    public Vector2 MultiplyScalar(float scalar){
+    public Vector2 multiplyScalar(float scalar){
         this.x *= scalar;
         this.y *= scalar;
         return this;
     }
 
-    public Vector2 Divide(Vector2 v){
+    public Vector2 divide(Vector2 v){
         this.x /= v.x;
         this.y /= v.y;
         return this;
     }
 
-    public  Vector2 DivideScalar(float scalar){
-        return this.MultiplyScalar( 1 / scalar );
+    public  Vector2 divideScalar(float scalar){
+        return this.multiplyScalar( 1 / scalar );
     }
 
-    public Vector2 ApplyMatrix3(Matrix3 m){
+    public Vector2 applyMatrix3(Matrix3 m){
         float x = this.x, y = this.y;
         float[] e = m.elements;
 
@@ -139,155 +138,155 @@ public class Vector2 {
         return this;
     }
 
-    public Vector2 Min(Vector2 v){
+    public Vector2 min(Vector2 v){
         this.x = Math.min( this.x, v.x );
         this.y = Math.min( this.y, v.y );
 
         return this;
     }
 
-    public Vector2 Max(Vector2 v){
+    public Vector2 max(Vector2 v){
         this.x = Math.max( this.x, v.x );
         this.y = Math.max( this.y, v.y );
         return this;
     }
 
-    public Vector2 Clamp(Vector2 min, Vector2 max){
+    public Vector2 clamp(Vector2 min, Vector2 max){
         this.x = Math.max( min.x, Math.min( max.x, this.x ) );
         this.y = Math.max( min.y, Math.min( max.y, this.y ) );
         return this;
     }
 
-    public Vector2 ClampScalar(float minVal, float maxVal){
+    public Vector2 clampScalar(float minVal, float maxVal){
         Vector2 min = new Vector2();
         Vector2 max = new Vector2();
-        min.Set( minVal, minVal );
-        max.Set( maxVal, maxVal );
+        min.set( minVal, minVal );
+        max.set( maxVal, maxVal );
 
-        return this.Clamp( min, max );
+        return this.clamp( min, max );
     }
 
-    public Vector2 ClampLength(float min, float max){
-        float length = this.Length() != 0 ? this.Length() : 1;
-        return this.DivideScalar( length ).MultiplyScalar( Math.max( min, Math.min( max, length ) ) );
+    public Vector2 clampLength(float min, float max){
+        float length = this.length() != 0 ? this.length() : 1;
+        return this.divideScalar( length ).multiplyScalar( Math.max( min, Math.min( max, length ) ) );
     }
 
-    public Vector2 Floor(){
+    public Vector2 floor(){
         this.x = (float)Math.floor( this.x );
         this.y = (float)Math.floor( this.y );
 
         return this;
     }
 
-    public Vector2 Ceil(){
+    public Vector2 ceil(){
         this.x = (float)Math.ceil( this.x );
         this.y = (float)Math.ceil( this.y );
 
         return this;
     }
 
-    public Vector2 Round(){
+    public Vector2 round(){
         this.x = Math.round( this.x );
         this.y = Math.round( this.y );
 
         return this;
     }
 
-    public Vector2 RoundToZero(){
+    public Vector2 roundToZero(){
         this.x = ( this.x < 0 ) ? (float)Math.ceil( this.x ) : (float)Math.floor( this.x );
         this.y = ( this.y < 0 ) ? (float)Math.ceil( this.y ) : (float)Math.floor( this.y );
         return this;
     }
 
-    public Vector2 Negate(){
+    public Vector2 negate(){
         this.x = - this.x;
         this.y = - this.y;
         return this;
     }
 
-    public float Dot(Vector2 v){
+    public float dot(Vector2 v){
         return this.x * v.x + this.y * v.y;
     }
 
-    public float LengthSq(){
+    public float lengthSq(){
         return this.x * this.x + this.y * this.y;
     }
 
-    public float Length(){
+    public float length(){
         return (float)Math.sqrt( this.x * this.x + this.y * this.y );
     }
 
-    public float ManhattanLength(){
+    public float manhattanLength(){
         return Math.abs( this.x ) + Math.abs( this.y );
     }
 
-    public Vector2 Normalize(){
-        float length = this.Length() != 0 ? this.Length() : 1;
-        return this.DivideScalar( length );
+    public Vector2 normalize(){
+        float length = this.length() != 0 ? this.length() : 1;
+        return this.divideScalar( length );
     }
 
-    public float Cross(Vector2 v){
+    public float cross(Vector2 v){
         return this.x * v.y - this.y * v.x;
     }
 
-    public float Angle(){
+    public float angle(){
         float angle = (float)Math.atan2( this.y, this.x );
         if ( angle < 0 ) angle += 2 * Math.PI;
         return angle;
     }
 
-    public float DistanceTo(Vector2 v){
-        return (float)Math.sqrt( this.DistanceToSquared( v ) );
+    public float distanceTo(Vector2 v){
+        return (float)Math.sqrt( this.distanceToSquared( v ) );
     }
 
-    public float DistanceToSquared(Vector2 v){
+    public float distanceToSquared(Vector2 v){
         float dx = this.x - v.x, dy = this.y - v.y;
         return dx * dx + dy * dy;
     }
 
-    public float ManhattanDistanceTo(Vector3 v){
+    public float manhattanDistanceTo(Vector3 v){
         return Math.abs( this.x - v.x ) + Math.abs( this.y - v.y );
     }
 
-    public Vector2 SetLength(float length){
-        return this.Normalize().MultiplyScalar( length );
+    public Vector2 setLength(float length){
+        return this.normalize().multiplyScalar( length );
     }
 
-    public Vector2 Lerp(Vector3 v, float alpha){
+    public Vector2 lerp(Vector3 v, float alpha){
         this.x += ( v.x - this.x ) * alpha;
         this.y += ( v.y - this.y ) * alpha;
         return this;
     }
 
-    public Vector2 LerpVectors(Vector2 v1, Vector2 v2, float alpha){
-        return this.SubVectors( v2, v1 ).MultiplyScalar( alpha ).Add( v1 );
+    public Vector2 lerpVectors(Vector2 v1, Vector2 v2, float alpha){
+        return this.subVectors( v2, v1 ).multiplyScalar( alpha ).add( v1 );
     }
 
-    public boolean Equals(Vector2 v){
+    public boolean equals(Vector2 v){
         return ( ( v.x == this.x ) && ( v.y == this.y ) );
     }
 
-    public Vector2 FromArray(float[] array, int offset){
+    public Vector2 fromArray(float[] array, int offset){
         this.x = array[ offset ];
         this.y = array[ offset + 1 ];
         return this;
     }
 
-    public float[] ToArray(float[] array, int offset){
+    public float[] toArray(float[] array, int offset){
         array[ offset ] = this.x;
         array[ offset + 1 ] = this.y;
 
         return array;
     }
 
-    public Vector2 FromBufferAttribute(Float32BufferAttribute attribute, int index, int offset){
-        this.x = attribute.GetX( index );
-        this.y = attribute.GetY( index );
+    public Vector2 fromBufferAttribute(Float32BufferAttribute attribute, int index, int offset){
+        this.x = attribute.getX( index );
+        this.y = attribute.getY( index );
 
         return this;
     }
 
-    public Vector2 RotateAround(Vector2 center, float angle){
+    public Vector2 rotateAround(Vector2 center, float angle){
         float c = (float)Math.cos( angle ), s = (float)Math.sin( angle );
 
         float x = this.x - center.x;

@@ -16,20 +16,20 @@ public class Sphere {
         this.radius = radius;
     }
 
-    public Sphere Set(Vector3 center, float radius){
+    public Sphere set(Vector3 center, float radius){
         this.center = center;
         this.radius = radius;
         return this;
     }
 
-    public Sphere SetFromPoints(ArrayList<Vector3> points){
+    public Sphere setFromPoints(ArrayList<Vector3> points){
         Box3 box = new Box3();
         Vector3 center = this.center;
-        box.SetFromPoints( points ).GetCenter( center );
+        box.setFromPoints( points ).getCenter( center );
         float maxRadiusSq = 0;
 
         for ( int i = 0, il = points.size(); i < il; i ++ ) {
-            maxRadiusSq = Math.max( maxRadiusSq, center.DistanceToSquared( points.get(i) ) );
+            maxRadiusSq = Math.max( maxRadiusSq, center.distanceToSquared( points.get(i) ) );
         }
 
         this.radius = (float)Math.sqrt( maxRadiusSq );
@@ -42,70 +42,70 @@ public class Sphere {
         return this;
     }
 
-    public Sphere Copy(Sphere s){
+    public Sphere copy(Sphere s){
 
         return this;
     }
 
-    public boolean Empty(){
+    public boolean empty(){
         return ( this.radius <= 0 );
     }
 
 
-    public boolean ContainsPoint(Vector3 point){
-        return ( point.DistanceToSquared( this.center ) <= ( this.radius * this.radius ) );
+    public boolean containsPoint(Vector3 point){
+        return ( point.distanceToSquared( this.center ) <= ( this.radius * this.radius ) );
     }
 
 
-    public boolean IntersectsBox(Box3 box){
-        return box.IntersectsSphere( this );
+    public boolean intersectsBox(Box3 box){
+        return box.intersectsSphere( this );
     }
 
-    public boolean IntersectsSphere(Sphere sphere){
+    public boolean intersectsSphere(Sphere sphere){
         float radiusSum = this.radius + sphere.radius;
-        return sphere.center.DistanceToSquared( this.center ) <= ( radiusSum * radiusSum );
+        return sphere.center.distanceToSquared( this.center ) <= ( radiusSum * radiusSum );
     }
 
-    public boolean IntersectsPlane(Plane plane){
+    public boolean intersectsPlane(Plane plane){
         return Math.abs( plane.DistanceToPoint( this.center ) ) <= this.radius;
     }
 
 
-    public Vector3 ClampPoint(Vector3 point, Vector3 target){
-        float deltaLengthSq = this.center.DistanceToSquared( point );
-        target.Copy( point );
+    public Vector3 clampPoint(Vector3 point, Vector3 target){
+        float deltaLengthSq = this.center.distanceToSquared( point );
+        target.copy( point );
 
         if ( deltaLengthSq > ( this.radius * this.radius ) ) {
-            target.Sub( this.center ).Normalize();
-            target.MultiplyScalar( this.radius ).Add( this.center );
+            target.sub( this.center ).normalize();
+            target.multiplyScalar( this.radius ).add( this.center );
         }
 
         return target;
     }
 
-    public float DistanceToPoint(Vector3 point){
-        return ( point.DistanceTo( this.center ) - this.radius );
+    public float distanceToPoint(Vector3 point){
+        return ( point.distanceTo( this.center ) - this.radius );
     }
 
-    public Box3 GetBoundingBox(Box3 target){
-        target.Set( this.center, this.center );
-        target.ExpandByScalar( this.radius );
+    public Box3 getBoundingBox(Box3 target){
+        target.set( this.center, this.center );
+        target.expandByScalar( this.radius );
 
         return target;
     }
 
-    public Sphere ApplyMatrix4(Matrix4 matrix){
-        this.center.ApplyMatrix4( matrix );
-        this.radius = this.radius * matrix.GetMaxScaleOnAxis();
+    public Sphere applyMatrix4(Matrix4 matrix){
+        this.center.applyMatrix4( matrix );
+        this.radius = this.radius * matrix.getMaxScaleOnAxis();
         return this;
     }
 
-    public Sphere Translate(Vector3 offset){
-        this.center.Add( offset );
+    public Sphere translate(Vector3 offset){
+        this.center.add( offset );
         return this;
     }
 
-    public boolean Equals(Sphere sphere){
+    public boolean equals(Sphere sphere){
         return sphere.center.equals( this.center ) && ( sphere.radius == this.radius );
     }
 }

@@ -35,22 +35,22 @@ public class BoxBufferGeometry extends BufferGeometry {
         this.uvs = new float[uvCount];
 
 
-        BuildPlane( 2, 1, 0, - 1, - 1, depth, height, width, depthSegments, heightSegments, 0 ); // px
-        BuildPlane( 2, 1, 0, 1, - 1, depth, height, - width, depthSegments, heightSegments, 1 ); // nx
-        BuildPlane( 0, 2, 1, 1, 1, width, depth, height, widthSegments, depthSegments, 2 ); // py
-        BuildPlane( 0, 2, 1, 1, - 1, width, depth, - height, widthSegments, depthSegments, 3 ); // ny
-        BuildPlane( 0, 1, 2, 1, - 1, width, height, depth, widthSegments, heightSegments, 4 ); // pz
-        BuildPlane( 0, 1, 2, - 1, - 1, width, height, - depth, widthSegments, heightSegments, 5 ); // nz
+        buildPlane( 2, 1, 0, - 1, - 1, depth, height, width, depthSegments, heightSegments, 0 ); // px
+        buildPlane( 2, 1, 0, 1, - 1, depth, height, - width, depthSegments, heightSegments, 1 ); // nx
+        buildPlane( 0, 2, 1, 1, 1, width, depth, height, widthSegments, depthSegments, 2 ); // py
+        buildPlane( 0, 2, 1, 1, - 1, width, depth, - height, widthSegments, depthSegments, 3 ); // ny
+        buildPlane( 0, 1, 2, 1, - 1, width, height, depth, widthSegments, heightSegments, 4 ); // pz
+        buildPlane( 0, 1, 2, - 1, - 1, width, height, - depth, widthSegments, heightSegments, 5 ); // nz
 
 
-        this.SetIndex( indices );
-        this.AddAttribute( "position", new Float32BufferAttribute( this.vertices, 3 ) );
-        this.AddAttribute( "normal", new Float32BufferAttribute( this.normals, 3 ) );
-        this.AddAttribute( "uv", new Float32BufferAttribute( this.uvs, 2 ) );
+        this.setIndex( indices );
+        this.addAttribute( "position", new Float32BufferAttribute( this.vertices, 3 ) );
+        this.addAttribute( "normal", new Float32BufferAttribute( this.normals, 3 ) );
+        this.addAttribute( "uv", new Float32BufferAttribute( this.uvs, 2 ) );
     }
 
 
-    private void BuildPlane(int u, int v, int w, int udir, int vdir, float width, float height, float depth,
+    private void buildPlane(int u, int v, int w, int udir, int vdir, float width, float height, float depth,
                             int gridX, int gridY, int materialIndex){
 
         float segmentWidth = width / gridX;
@@ -76,9 +76,9 @@ public class BoxBufferGeometry extends BufferGeometry {
                 float x = ix * segmentWidth - widthHalf;
 
                 // set values to correct vector component
-                vector.SetComponent(u, x * udir);
-                vector.SetComponent(v,y * vdir );
-                vector.SetComponent(w, depthHalf);
+                vector.setComponent(u, x * udir);
+                vector.setComponent(v,y * vdir );
+                vector.setComponent(w, depthHalf);
 
                 // now apply vector to vertex buffer
                 vertices[vertexIndex] = vector.x;
@@ -86,9 +86,9 @@ public class BoxBufferGeometry extends BufferGeometry {
                 vertices[vertexIndex+2] = vector.z;
 
                 // set values to correct vector component
-                vector.SetComponent(u, 0);
-                vector.SetComponent(v, 0);
-                vector.SetComponent(w, depth > 0 ? 1 : - 1);
+                vector.setComponent(u, 0);
+                vector.setComponent(v, 0);
+                vector.setComponent(w, depth > 0 ? 1 : - 1);
 
                 // now apply vector to normal buffer
                 normals[vertexIndex] = vector.x;
@@ -130,7 +130,7 @@ public class BoxBufferGeometry extends BufferGeometry {
         }
 
         // add a group to the geometry. this will ensure multi material support
-        this.AddGroup( groupStart, groupCount, materialIndex );
+        this.addGroup( groupStart, groupCount, materialIndex );
 
         // calculate new start value for groups
         groupStart += groupCount;

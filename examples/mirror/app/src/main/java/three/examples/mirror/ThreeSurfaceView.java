@@ -15,11 +15,11 @@ public class ThreeSurfaceView extends GLSurfaceView {
         setEGLContextClientVersion(2);
         //fix for error No Config chosen, but I don't know what this does.
         super.setEGLConfigChooser(8 , 8, 8, 8, 16, 0);
-        // Set the GLRenderer for drawing on the GLSurfaceView
+        // set the GLRenderer for drawing on the GLSurfaceView
         mRenderer = new ThreeRenderer();
         setRenderer(mRenderer);
 
-        // Render the view only when there is a change in the drawing data
+        // render the view only when there is a change in the drawing data
         setRenderMode(GLSurfaceView.RENDERMODE_WHEN_DIRTY);
     }
 
@@ -32,6 +32,8 @@ public class ThreeSurfaceView extends GLSurfaceView {
         // MotionEvent reports input details from the touch screen
         // and other input controls. In this case, you are only
         // interested in events where the touch position changed.
+
+        mRenderer.controls.handleTouchEvent(e);
 
         float x = e.getX();
         float y = e.getY();

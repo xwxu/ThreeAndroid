@@ -21,7 +21,7 @@ public class GLProperties {
         renderTargetPropertiesHashMap = new HashMap<>();
     }
 
-    public MaterialProperties GetMaterial(Material material){
+    public MaterialProperties getMaterial(Material material){
         MaterialProperties property = materialPropertiesMap.get(material);
         if(property == null){
             property = new MaterialProperties();
@@ -31,7 +31,7 @@ public class GLProperties {
         return property;
     }
 
-    public TextureProperties GetTexture(Texture texture){
+    public TextureProperties getTexture(Texture texture){
         TextureProperties property = texturePropertiesMap.get(texture);
         if(property == null){
             property = new TextureProperties();
@@ -41,7 +41,7 @@ public class GLProperties {
         return property;
     }
 
-    public RenderTargetProperties GetRenderTarget(GLRenderTarget renderTarget){
+    public RenderTargetProperties getRenderTarget(GLRenderTarget renderTarget){
         RenderTargetProperties property = renderTargetPropertiesHashMap.get(renderTarget);
         if(property == null){
             property = new RenderTargetProperties();

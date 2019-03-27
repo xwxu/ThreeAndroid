@@ -6,7 +6,7 @@ import java.nio.IntBuffer;
 
 public class GLShader {
 
-    public static int CreateShader(int type, String shaderStr){
+    public static int createShader(int type, String shaderStr){
         int shader = GLES20.glCreateShader(type);
         GLES20.glShaderSource(shader, shaderStr);
         GLES20.glCompileShader(shader);

@@ -2,7 +2,6 @@ package three.lights;
 
 import three.core.Object3D;
 import three.math.Color;
-import three.math.Vector3;
 
 public class DirectionalLight extends Light {
 
@@ -12,16 +11,16 @@ public class DirectionalLight extends Light {
     public DirectionalLight(Color color, float intensity){
         super(color, intensity);
         this.type = "DirectionalLight";
-        this.position.Copy(Object3D.DefaultUp);
-        this.UpdateMatrix();
+        this.position.copy(Object3D.DefaultUp);
+        this.updateMatrix();
 
     }
 
-    public DirectionalLight Copy(DirectionalLight source){
-        super.Copy(source);
+    public DirectionalLight copy(DirectionalLight source){
+        super.copy(source);
         this.type = "DirectionalLight";
-        this.target = source.target.Clone(false);
-        this.shadow = source.shadow.Clone();
+        this.target = source.target.clone(false);
+        this.shadow = source.shadow.clone();
 
         return this;
     }

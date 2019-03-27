@@ -157,7 +157,7 @@ public class ShadowMapParsFragment {
             "\n" +
             "\t\tvec3 absV = abs( v );\n" +
             "\n" +
-            "\t\t// Intersect unit cube\n" +
+            "\t\t// intersect unit cube\n" +
             "\n" +
             "\t\tfloat scaleToCube = 1.0 / max( absV.x, max( absV.y, absV.z ) );\n" +
             "\t\tabsV *= scaleToCube;\n" +

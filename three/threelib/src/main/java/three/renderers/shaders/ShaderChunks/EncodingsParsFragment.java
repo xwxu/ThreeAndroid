@@ -72,7 +72,7 @@ public class EncodingsParsFragment {
             "\treturn vResult;\n" +
             "}\n" +
             "\n" +
-            "// Inverse M matrix, for decoding\n" +
+            "// inverse M matrix, for decoding\n" +
             "const mat3 cLogLuvInverseM = mat3( 6.0014, -2.7008, -1.7996, -1.3320, 3.1029, -5.7721, 0.3008, -1.0882, 5.6268 );\n" +
             "vec4 LogLuvToLinear( in vec4 value ) {\n" +
             "\tfloat Le = value.z * 255.0 + value.w;\n" +

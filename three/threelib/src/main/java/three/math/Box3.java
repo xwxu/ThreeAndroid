@@ -2,7 +2,6 @@ package three.math;
 
 import java.util.ArrayList;
 
-import three.bufferAttribute.BufferAttribute;
 import three.bufferAttribute.Float32BufferAttribute;
 import three.core.AbstractGeometry;
 import three.core.BufferGeometry;
@@ -26,13 +25,13 @@ public class Box3 {
         this.isBox3 = true;
     }
 
-    public Box3 Set(Vector3 min, Vector3 max){
-        this.min.Copy(min);
-        this.max.Copy(max);
+    public Box3 set(Vector3 min, Vector3 max){
+        this.min.copy(min);
+        this.max.copy(max);
         return this;
     }
 
-    public Box3 SetFromArray(float[] array){
+    public Box3 setFromArray(float[] array){
         float minX = Float.POSITIVE_INFINITY;
         float minY =  Float.POSITIVE_INFINITY;
         float minZ =  Float.POSITIVE_INFINITY;
@@ -55,12 +54,12 @@ public class Box3 {
             if ( z > maxZ ) maxZ = z;
         }
 
-        this.min.Set( minX, minY, minZ );
-        this.max.Set( maxX, maxY, maxZ );
+        this.min.set( minX, minY, minZ );
+        this.max.set( maxX, maxY, maxZ );
         return this;
     }
 
-    public Box3 SetFromBufferAttribute(Float32BufferAttribute attribute){
+    public Box3 setFromBufferAttribute(Float32BufferAttribute attribute){
         float minX = Float.POSITIVE_INFINITY;
         float minY =  Float.POSITIVE_INFINITY;
         float minZ =  Float.POSITIVE_INFINITY;
@@ -70,9 +69,9 @@ public class Box3 {
         float maxZ =  Float.NEGATIVE_INFINITY;
 
         for ( int i = 0, l = attribute.count; i < l; i ++ ) {
-            float x = attribute.GetX( i );
-            float y = attribute.GetY( i );
-            float z = attribute.GetZ( i );
+            float x = attribute.getX( i );
+            float y = attribute.getY( i );
+            float z = attribute.getZ( i );
 
             if ( x < minX ) minX = x;
             if ( y < minY ) minY = y;
@@ -83,88 +82,88 @@ public class Box3 {
             if ( z > maxZ ) maxZ = z;
         }
 
-        this.min.Set( minX, minY, minZ );
-        this.max.Set( maxX, maxY, maxZ );
+        this.min.set( minX, minY, minZ );
+        this.max.set( maxX, maxY, maxZ );
 
         return this;
     }
 
-    public Box3 SetFromPoints(ArrayList<Vector3> points){
-        this.MakeEmpty();
+    public Box3 setFromPoints(ArrayList<Vector3> points){
+        this.makeEmpty();
 
         for ( int i = 0, il = points.size(); i < il; i ++ ) {
-            this.ExpandByPoint( points.get(i) );
+            this.expandByPoint( points.get(i) );
         }
         return this;
     }
 
-    public Box3 SetFromCenterAndSize(Vector3 center, Vector3 size){
+    public Box3 setFromCenterAndSize(Vector3 center, Vector3 size){
         Vector3 v1 = new Vector3();
-        Vector3 halfSize = v1.Copy( size ).MultiplyScalar( 0.5f );
-        this.min.Copy( center ).Sub( halfSize );
-        this.max.Copy( center ).Add( halfSize );
+        Vector3 halfSize = v1.copy( size ).multiplyScalar( 0.5f );
+        this.min.copy( center ).sub( halfSize );
+        this.max.copy( center ).add( halfSize );
 
         return this;
     }
 
-    public Box3 SetFromObject(Object3D object){
-        this.MakeEmpty();
-        return this.ExpandByObject( object );
+    public Box3 setFromObject(Object3D object){
+        this.makeEmpty();
+        return this.expandByObject( object );
     }
 
-    public Box3 Clone(){
-        return new Box3().Copy(this);
+    public Box3 clone(){
+        return new Box3().copy(this);
     }
 
-    public Box3 Copy(Box3 box){
-        this.min.Copy( box.min );
-        this.max.Copy( box.max );
+    public Box3 copy(Box3 box){
+        this.min.copy( box.min );
+        this.max.copy( box.max );
         return this;
     }
 
-    public Box3 MakeEmpty(){
+    public Box3 makeEmpty(){
         this.min.x = this.min.y = this.min.z = Float.POSITIVE_INFINITY;
         this.max.x = this.max.y = this.max.z = Float.NEGATIVE_INFINITY;
         return this;
     }
 
-    public boolean IsEmpty(){
+    public boolean isEmpty(){
         return ( this.max.x < this.min.x ) || ( this.max.y < this.min.y ) || ( this.max.z < this.min.z );
     }
 
-    public Vector3 GetCenter(Vector3 target){
-        return this.IsEmpty() ? target.Set( 0, 0, 0 ) : target.AddVectors( this.min, this.max ).MultiplyScalar( 0.5f );
+    public Vector3 getCenter(Vector3 target){
+        return this.isEmpty() ? target.set( 0, 0, 0 ) : target.addVectors( this.min, this.max ).multiplyScalar( 0.5f );
     }
 
-    public Vector3 GetSize(Vector3 target){
-        return this.IsEmpty() ? target.Set( 0, 0, 0 ) : target.SubVectors( this.max, this.min );
+    public Vector3 getSize(Vector3 target){
+        return this.isEmpty() ? target.set( 0, 0, 0 ) : target.subVectors( this.max, this.min );
     }
 
-    public Box3 ExpandByPoint(Vector3 point){
-        this.min.Min( point );
-        this.max.Max( point );
+    public Box3 expandByPoint(Vector3 point){
+        this.min.min( point );
+        this.max.max( point );
         return this;
     }
 
-    public Box3 ExpandByVector(Vector3 vector){
-        this.min.Sub( vector );
-        this.max.Add( vector );
+    public Box3 expandByVector(Vector3 vector){
+        this.min.sub( vector );
+        this.max.add( vector );
         return this;
     }
 
-    public Box3 ExpandByScalar(float scalar){
-        this.min.AddScalar( -scalar );
-        this.max.AddScalar( scalar );
+    public Box3 expandByScalar(float scalar){
+        this.min.addScalar( -scalar );
+        this.max.addScalar( scalar );
         return this;
     }
 
-    public Box3 ExpandByObject(Object3D object){
-        object.UpdateMatrixWorld(true);
-        Expand(object, this);
+    public Box3 expandByObject(Object3D object){
+        object.updateMatrixWorld(true);
+        expand(object, this);
         return this;
     }
 
-    private void Expand(Object3D node, Box3 box){
+    private void expand(Object3D node, Box3 box){
         AbstractGeometry geometry = node.geometry;
         Vector3 v1 = new Vector3();
         if ( geometry != null ) {
@@ -172,10 +171,10 @@ public class Box3 {
                 Geometry geometry1 = (Geometry)geometry;
                 ArrayList<Vector3> vertices = geometry1.vertices;
                 for ( int i = 0, l = vertices.size(); i < l; i ++ ) {
-                    v1.Copy( vertices.get(i) );
-                    v1.ApplyMatrix4( node.matrixWorld );
+                    v1.copy( vertices.get(i) );
+                    v1.applyMatrix4( node.matrixWorld );
 
-                    box.ExpandByPoint( v1 );
+                    box.expandByPoint( v1 );
                 }
 
             } else if ( geometry instanceof BufferGeometry) {
@@ -184,8 +183,8 @@ public class Box3 {
 
                 if ( attribute != null ) {
                     for ( int i = 0, l = attribute.count; i < l; i ++ ) {
-                        v1.FromBufferAttribute( attribute, i, 0 ).ApplyMatrix4( node.matrixWorld );
-                        box.ExpandByPoint( v1 );
+                        v1.fromBufferAttribute( attribute, i, 0 ).applyMatrix4( node.matrixWorld );
+                        box.expandByPoint( v1 );
                     }
                 }
             }
@@ -193,44 +192,44 @@ public class Box3 {
 
         for(int i = 0; i < node.children.size(); ++i){
             Object3D child = node.children.get(i);
-            Expand(child, box);
+            expand(child, box);
         }
     }
 
-    public boolean ContainsPoint(Vector3 point){
+    public boolean containsPoint(Vector3 point){
         return point.x < this.min.x || point.x > this.max.x ||
                 point.y < this.min.y || point.y > this.max.y ||
                 point.z < this.min.z || point.z > this.max.z ? false : true;
     }
 
-    public boolean ContainsBox(Box3 box){
+    public boolean containsBox(Box3 box){
         return this.min.x <= box.min.x && box.max.x <= this.max.x &&
                 this.min.y <= box.min.y && box.max.y <= this.max.y &&
                 this.min.z <= box.min.z && box.max.z <= this.max.z;
     }
 
-    public Vector3 GetParameter(Vector3 point, Vector3 target){
-        return target.Set(
+    public Vector3 getParameter(Vector3 point, Vector3 target){
+        return target.set(
                 ( point.x - this.min.x ) / ( this.max.x - this.min.x ),
                 ( point.y - this.min.y ) / ( this.max.y - this.min.y ),
                 ( point.z - this.min.z ) / ( this.max.z - this.min.z )
         );
     }
 
-    public boolean IntersectsBox(Box3 box){
+    public boolean intersectsBox(Box3 box){
         // using 6 splitting planes to rule out intersections.
         return box.max.x < this.min.x || box.min.x > this.max.x ||
                 box.max.y < this.min.y || box.min.y > this.max.y ||
                 box.max.z < this.min.z || box.min.z > this.max.z ? false : true;
     }
 
-    public boolean IntersectsSphere(Sphere sphere){
+    public boolean intersectsSphere(Sphere sphere){
         Vector3 closestPoint = new Vector3();
-        this.ClampPoint( sphere.center, closestPoint );
-        return closestPoint.DistanceToSquared( sphere.center ) <= ( sphere.radius * sphere.radius );
+        this.clampPoint( sphere.center, closestPoint );
+        return closestPoint.distanceToSquared( sphere.center ) <= ( sphere.radius * sphere.radius );
     }
 
-    public boolean IntersectsPlane(Plane plane){
+    public boolean intersectsPlane(Plane plane){
         float min, max;
 
         if ( plane.normal.x > 0 ) {
@@ -260,7 +259,7 @@ public class Box3 {
         return ( min <= - plane.constant && max >= - plane.constant );
     }
 
-    public boolean IntersectsTriangle(Triangle triangle){
+    public boolean intersectsTriangle(Triangle triangle){
         // triangle centered vertices
         Vector3 v0 = new Vector3();
         Vector3 v1 = new Vector3();
@@ -273,23 +272,23 @@ public class Box3 {
         Vector3 extents = new Vector3();
         Vector3 triangleNormal = new Vector3();
 
-        if ( this.IsEmpty() ) {
+        if ( this.isEmpty() ) {
             return false;
         }
 
         // compute box center and extents
-        this.GetCenter( center );
-        extents.SubVectors( this.max, center );
+        this.getCenter( center );
+        extents.subVectors( this.max, center );
 
         // translate triangle to aabb origin
-        v0.SubVectors( triangle.a, center );
-        v1.SubVectors( triangle.b, center );
-        v2.SubVectors( triangle.c, center );
+        v0.subVectors( triangle.a, center );
+        v1.subVectors( triangle.b, center );
+        v2.subVectors( triangle.c, center );
 
         // compute edge vectors for triangle
-        f0.SubVectors( v1, v0 );
-        f1.SubVectors( v2, v1 );
-        f2.SubVectors( v0, v2 );
+        f0.subVectors( v1, v0 );
+        f1.subVectors( v2, v1 );
+        f2.subVectors( v0, v2 );
 
         // test against axes that are given by cross product combinations of the edges of the triangle and the edges of the aabb
         // make an axis testing of each of the 3 sides of the aabb against each of the 3 sides of the triangle = 9 axis of separation
@@ -298,35 +297,35 @@ public class Box3 {
                 f0.z, 0, - f0.x, f1.z, 0, - f1.x, f2.z, 0, - f2.x,
                 - f0.y, f0.x, 0, - f1.y, f1.x, 0, - f2.y, f2.x, 0};
 
-        if ( ! SatForAxes( axes, v0, v1, v2, extents ) ) {
+        if ( ! satForAxes( axes, v0, v1, v2, extents ) ) {
             return false;
         }
 
         // test 3 face normals from the aabb
         axes = new float[]{1, 0, 0, 0, 1, 0, 0, 0, 1};
-        if ( ! SatForAxes( axes, v0, v1, v2, extents ) ) {
+        if ( ! satForAxes( axes, v0, v1, v2, extents ) ) {
             return false;
         }
 
         // finally testing the face normal of the triangle
         // use already existing triangle edge vectors here
-        triangleNormal.CrossVectors( f0, f1 );
+        triangleNormal.crossVectors( f0, f1 );
         axes = new float[]{triangleNormal.x, triangleNormal.y, triangleNormal.z};
-        return SatForAxes( axes, v0, v1, v2, extents );
+        return satForAxes( axes, v0, v1, v2, extents );
 
     }
 
-    private boolean SatForAxes(float[] axes, Vector3 v0, Vector3 v1, Vector3 v2, Vector3 extents){
+    private boolean satForAxes(float[] axes, Vector3 v0, Vector3 v1, Vector3 v2, Vector3 extents){
         Vector3 testAxis = new Vector3();
         for ( int i = 0, j = axes.length - 3; i <= j; i += 3 ) {
 
-            testAxis.FromArray( axes, i );
+            testAxis.fromArray( axes, i );
             // project the aabb onto the seperating axis
             float r = extents.x * Math.abs( testAxis.x ) + extents.y * Math.abs( testAxis.y ) + extents.z * Math.abs( testAxis.z );
             // project all 3 vertices of the triangle onto the seperating axis
-            float p0 = v0.Dot( testAxis );
-            float p1 = v1.Dot( testAxis );
-            float p2 = v2.Dot( testAxis );
+            float p0 = v0.dot( testAxis );
+            float p1 = v1.dot( testAxis );
+            float p2 = v2.dot( testAxis );
             // actual test, basically see if either of the most extreme of the triangle points intersects r
             if ( Math.max( - Math.max( p0, Math.max(p1, p2) ), Math.min( p0, Math.min(p1, p2) ) ) > r ) {
                 // points of the projected triangle are outside the projected half-length of the aabb
@@ -339,41 +338,41 @@ public class Box3 {
         return true;
     }
 
-    public Vector3 ClampPoint(Vector3 point, Vector3 target){
-        return target.Copy( point ).Clamp( this.min, this.max );
+    public Vector3 clampPoint(Vector3 point, Vector3 target){
+        return target.copy( point ).clamp( this.min, this.max );
     }
 
-    public float DistanceToPoint(Vector3 point){
+    public float distanceToPoint(Vector3 point){
         Vector3 v1 = new Vector3();
-        Vector3 clampedPoint = v1.Copy( point ).Clamp( this.min, this.max );
-        return clampedPoint.Sub( point ).Length();
+        Vector3 clampedPoint = v1.copy( point ).clamp( this.min, this.max );
+        return clampedPoint.sub( point ).length();
     }
 
-    public Sphere GetBoundingSphere(Sphere target){
+    public Sphere getBoundingSphere(Sphere target){
         Vector3 v1 = new Vector3();
-        this.GetCenter( target.center );
+        this.getCenter( target.center );
 
-        target.radius = this.GetSize( v1 ).Length() * 0.5f;
+        target.radius = this.getSize( v1 ).length() * 0.5f;
         return target;
     }
 
-    public Box3 Intersect(Box3 box){
-        this.min.Max( box.min );
-        this.max.Min( box.max );
+    public Box3 intersect(Box3 box){
+        this.min.max( box.min );
+        this.max.min( box.max );
 
         // ensure that if there is no overlap, the result is fully empty, not slightly empty with non-inf/+inf values that will cause subsequence intersects to erroneously return valid values.
-        if ( this.IsEmpty() ) this.MakeEmpty();
+        if ( this.isEmpty() ) this.makeEmpty();
 
         return this;
     }
 
-    public Box3 Union(Box3 box){
-        this.min.Min( box.min );
-        this.max.Max( box.max );
+    public Box3 union(Box3 box){
+        this.min.min( box.min );
+        this.max.max( box.max );
         return this;
     }
 
-    public Box3 ApplyMatrix4(Matrix4 matrix){
+    public Box3 applyMatrix4(Matrix4 matrix){
         ArrayList<Vector3> points = new ArrayList<>();
         points.add(new Vector3());
         points.add(new Vector3());
@@ -384,30 +383,30 @@ public class Box3 {
         points.add(new Vector3());
         points.add(new Vector3());
 
-        if ( this.IsEmpty() ) return this;
+        if ( this.isEmpty() ) return this;
 
         // NOTE: I am using a binary pattern to specify all 2^3 combinations below
-        points.get(0).Set( this.min.x, this.min.y, this.min.z ).ApplyMatrix4( matrix ); // 000
-        points.get(1).Set( this.min.x, this.min.y, this.max.z ).ApplyMatrix4( matrix ); // 001
-        points.get(2).Set( this.min.x, this.max.y, this.min.z ).ApplyMatrix4( matrix ); // 010
-        points.get(3).Set( this.min.x, this.max.y, this.max.z ).ApplyMatrix4( matrix ); // 011
-        points.get(4).Set( this.max.x, this.min.y, this.min.z ).ApplyMatrix4( matrix ); // 100
-        points.get(5).Set( this.max.x, this.min.y, this.max.z ).ApplyMatrix4( matrix ); // 101
-        points.get(6).Set( this.max.x, this.max.y, this.min.z ).ApplyMatrix4( matrix ); // 110
-        points.get(7).Set( this.max.x, this.max.y, this.max.z ).ApplyMatrix4( matrix ); // 111
+        points.get(0).set( this.min.x, this.min.y, this.min.z ).applyMatrix4( matrix ); // 000
+        points.get(1).set( this.min.x, this.min.y, this.max.z ).applyMatrix4( matrix ); // 001
+        points.get(2).set( this.min.x, this.max.y, this.min.z ).applyMatrix4( matrix ); // 010
+        points.get(3).set( this.min.x, this.max.y, this.max.z ).applyMatrix4( matrix ); // 011
+        points.get(4).set( this.max.x, this.min.y, this.min.z ).applyMatrix4( matrix ); // 100
+        points.get(5).set( this.max.x, this.min.y, this.max.z ).applyMatrix4( matrix ); // 101
+        points.get(6).set( this.max.x, this.max.y, this.min.z ).applyMatrix4( matrix ); // 110
+        points.get(7).set( this.max.x, this.max.y, this.max.z ).applyMatrix4( matrix ); // 111
 
-        this.SetFromPoints( points );
+        this.setFromPoints( points );
 
         return this;
     }
 
-    public Box3 Translate(Vector3 offset){
-        this.min.Add( offset );
-        this.max.Add( offset );
+    public Box3 translate(Vector3 offset){
+        this.min.add( offset );
+        this.max.add( offset );
         return this;
     }
 
-    public boolean Equals(Box3 box){
-        return box.min.Equals( this.min ) && box.max.Equals( this.max );
+    public boolean equals(Box3 box){
+        return box.min.equals( this.min ) && box.max.equals( this.max );
     }
 }

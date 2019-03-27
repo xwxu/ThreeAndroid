@@ -73,10 +73,10 @@ public class MeshPhongMaterial extends MeshMaterial{
         morphNormals = parameters.morphNormals;
     }
 
-    public MeshPhongMaterial Copy(MeshPhongMaterial source) {
-        super.Copy(source);
-        this.color.Copy( source.color );
-        this.specular.Copy( source.specular );
+    public MeshPhongMaterial copy(MeshPhongMaterial source) {
+        super.copy(source);
+        this.color.copy( source.color );
+        this.specular.copy( source.specular );
         this.shininess = source.shininess;
 
         this.map = source.map;
@@ -87,7 +87,7 @@ public class MeshPhongMaterial extends MeshMaterial{
         this.aoMap = source.aoMap;
         this.aoMapIntensity = source.aoMapIntensity;
 
-        this.emissive.Copy( source.emissive );
+        this.emissive.copy( source.emissive );
         this.emissiveMap = source.emissiveMap;
         this.emissiveIntensity = source.emissiveIntensity;
 
@@ -96,7 +96,7 @@ public class MeshPhongMaterial extends MeshMaterial{
 
         this.normalMap = source.normalMap;
         this.normalMapType = source.normalMapType;
-        this.normalScale.Copy( source.normalScale );
+        this.normalScale.copy( source.normalScale );
 
         this.displacementMap = source.displacementMap;
         this.displacementScale = source.displacementScale;

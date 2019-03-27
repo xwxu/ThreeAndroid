@@ -3,14 +3,14 @@ package three.math;
 import three.core.Object3D;
 
 public class Frustum {
-    public boolean IntersectsSprite(Object3D object) {
+    public boolean intersectsSprite(Object3D object) {
         return false;
     }
 
-    public boolean IntersectsObject(Object3D object) {
+    public boolean intersectsObject(Object3D object) {
         return true;
     }
 
-    public void SetFromMatrix(Matrix4 projScreenMatrix) {
+    public void setFromMatrix(Matrix4 projScreenMatrix) {
     }
 }

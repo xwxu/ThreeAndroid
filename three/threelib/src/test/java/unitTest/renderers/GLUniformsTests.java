@@ -12,6 +12,6 @@ public class GLUniformsTests {
         GLUniforms a = new GLUniforms(10, null);
         ActiveUniformInfo activeInfo = new ActiveUniformInfo();
         activeInfo.name = "matrix[2].position";
-        a.ParseUniform(activeInfo, 0, a);
+        a.parseUniform(activeInfo, 0, a);
     }
 }

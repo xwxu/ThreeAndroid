@@ -2,7 +2,6 @@ package unitTest.renderers;
 
 import org.junit.Test;
 
-import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -11,16 +10,14 @@ import three.materials.Material;
 import three.materials.MeshPhongMaterial;
 import three.materials.parameters.MeshPhongParameters;
 import three.renderers.gl.GLProgram;
-import three.renderers.shaders.ShaderChunk;
 import three.renderers.shaders.ShaderChunks.ShadowMapVertex;
-import three.renderers.shaders.ShaderLib;
 import three.renderers.shaders.ShaderLibs.MeshPhongFrag;
 import three.textures.Texture;
 
 public class GLProgramTests {
     @Test
     public void ParseIncludes(){
-        String parsed = GLProgram.ParseIncludes(MeshPhongFrag.code);
+        String parsed = GLProgram.parseIncludes(MeshPhongFrag.code);
         System.out.println(parsed);
 
     }

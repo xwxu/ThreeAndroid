@@ -44,7 +44,7 @@ public class ShaderLib {
         listBasic.add(uniformsLib.aomap);
         listBasic.add(uniformsLib.lightmap);
         listBasic.add(uniformsLib.fog);
-        shaderBasic.uniforms = UniformUtils.MergeUniforms(listBasic);
+        shaderBasic.uniforms = UniformUtils.mergeUniforms(listBasic);
         shaderBasic.vertexShader = MeshBasicVert.code;
         shaderBasic.fragmentShader = MeshBasicFrag.code;
         libs.put("basic", shaderBasic);
@@ -60,8 +60,8 @@ public class ShaderLib {
         listLambert.add(uniformsLib.emissivemap);
         listLambert.add(uniformsLib.fog);
         listLambert.add(uniformsLib.lights);
-        shaderLambert.uniforms = UniformUtils.MergeUniforms(listLambert);
-        shaderLambert.uniforms.Put("emissive", new Color(0x000000));
+        shaderLambert.uniforms = UniformUtils.mergeUniforms(listLambert);
+        shaderLambert.uniforms.put("emissive", new Color(0x000000));
         shaderLambert.vertexShader = MeshLambertVert.code;
         shaderLambert.fragmentShader = MeshLambertFrag.code;
         libs.put("lambert", shaderLambert);
@@ -81,10 +81,10 @@ public class ShaderLib {
         listPhong.add(uniformsLib.gradientmap);
         listPhong.add(uniformsLib.fog);
         listPhong.add(uniformsLib.lights);
-        shaderPhong.uniforms = UniformUtils.MergeUniforms(listPhong);
-        shaderPhong.uniforms.Put("emissive", new Color(0x000000));
-        shaderPhong.uniforms.Put("specular", new Color(0x111111));
-        shaderPhong.uniforms.Put("shininess", 30.0f);
+        shaderPhong.uniforms = UniformUtils.mergeUniforms(listPhong);
+        shaderPhong.uniforms.put("emissive", new Color(0x000000));
+        shaderPhong.uniforms.put("specular", new Color(0x111111));
+        shaderPhong.uniforms.put("shininess", 30.0f);
         shaderPhong.vertexShader = MeshPhongVert.code;
         shaderPhong.fragmentShader = MeshPhongFrag.code;
         libs.put("phong", shaderPhong);
@@ -104,20 +104,20 @@ public class ShaderLib {
         listStandard.add(uniformsLib.gradientmap);
         listStandard.add(uniformsLib.fog);
         listStandard.add(uniformsLib.lights);
-        shaderStandard.uniforms = UniformUtils.MergeUniforms(listStandard);
-        shaderStandard.uniforms.Put("emissive", new Color(0x000000));
-        shaderStandard.uniforms.Put("roughness", 0.5f);
-        shaderStandard.uniforms.Put("metalness", 0.5f);
-        shaderStandard.uniforms.Put("envMapIntensity", 1.0f);
+        shaderStandard.uniforms = UniformUtils.mergeUniforms(listStandard);
+        shaderStandard.uniforms.put("emissive", new Color(0x000000));
+        shaderStandard.uniforms.put("roughness", 0.5f);
+        shaderStandard.uniforms.put("metalness", 0.5f);
+        shaderStandard.uniforms.put("envMapIntensity", 1.0f);
         shaderStandard.vertexShader = MeshPhysicalVert.code;
         shaderStandard.fragmentShader = MeshPhysicalFrag.code;
         libs.put("standard", shaderStandard);
 
         // Physical
         ShaderObject shaderPhysical = new ShaderObject();
-        shaderPhysical.uniforms = UniformUtils.CloneUniforms(shaderStandard.uniforms);
-        shaderPhysical.uniforms.Put("clearCoat", 0.0f);
-        shaderPhysical.uniforms.Put("clearCoatRoughness", 0.0f);
+        shaderPhysical.uniforms = UniformUtils.cloneUniforms(shaderStandard.uniforms);
+        shaderPhysical.uniforms.put("clearCoat", 0.0f);
+        shaderPhysical.uniforms.put("clearCoatRoughness", 0.0f);
         shaderPhysical.vertexShader = MeshPhysicalVert.code;
         shaderPhysical.fragmentShader = MeshPhysicalFrag.code;
         libs.put("physical", shaderPhysical);
@@ -130,8 +130,8 @@ public class ShaderLib {
         listMatcap.add(uniformsLib.normalmap);
         listMatcap.add(uniformsLib.displacementmap);
         listMatcap.add(uniformsLib.fog);
-        shaderMatcap.uniforms = UniformUtils.MergeUniforms(listMatcap);
-        shaderMatcap.uniforms.Put("matcap", null);
+        shaderMatcap.uniforms = UniformUtils.mergeUniforms(listMatcap);
+        shaderMatcap.uniforms.put("matcap", null);
         shaderMatcap.vertexShader = MeshMatcapVert.code;
         shaderMatcap.fragmentShader = MeshMatcapFrag.code;
         libs.put("matcap", shaderMatcap);
@@ -141,7 +141,7 @@ public class ShaderLib {
         ArrayList<UniformsObject> listPoints = new ArrayList<>();
         listPoints.add(uniformsLib.points);
         listPoints.add(uniformsLib.fog);
-        shaderPoints.uniforms = UniformUtils.MergeUniforms(listPoints);
+        shaderPoints.uniforms = UniformUtils.mergeUniforms(listPoints);
         shaderPoints.vertexShader = PointsVert.code;
         shaderPoints.fragmentShader = PointsFrag.code;
         libs.put("points", shaderPoints);
@@ -151,10 +151,10 @@ public class ShaderLib {
         ArrayList<UniformsObject> listDashed = new ArrayList<>();
         listDashed.add(uniformsLib.common);
         listDashed.add(uniformsLib.fog);
-        shaderDashed.uniforms = UniformUtils.MergeUniforms(listDashed);
-        shaderDashed.uniforms.Put("scale", 1.0f);
-        shaderDashed.uniforms.Put("dashSize", 1.0f);
-        shaderDashed.uniforms.Put("totalSize", 2.0f);
+        shaderDashed.uniforms = UniformUtils.mergeUniforms(listDashed);
+        shaderDashed.uniforms.put("scale", 1.0f);
+        shaderDashed.uniforms.put("dashSize", 1.0f);
+        shaderDashed.uniforms.put("totalSize", 2.0f);
         shaderDashed.vertexShader = LineDashedVert.code;
         shaderDashed.fragmentShader = LineDashedFrag.code;
         libs.put("dashed", shaderDashed);
@@ -170,8 +170,8 @@ public class ShaderLib {
         listNormal.add(uniformsLib.bumpmap);
         listNormal.add(uniformsLib.normalmap);
         listNormal.add(uniformsLib.displacementmap);
-        shaderNormal.uniforms = UniformUtils.MergeUniforms(listNormal);
-        shaderNormal.uniforms.Put("opacity", 1.0f);
+        shaderNormal.uniforms = UniformUtils.mergeUniforms(listNormal);
+        shaderNormal.uniforms.put("opacity", 1.0f);
         shaderNormal.vertexShader = NormalVert.code;
         shaderNormal.fragmentShader = NormalFrag.code;
         libs.put("normal", shaderNormal);
@@ -181,7 +181,7 @@ public class ShaderLib {
         ArrayList<UniformsObject> listSprite = new ArrayList<>();
         listSprite.add(uniformsLib.sprite);
         listSprite.add(uniformsLib.fog);
-        shaderSprite.uniforms = UniformUtils.MergeUniforms(listSprite);
+        shaderSprite.uniforms = UniformUtils.mergeUniforms(listSprite);
         shaderSprite.vertexShader = SpriteVert.code;
         shaderSprite.fragmentShader = SpriteFrag.code;
         libs.put("sprite", shaderSprite);
@@ -189,8 +189,8 @@ public class ShaderLib {
         // Background
         ShaderObject shaderBackground = new ShaderObject();
         shaderBackground.uniforms = new UniformsObject();
-        shaderBackground.uniforms.Put("uvTransform", new Matrix3());
-        shaderBackground.uniforms.Put("t2D", null);
+        shaderBackground.uniforms.put("uvTransform", new Matrix3());
+        shaderBackground.uniforms.put("t2D", null);
         shaderBackground.vertexShader = BackgroundVert.code;
         shaderBackground.fragmentShader = BackgroundFrag.code;
         libs.put("background", shaderBackground);
@@ -209,13 +209,13 @@ public class ShaderLib {
         ArrayList<UniformsObject> listShadow = new ArrayList<>();
         listShadow.add(uniformsLib.lights);
         listShadow.add(uniformsLib.fog);
-        shaderShadow.uniforms = UniformUtils.MergeUniforms(listShadow);
+        shaderShadow.uniforms = UniformUtils.mergeUniforms(listShadow);
         shaderShadow.vertexShader = ShadowVert.code;
         shaderShadow.fragmentShader = ShadowFrag.code;
         libs.put("shadow", shaderShadow);
     }
 
-    public ShaderObject Get(String name){
+    public ShaderObject get(String name){
         return libs.get(name);
     }
 

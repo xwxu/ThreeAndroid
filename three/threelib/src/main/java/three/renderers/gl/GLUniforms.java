@@ -34,14 +34,14 @@ public class GLUniforms extends UniformContainer {
         for ( int i = 0; i < n[0]; ++ i ) {
             GLES20.glGetActiveUniform( program, i, 40, null, 0,  sizeBuf, 0, typeBuf, 0, nameBuf, 0 );
 
-            byte[] trimed = GLUtils.TrimZero(nameBuf);
+            byte[] trimed = GLUtils.trimZero(nameBuf);
             String name = new String(trimed);
             int addr = GLES20.glGetUniformLocation(program, name);
             ActiveUniformInfo activeInfo = new ActiveUniformInfo();
             activeInfo.name = name;
             activeInfo.type = typeBuf[0];
             activeInfo.size = sizeBuf[0];
-            ParseUniform( activeInfo, addr, this );
+            parseUniform( activeInfo, addr, this );
 
         }
     }
@@ -52,7 +52,7 @@ public class GLUniforms extends UniformContainer {
     *  pureArray: ddg[1]
     *  structure: lights[0].position
     * */
-    public void ParseUniform(ActiveUniformInfo activeInfo, int addr, UniformContainer container){
+    public void parseUniform(ActiveUniformInfo activeInfo, int addr, UniformContainer container){
         String path = activeInfo.name;
 
         while (true){
@@ -61,7 +61,7 @@ public class GLUniforms extends UniformContainer {
             int dot = path.indexOf('.');
 
             if(leftBracket < 0 ){ // single
-                AddUniform(container, new SingleUniform(path, activeInfo, addr));
+                addUniform(container, new SingleUniform(path, activeInfo, addr));
                 break;
 
             }else if(leftBracket == 0){ // [1].xx
@@ -72,7 +72,7 @@ public class GLUniforms extends UniformContainer {
                         next = (UniformContainer) container.map.get(id);
                     }else{
                         next = new StructuredUniform(id);
-                        AddUniform(container, next);
+                        addUniform(container, next);
                     }
 
                     container = next;
@@ -83,7 +83,7 @@ public class GLUniforms extends UniformContainer {
 
                 if(dot < 0){ // pure array
                     String id = path.substring(0, leftBracket);
-                    AddUniform(container, new PureArrayUniform(id, activeInfo, addr));
+                    addUniform(container, new PureArrayUniform(id, activeInfo, addr));
                     break;
 
                 }else{
@@ -94,7 +94,7 @@ public class GLUniforms extends UniformContainer {
                         next = (UniformContainer) container.map.get(id);
                     }else{
                         next = new StructuredUniform(id);
-                        AddUniform(container, next);
+                        addUniform(container, next);
                     }
 
                     container = next;
@@ -105,12 +105,12 @@ public class GLUniforms extends UniformContainer {
         }
     }
 
-    private void AddUniform(UniformContainer container, AbstractUniform uniformObject){
+    private void addUniform(UniformContainer container, AbstractUniform uniformObject){
         container.seq.add(uniformObject);
         container.map.put(uniformObject.id, uniformObject);
     }
 
-    public static ArrayList<AbstractUniform> SeqWithValue(ArrayList<AbstractUniform> seq, UniformsObject values) {
+    public static ArrayList<AbstractUniform> seqWithValue(ArrayList<AbstractUniform> seq, UniformsObject values) {
         ArrayList<AbstractUniform> r = new ArrayList();
 
         for ( int i = 0, n = seq.size(); i != n; ++ i ) {
@@ -126,50 +126,50 @@ public class GLUniforms extends UniformContainer {
     }
 
 
-    public void SetValue(){
+    public void setValue(){
 
     }
 
-    public void SetValue1f(String name, float value){
+    public void setValue1F(String name, float value){
         SingleUniform u = (SingleUniform) this.map.get(name);
         if(u != null){
-            u.SetValue1f(value);
+            u.setValue1F(value);
         }
     }
 
-    public void SetValue2fv(String name, Vector2 vector){
+    public void setValue2Fv(String name, Vector2 vector){
         SingleUniform u = (SingleUniform) this.map.get(name);
         if(u != null){
-            u.SetValue2fv(vector);
+            u.setValue2Fv(vector);
         }
     }
 
-    public void SetValue3fm(String name, Matrix3 matrix){
+    public void setValue3Fm(String name, Matrix3 matrix){
         SingleUniform u = (SingleUniform) this.map.get(name);
         if(u != null){
-            u.SetValue3fm(matrix);
+            u.setValue3fm(matrix);
         }
     }
 
-    public void SetValue4fm(String name, Matrix4 matrix){
+    public void setValue4Fm(String name, Matrix4 matrix){
         SingleUniform u = (SingleUniform) this.map.get(name);
         if(u != null){
-            u.SetValue4fm(matrix);
+            u.setValue4fm(matrix);
         }
     }
 
-    public void SetOptional(){
+    public void setOptional(){
 
     }
 
-    public static void Upload(ArrayList<AbstractUniform> seq, UniformsObject values, GLRenderer renderer){
+    public static void upload(ArrayList<AbstractUniform> seq, UniformsObject values, GLRenderer renderer){
         for ( int i = 0, n = seq.size(); i != n; ++ i ) {
 
             AbstractUniform u = seq.get(i);
             UniformState v = values.uniforms.get(u.id);
 
             if ( v.needsUpdate != false ) {
-                u.SetValue( v.value, renderer );
+                u.setValue( v.value, renderer );
             }
         }
     }

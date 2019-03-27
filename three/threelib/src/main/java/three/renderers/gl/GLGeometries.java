@@ -5,8 +5,6 @@ import android.opengl.GLES20;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
 //import java.util.Observer;
 
 import io.reactivex.Observer;
@@ -38,7 +36,7 @@ public class GLGeometries {
 
             @Override
             public void onNext(AbstractGeometry geometry) {
-                OnGeometryDispose(geometry);
+                onGeometryDispose(geometry);
             }
 
             @Override
@@ -52,18 +50,18 @@ public class GLGeometries {
 
     }
 
-    private void OnGeometryDispose(AbstractGeometry geometry){
+    private void onGeometryDispose(AbstractGeometry geometry){
 
         BufferGeometry buffergeometry = geometries.get(geometry.id);
 
         if ( buffergeometry.index != null ) {
-            attributes.Remove( buffergeometry.index );
+            attributes.remove( buffergeometry.index );
         }
 
         for (Object o : buffergeometry.attributes.entrySet()) {
             HashMap.Entry pair = (HashMap.Entry) o;
             String name = (String) pair.getKey();
-            attributes.Remove(buffergeometry.attributes.get(name));
+            attributes.remove(buffergeometry.attributes.get(name));
         }
 
         geometry.subject.onComplete();
@@ -73,7 +71,7 @@ public class GLGeometries {
         BufferAttribute attribute = wireframeAttributes.get(buffergeometry.id);
 
         if ( attribute != null) {
-            attributes.Remove( attribute );
+            attributes.remove( attribute );
             wireframeAttributes.remove(buffergeometry.id);
         }
 
@@ -81,7 +79,7 @@ public class GLGeometries {
     }
 
 
-    public BufferGeometry Get(Object3D object, AbstractGeometry geometry) {
+    public BufferGeometry get(Object3D object, AbstractGeometry geometry) {
         BufferGeometry bufferGeometry = geometries.get(geometry.id);
         if(bufferGeometry != null){
             return bufferGeometry;
@@ -94,7 +92,7 @@ public class GLGeometries {
         }else{
             Geometry geometry1 = (Geometry)geometry;
             if ( geometry1._bufferGeometry == null ) {
-                geometry1._bufferGeometry = new BufferGeometry().SetFromObject( object );
+                geometry1._bufferGeometry = new BufferGeometry().setFromObject( object );
             }
 
             bufferGeometry = geometry1._bufferGeometry;
@@ -107,12 +105,12 @@ public class GLGeometries {
     }
 
 
-    public void Update(BufferGeometry geometry){
+    public void update(BufferGeometry geometry){
         Uint32BufferAttribute index = geometry.index;
         HashMap<String, BufferAttribute> geometryAttributes = geometry.attributes;
 
         if ( index != null ) {
-            attributes.Update( index, GLES20.GL_ELEMENT_ARRAY_BUFFER );
+            attributes.update( index, GLES20.GL_ELEMENT_ARRAY_BUFFER );
         }
 
         for (Object o : geometryAttributes.entrySet()) {
@@ -120,12 +118,12 @@ public class GLGeometries {
             String name = (String) pair.getKey();
             BufferAttribute attribute = (BufferAttribute) pair.getValue();
 
-            attributes.Update(attribute, GLES20.GL_ARRAY_BUFFER);
+            attributes.update(attribute, GLES20.GL_ARRAY_BUFFER);
         }
 
     }
 
-    public Uint32BufferAttribute GetWireframeAttribute(BufferGeometry geometry){
+    public Uint32BufferAttribute getWireframeAttribute(BufferGeometry geometry){
         Uint32BufferAttribute attribute = (Uint32BufferAttribute)wireframeAttributes.get(geometry.id);
 
         if ( attribute != null ) return attribute;
@@ -170,7 +168,7 @@ public class GLGeometries {
         }
         attribute = new Uint32BufferAttribute(indices, 1);
 
-        attributes.Update( attribute, GLES20.GL_ELEMENT_ARRAY_BUFFER );
+        attributes.update( attribute, GLES20.GL_ELEMENT_ARRAY_BUFFER );
         wireframeAttributes.put(geometry.id, attribute);
 
         return attribute;

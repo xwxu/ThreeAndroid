@@ -2,16 +2,13 @@ package three.core;
 
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
-import java.nio.ShortBuffer;
 import java.util.ArrayList;
 import java.util.HashMap;
 //import java.util.Observable;
 
-import io.reactivex.subjects.PublishSubject;
 import three.bufferAttribute.BufferAttribute;
 import three.bufferAttribute.Float32BufferAttribute;
 import three.math.Box3;
-import three.math.Math_;
 import three.math.Matrix4;
 import three.math.Matrix3;
 import three.math.Sphere;
@@ -66,30 +63,30 @@ public class Geometry extends AbstractGeometry{
     }
 
 
-    public Geometry ApplyMatrix(Matrix4 matrix){
-        Matrix3 normalMatrix = new Matrix3().GetNormalMatrix( matrix );
+    public Geometry applyMatrix(Matrix4 matrix){
+        Matrix3 normalMatrix = new Matrix3().getNormalMatrix( matrix );
 
         for ( int i = 0, il = this.vertices.size(); i < il; i ++ ) {
             Vector3 vertex = this.vertices.get(i);
-            vertex.ApplyMatrix4( matrix );
+            vertex.applyMatrix4( matrix );
         }
 
         for ( int i = 0, il = this.faces.size(); i < il; i ++ ) {
             Face3 face = this.faces.get(i);
-            face.normal.ApplyMatrix3( normalMatrix ).Normalize();
+            face.normal.applyMatrix3( normalMatrix ).normalize();
 
             for ( int j = 0, jl = face.vertexNormals.size(); j < jl; j ++ ) {
-                face.vertexNormals.get(j).ApplyMatrix3( normalMatrix ).Normalize();
+                face.vertexNormals.get(j).applyMatrix3( normalMatrix ).normalize();
             }
 
         }
 
         if ( this.boundingBox != null ) {
-            this.ComputeBoundingBox();
+            this.computeBoundingBox();
         }
 
         if ( this.boundingSphere != null ) {
-            this.ComputeBoundingSphere();
+            this.computeBoundingSphere();
         }
 
         this.verticesNeedUpdate = true;
@@ -97,57 +94,57 @@ public class Geometry extends AbstractGeometry{
         return this;
     }
 
-    public void RotateX(float angle){
+    public void rotateX(float angle){
         Matrix4 m1 = new Matrix4();
-        m1.MakeRotationX( angle );
-        this.ApplyMatrix( m1 );
+        m1.makeRotationX( angle );
+        this.applyMatrix( m1 );
     }
 
-    public void RotateY(float angle){
+    public void rotateY(float angle){
         Matrix4 m1 = new Matrix4();
-        m1.MakeRotationY( angle );
-        this.ApplyMatrix( m1 );
+        m1.makeRotationY( angle );
+        this.applyMatrix( m1 );
     }
 
-    public void RotateZ(float angle){
+    public void rotateZ(float angle){
         Matrix4 m1 = new Matrix4();
-        m1.MakeRotationZ( angle );
-        this.ApplyMatrix( m1 );
+        m1.makeRotationZ( angle );
+        this.applyMatrix( m1 );
     }
 
-    public void Translate(float x, float y, float z){
+    public void translate(float x, float y, float z){
         Matrix4 m1 = new Matrix4();
-        m1.MakeTranslation( x, y, z );
-        this.ApplyMatrix( m1 );
+        m1.makeTranslation( x, y, z );
+        this.applyMatrix( m1 );
     }
 
-    public void Scale(float x, float y, float z){
+    public void scale(float x, float y, float z){
         Matrix4 m1 = new Matrix4();
-        m1.MakeScale( x, y, z );
-        this.ApplyMatrix( m1 );
+        m1.makeScale( x, y, z );
+        this.applyMatrix( m1 );
     }
 
-    public void LookAt(Vector3 vector){
+    public void lookAt(Vector3 vector){
         Object3D obj = new Object3D();
-        obj.LookAt( vector );
-        obj.UpdateMatrix();
-        this.ApplyMatrix( obj.matrix );
+        obj.lookAt( vector );
+        obj.updateMatrix();
+        this.applyMatrix( obj.matrix );
     }
 
-    private void AddFace(FloatBuffer colors, FloatBuffer normals, FloatBuffer uvs, FloatBuffer uvs2,
+    private void addFace(FloatBuffer colors, FloatBuffer normals, FloatBuffer uvs, FloatBuffer uvs2,
                          int a, int b, int c, int materialIndex){
         ArrayList<Color> vertexColors = new ArrayList<Color>();
         if(colors != null){
-            vertexColors.add(this.colors.get(a).Clone());
-            vertexColors.add(this.colors.get(b).Clone());
-            vertexColors.add(this.colors.get(c).Clone());
+            vertexColors.add(this.colors.get(a).clone());
+            vertexColors.add(this.colors.get(b).clone());
+            vertexColors.add(this.colors.get(c).clone());
         }
 
         ArrayList<Vector3> vertexNormals = new ArrayList<Vector3>();
         if(normals != null){
-            vertexNormals.add(new Vector3().FromArray( normals.array(), a * 3 ));
-            vertexNormals.add(new Vector3().FromArray( normals.array(), b * 3 ));
-            vertexNormals.add(new Vector3().FromArray( normals.array(), c * 3 ));
+            vertexNormals.add(new Vector3().fromArray( normals.array(), a * 3 ));
+            vertexNormals.add(new Vector3().fromArray( normals.array(), b * 3 ));
+            vertexNormals.add(new Vector3().fromArray( normals.array(), c * 3 ));
         }
 
         Face3 face = new Face3( a, b, c, vertexNormals, vertexColors, materialIndex );
@@ -155,22 +152,22 @@ public class Geometry extends AbstractGeometry{
 
         if ( uvs != null ) {
             ArrayList<Vector2> uv = new ArrayList<Vector2>();
-            uv.add(new Vector2().FromArray( uvs.array(), a * 2 ));
-            uv.add(new Vector2().FromArray( uvs.array(), b * 2 ));
-            uv.add(new Vector2().FromArray( uvs.array(), c * 2 ));
+            uv.add(new Vector2().fromArray( uvs.array(), a * 2 ));
+            uv.add(new Vector2().fromArray( uvs.array(), b * 2 ));
+            uv.add(new Vector2().fromArray( uvs.array(), c * 2 ));
             this.faceVertexUvs.get(0).add( uv );
         }
 
         if ( uvs2 != null ) {
             ArrayList<Vector2> uv = new ArrayList<Vector2>();
-            uv.add(new Vector2().FromArray( uvs2.array(), a * 2 ));
-            uv.add(new Vector2().FromArray( uvs2.array(), b * 2 ));
-            uv.add(new Vector2().FromArray( uvs2.array(), c * 2 ));
+            uv.add(new Vector2().fromArray( uvs2.array(), a * 2 ));
+            uv.add(new Vector2().fromArray( uvs2.array(), b * 2 ));
+            uv.add(new Vector2().fromArray( uvs2.array(), c * 2 ));
             this.faceVertexUvs.get(1).add( uv );
         }
     }
 
-    public Geometry FromBufferGeometry(BufferGeometry geometry){
+    public Geometry fromBufferGeometry(BufferGeometry geometry){
         IntBuffer indices = geometry.index.array;
         HashMap<String, BufferAttribute> attributes = geometry.attributes;
 
@@ -190,9 +187,9 @@ public class Geometry extends AbstractGeometry{
         }
 
         for ( int i = 0, j = 0; i < positions.capacity(); i += 3, j += 2 ) {
-            this.vertices.add( new Vector3().FromArray( positions.array(), i ) );
+            this.vertices.add( new Vector3().fromArray( positions.array(), i ) );
             if ( colors != null ) {
-                this.colors.add( new Color().FromArray( colors.array(), i ) );
+                this.colors.add( new Color().fromArray( colors.array(), i ) );
             }
         }
 
@@ -206,10 +203,10 @@ public class Geometry extends AbstractGeometry{
 
                 for ( int j = start, jl = start + count; j < jl; j += 3 ) {
                     if ( indices != null ) {
-                        AddFace( colors, normals, uvs, uvs2,
+                        addFace( colors, normals, uvs, uvs2,
                                 indices.get(j), indices.get(j+1), indices.get(j+2), group.materialIndex );
                     } else {
-                        AddFace( colors, normals, uvs, uvs2, j,j + 1, j + 2, group.materialIndex );
+                        addFace( colors, normals, uvs, uvs2, j,j + 1, j + 2, group.materialIndex );
                     }
                 }
             }
@@ -217,21 +214,21 @@ public class Geometry extends AbstractGeometry{
         } else {
             if ( indices != null ) {
                 for ( int i = 0; i < indices.capacity(); i += 3 ) {
-                    AddFace( colors, normals, uvs, uvs2,
+                    addFace( colors, normals, uvs, uvs2,
                             indices.get(i), indices.get(i+1), indices.get(i+2), 0 );
                 }
             } else {
                 for ( int i = 0; i < positions.capacity() / 3; i += 3 ) {
-                    AddFace( colors, normals, uvs, uvs2, i, i+1, i+2, 0 );
+                    addFace( colors, normals, uvs, uvs2, i, i+1, i+2, 0 );
                 }
             }
 
         }
 
-        this.ComputeFaceNormals();
+        this.computeFaceNormals();
 
         if ( geometry.boundingBox != null ) {
-            this.boundingBox = geometry.boundingBox.Clone();
+            this.boundingBox = geometry.boundingBox.clone();
         }
 
         if ( geometry.boundingSphere != null ) {
@@ -241,15 +238,15 @@ public class Geometry extends AbstractGeometry{
         return this;
     }
 
-    public void Center(){
+    public void center(){
         Vector3 offset = new Vector3();
-        this.ComputeBoundingBox();
-        this.boundingBox.GetCenter( offset ).Negate();
-        this.Translate( offset.x, offset.y, offset.z );
+        this.computeBoundingBox();
+        this.boundingBox.getCenter( offset ).negate();
+        this.translate( offset.x, offset.y, offset.z );
     }
 
-    public Geometry Normalize(){
-        this.ComputeBoundingSphere();
+    public Geometry normalize(){
+        this.computeBoundingSphere();
 
         Vector3 center = this.boundingSphere.center;
         float radius = this.boundingSphere.radius;
@@ -257,19 +254,19 @@ public class Geometry extends AbstractGeometry{
         float s = radius == 0 ? 1 : 1.0f / radius;
 
         Matrix4 matrix = new Matrix4();
-        matrix.Set(
+        matrix.set(
                 s, 0, 0, - s * center.x,
                 0, s, 0, - s * center.y,
                 0, 0, s, - s * center.z,
                 0, 0, 0, 1
         );
 
-        this.ApplyMatrix( matrix );
+        this.applyMatrix( matrix );
 
         return this;
     }
 
-    public void ComputeFaceNormals(){
+    public void computeFaceNormals(){
         Vector3 cb = new Vector3(), ab = new Vector3();
 
         for ( int f = 0, fl = this.faces.size(); f < fl; f ++ ) {
@@ -279,17 +276,17 @@ public class Geometry extends AbstractGeometry{
             Vector3 vB = this.vertices.get(face.b);
             Vector3 vC = this.vertices.get(face.c);
 
-            cb.SubVectors( vC, vB );
-            ab.SubVectors( vA, vB );
-            cb.Cross( ab );
+            cb.subVectors( vC, vB );
+            ab.subVectors( vA, vB );
+            cb.cross( ab );
 
-            cb.Normalize();
+            cb.normalize();
 
-            face.normal.Copy( cb );
+            face.normal.copy( cb );
         }
     }
 
-    public void ComputeVertexNormals(boolean areaWeighted){
+    public void computeVertexNormals(boolean areaWeighted){
         ArrayList<Vector3> vertices = new ArrayList<>();
 
         for ( int v = 0, vl = this.vertices.size(); v < vl; v ++ ) {
@@ -306,28 +303,28 @@ public class Geometry extends AbstractGeometry{
                 Vector3 vB = this.vertices.get(face.b);
                 Vector3 vC = this.vertices.get(face.c);
 
-                cb.SubVectors( vC, vB );
-                ab.SubVectors( vA, vB );
-                cb.Cross( ab );
+                cb.subVectors( vC, vB );
+                ab.subVectors( vA, vB );
+                cb.cross( ab );
 
-                vertices.get(face.a).Add( cb );
-                vertices.get(face.b).Add( cb );
-                vertices.get(face.c).Add( cb );
+                vertices.get(face.a).add( cb );
+                vertices.get(face.b).add( cb );
+                vertices.get(face.c).add( cb );
             }
 
         } else {
-            this.ComputeFaceNormals();
+            this.computeFaceNormals();
 
             for ( int f = 0, fl = this.faces.size(); f < fl; f ++ ) {
                 Face3 face = this.faces.get(f);
-                vertices.get(face.a).Add( face.normal );
-                vertices.get(face.b).Add( face.normal );
-                vertices.get(face.c).Add( face.normal );
+                vertices.get(face.a).add( face.normal );
+                vertices.get(face.b).add( face.normal );
+                vertices.get(face.c).add( face.normal );
             }
         }
 
         for ( int v = 0, vl = this.vertices.size(); v < vl; v ++ ) {
-            vertices.get(v).Normalize();
+            vertices.get(v).normalize();
         }
 
         for ( int f = 0, fl = this.faces.size(); f < fl; f ++ ) {
@@ -335,9 +332,9 @@ public class Geometry extends AbstractGeometry{
 
             if ( face.vertexNormals.size() == 3 ) {
 
-                face.vertexNormals.get(0).Copy( vertices.get(face.a) );
-                face.vertexNormals.get(1).Copy( vertices.get(face.b) );
-                face.vertexNormals.get(2).Copy( vertices.get(face.c) );
+                face.vertexNormals.get(0).copy( vertices.get(face.a) );
+                face.vertexNormals.get(1).copy( vertices.get(face.b) );
+                face.vertexNormals.get(2).copy( vertices.get(face.c) );
 
             } else {
 
@@ -354,8 +351,8 @@ public class Geometry extends AbstractGeometry{
         }
     }
 
-    public void ComputeFlatVertexNormals(){
-        this.ComputeFaceNormals();
+    public void computeFlatVertexNormals(){
+        this.computeFaceNormals();
 
         for ( int f = 0, fl = this.faces.size(); f < fl; f ++ ) {
 
@@ -364,9 +361,9 @@ public class Geometry extends AbstractGeometry{
 
             if ( vertexNormals.size() == 3 ) {
 
-                vertexNormals.get(0).Copy( face.normal );
-                vertexNormals.get(1).Copy( face.normal );
-                vertexNormals.get(2).Copy( face.normal );
+                vertexNormals.get(0).copy( face.normal );
+                vertexNormals.get(1).copy( face.normal );
+                vertexNormals.get(2).copy( face.normal );
 
             } else {
 
@@ -383,21 +380,21 @@ public class Geometry extends AbstractGeometry{
         }
     }
 
-    public void ComputeBoundingBox(){
+    public void computeBoundingBox(){
         if(this.boundingBox == null){
             this.boundingBox = new Box3();
         }
-        this.boundingBox.SetFromPoints(this.vertices);
+        this.boundingBox.setFromPoints(this.vertices);
     }
 
-    public void ComputeBoundingSphere(){
+    public void computeBoundingSphere(){
         if(this.boundingSphere == null){
             this.boundingSphere = new Sphere();
         }
-        this.boundingSphere.SetFromPoints(this.vertices);
+        this.boundingSphere.setFromPoints(this.vertices);
     }
 
-    public Geometry SetFromPoints(ArrayList<Vector3> points){
+    public Geometry setFromPoints(ArrayList<Vector3> points){
         this.vertices = new ArrayList<Vector3>();
 
         for ( int i = 0, l = points.size(); i < l; i ++ ) {
@@ -407,11 +404,11 @@ public class Geometry extends AbstractGeometry{
         return this;
     }
 
-    public Geometry Clone(){
-        return new Geometry().Copy(this);
+    public Geometry clone(){
+        return new Geometry().copy(this);
     }
 
-    public Geometry Copy(Geometry source){
+    public Geometry copy(Geometry source){
         // reset
         this.vertices.clear();
         this.colors.clear();
@@ -433,13 +430,13 @@ public class Geometry extends AbstractGeometry{
         // colors
         ArrayList<Color> colors = source.colors;
         for ( int i = 0, il = colors.size(); i < il; i ++ ) {
-            this.colors.add( colors.get(i).Clone() );
+            this.colors.add( colors.get(i).clone() );
         }
 
         // faces
         ArrayList<Face3> faces = source.faces;
         for ( int i = 0, il = faces.size(); i < il; i ++ ) {
-            this.faces.add( faces.get(i).Clone() );
+            this.faces.add( faces.get(i).clone() );
         }
 
         // face vertex uvs
@@ -462,11 +459,11 @@ public class Geometry extends AbstractGeometry{
         return this;
     }
 
-    public void Dispose(){
+    public void dispose(){
         this.subject.onNext(this);
     }
 
-    protected int MergeVertices() {
+    protected int mergeVertices() {
         // Hashmap for looking up vertices by position coordinates (and making sure they are unique)
         HashMap<Float, Integer> verticesMap = new HashMap();
 

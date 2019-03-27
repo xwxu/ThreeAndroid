@@ -20,9 +20,9 @@ public class Light extends Object3D {
         this.receiveShadow = false;
     }
 
-    public Light Copy(Light source){
-        super.Copy(source, false);
-        this.color.Copy(source.color);
+    public Light copy(Light source){
+        super.copy(source, false);
+        this.color.copy(source.color);
         this.intensity = source.intensity;
         return this;
     }

@@ -24,45 +24,45 @@ public class Quaternion {
         this.isQuaternion = true;
     }
 
-    public Quaternion Slerp(Quaternion qa, Quaternion qb, Quaternion qm, float t){
+    public Quaternion slerp(Quaternion qa, Quaternion qb, Quaternion qm, float t){
         return this;
     }
 
-    public Quaternion SlerpFlat(){
+    public Quaternion slerpFlat(){
         return this;
     }
 
-    public void SetX(float x){
+    public void setX(float x){
         this.x = x;
-        OnChangeCallback();
+        onChangeCallback();
     }
 
-    public void SetY(float y){
+    public void setY(float y){
         this.y = y;
-        OnChangeCallback();
+        onChangeCallback();
     }
 
-    public void SetZ(float z){
+    public void setZ(float z){
         this.z = z;
-        OnChangeCallback();
+        onChangeCallback();
     }
 
-    public void SetW(float w){
+    public void setW(float w){
         this.w = w;
-        OnChangeCallback();
+        onChangeCallback();
     }
 
-    public void SetOnchangeCallback(Euler euler){
+    public void setOnchangeCallback(Euler euler){
         this.onChangeEuler = euler;
     }
 
-    private void OnChangeCallback(){
+    private void onChangeCallback(){
         if(this.onChangeEuler != null){
-            this.onChangeEuler.SetFromQuaternion( this, "", false );
+            this.onChangeEuler.setFromQuaternion( this, "", false );
         }
     }
 
-    public Quaternion Set(float x, float y, float z, float w){
+    public Quaternion set(float x, float y, float z, float w){
         this.x = x;
         this.y = y;
         this.z = z;
@@ -70,13 +70,13 @@ public class Quaternion {
         return this;
     }
 
-    public Quaternion Copy(Quaternion quaternion){
+    public Quaternion copy(Quaternion quaternion){
         this.x = quaternion.x;
         this.y = quaternion.y;
         this.z = quaternion.z;
         this.w = quaternion.w;
 
-        this.OnChangeCallback();
+        this.onChangeCallback();
         return this;
     }
 
@@ -84,7 +84,7 @@ public class Quaternion {
         return new Quaternion(this.x, this.y, this.z, this.w);
     }
 
-    public Quaternion SetFromEuler(Euler euler, boolean update){
+    public Quaternion setFromEuler(Euler euler, boolean update){
         float x = euler.x, y = euler.y, z = euler.z;
         String order = euler.order;
 
@@ -96,44 +96,44 @@ public class Quaternion {
         float s2 = (float)Math.sin( y / 2 );
         float s3 = (float)Math.sin( z / 2 );
 
-        if ( order == "XYZ" ) {
+        if (order.equals("XYZ")) {
             this.x = s1 * c2 * c3 + c1 * s2 * s3;
             this.y = c1 * s2 * c3 - s1 * c2 * s3;
             this.z = c1 * c2 * s3 + s1 * s2 * c3;
             this.w = c1 * c2 * c3 - s1 * s2 * s3;
-        } else if ( order == "YXZ" ) {
+        } else if (order.equals("YXZ")) {
             this.x = s1 * c2 * c3 + c1 * s2 * s3;
             this.y = c1 * s2 * c3 - s1 * c2 * s3;
             this.z = c1 * c2 * s3 - s1 * s2 * c3;
             this.w = c1 * c2 * c3 + s1 * s2 * s3;
-        } else if ( order == "ZXY" ) {
+        } else if (order.equals("ZXY")) {
             this.x = s1 * c2 * c3 - c1 * s2 * s3;
             this.y = c1 * s2 * c3 + s1 * c2 * s3;
             this.z = c1 * c2 * s3 + s1 * s2 * c3;
             this.w = c1 * c2 * c3 - s1 * s2 * s3;
-        } else if ( order == "ZYX" ) {
+        } else if (order.equals("ZYX")) {
             this.x = s1 * c2 * c3 - c1 * s2 * s3;
             this.y = c1 * s2 * c3 + s1 * c2 * s3;
             this.z = c1 * c2 * s3 - s1 * s2 * c3;
             this.w = c1 * c2 * c3 + s1 * s2 * s3;
-        } else if ( order == "YZX" ) {
+        } else if (order.equals("YZX")) {
             this.x = s1 * c2 * c3 + c1 * s2 * s3;
             this.y = c1 * s2 * c3 + s1 * c2 * s3;
             this.z = c1 * c2 * s3 - s1 * s2 * c3;
             this.w = c1 * c2 * c3 - s1 * s2 * s3;
-        } else if ( order == "XZY" ) {
+        } else if (order.equals("XZY")) {
             this.x = s1 * c2 * c3 - c1 * s2 * s3;
             this.y = c1 * s2 * c3 - s1 * c2 * s3;
             this.z = c1 * c2 * s3 + s1 * s2 * c3;
             this.w = c1 * c2 * c3 + s1 * s2 * s3;
         }
 
-        if ( update != false ) this.OnChangeCallback();
+        if (update) this.onChangeCallback();
 
         return this;
     }
 
-    public Quaternion SetFromAxisAngle(Vector3 axis, float angle){
+    public Quaternion setFromAxisAngle(Vector3 axis, float angle){
         float halfAngle = angle / 2, s = (float)Math.sin( halfAngle );
 
         this.x = axis.x * s;
@@ -141,11 +141,11 @@ public class Quaternion {
         this.z = axis.z * s;
         this.w = (float)Math.cos( halfAngle );
 
-        this.OnChangeCallback();
+        this.onChangeCallback();
         return this;
     }
 
-    public Quaternion SetFromRotationMatrix(Matrix4 m){
+    public Quaternion setFromRotationMatrix(Matrix4 m){
         float[] te = m.elements;
 
         float m11 = te[ 0 ], m12 = te[ 4 ], m13 = te[ 8 ],
@@ -183,27 +183,27 @@ public class Quaternion {
             this.z = 0.25f * s;
         }
 
-        this.OnChangeCallback();
+        this.onChangeCallback();
         return this;
     }
 
-    public Quaternion SetFromUnitVectors(Vector3 vFrom, Vector3 vTo){
+    public Quaternion setFromUnitVectors(Vector3 vFrom, Vector3 vTo){
         Vector3 v1 = new Vector3();
         float r;
         float EPS = 0.000001f;
 
-        r = vFrom.Dot( vTo ) + 1;
+        r = vFrom.dot( vTo ) + 1;
 
         if ( r < EPS ) {
             r = 0;
             if ( Math.abs( vFrom.x ) > Math.abs( vFrom.z ) ) {
-                v1.Set( - vFrom.y, vFrom.x, 0 );
+                v1.set( - vFrom.y, vFrom.x, 0 );
             } else {
-                v1.Set( 0, - vFrom.z, vFrom.y );
+                v1.set( 0, - vFrom.z, vFrom.y );
             }
 
         } else {
-            v1.CrossVectors( vFrom, vTo );
+            v1.crossVectors( vFrom, vTo );
         }
 
         this.x = v1.x;
@@ -211,53 +211,53 @@ public class Quaternion {
         this.z = v1.z;
         this.w = r;
 
-        return this.Normalize();
+        return this.normalize();
 
     }
 
-    public float AngleTo(Quaternion q){
-        return 2 * (float)Math.acos( Math.abs( Math_.Clamp( this.Dot( q ), - 1, 1 ) ) );
+    public float angleTo(Quaternion q){
+        return 2 * (float)Math.acos( Math.abs( Math_.clamp( this.dot( q ), - 1, 1 ) ) );
     }
 
-    public Quaternion RotateTowards(Quaternion q, float step){
-        float angle = this.AngleTo(q);
+    public Quaternion rotateTowards(Quaternion q, float step){
+        float angle = this.angleTo(q);
 
         if ( angle == 0 )
             return this;
 
         float t = Math.min( 1, step / angle );
-        this.Slerp( q, t );
+        this.slerp( q, t );
 
         return this;
     }
 
-    public Quaternion Inverse(){
-        return this.Conjugate();
+    public Quaternion inverse(){
+        return this.conjugate();
     }
 
-    public Quaternion Conjugate(){
+    public Quaternion conjugate(){
         this.x *= - 1;
         this.y *= - 1;
         this.z *= - 1;
 
-        this.OnChangeCallback();
+        this.onChangeCallback();
         return this;
     }
 
-    public float Dot(Quaternion v){
+    public float dot(Quaternion v){
         return this.x * v.x + this.y * v.y + this.z * v.z + this.w * v.w;
     }
 
-    public float LengthSq(){
+    public float lengthSq(){
         return this.x * this.x + this.y * this.y + this.z * this.z + this.w * this.w;
     }
 
-    public float Length(){
+    public float length(){
         return (float)Math.sqrt( this.x * this.x + this.y * this.y + this.z * this.z + this.w * this.w );
     }
 
-    public Quaternion Normalize(){
-        float l = this.Length();
+    public Quaternion normalize(){
+        float l = this.length();
 
         if ( l == 0 ) {
             this.x = 0;
@@ -272,19 +272,19 @@ public class Quaternion {
             this.w = this.w * l;
         }
 
-        this.OnChangeCallback();
+        this.onChangeCallback();
         return this;
     }
 
-    public Quaternion Multiply(Quaternion q){
-        return this.MultiplyQuaternions( this, q );
+    public Quaternion multiply(Quaternion q){
+        return this.multiplyQuaternions( this, q );
     }
 
-    public Quaternion Premultiply(Quaternion q){
-        return this.MultiplyQuaternions( q, this );
+    public Quaternion premultiply(Quaternion q){
+        return this.multiplyQuaternions( q, this );
     }
 
-    public Quaternion MultiplyQuaternions(Quaternion a, Quaternion b){
+    public Quaternion multiplyQuaternions(Quaternion a, Quaternion b){
         float qax = a.x, qay = a.y, qaz = a.z, qaw = a.w;
         float qbx = b.x, qby = b.y, qbz = b.z, qbw = b.w;
 
@@ -293,13 +293,13 @@ public class Quaternion {
         this.z = qaz * qbw + qaw * qbz + qax * qby - qay * qbx;
         this.w = qaw * qbw - qax * qbx - qay * qby - qaz * qbz;
 
-        this.OnChangeCallback();
+        this.onChangeCallback();
         return this;
     }
 
-    public Quaternion Slerp(Quaternion qb, float t){
+    public Quaternion slerp(Quaternion qb, float t){
         if ( t == 0 ) return this;
-        if ( t == 1 ) return this.Copy( qb );
+        if ( t == 1 ) return this.copy( qb );
 
         float x = this.x, y = this.y, z = this.z, w = this.w;
 
@@ -312,7 +312,7 @@ public class Quaternion {
             this.z = - qb.z;
             cosHalfTheta = - cosHalfTheta;
         } else {
-            this.Copy( qb );
+            this.copy( qb );
         }
 
         if ( cosHalfTheta >= 1.0 ) {
@@ -331,7 +331,7 @@ public class Quaternion {
             this.x = s * x + t * this.x;
             this.y = s * y + t * this.y;
             this.z = s * z + t * this.z;
-            return this.Normalize();
+            return this.normalize();
         }
 
         float sinHalfTheta = (float)Math.sqrt( sqrSinHalfTheta );
@@ -344,25 +344,25 @@ public class Quaternion {
         this.y = ( y * ratioA + this.y * ratioB );
         this.z = ( z * ratioA + this.z * ratioB );
 
-        this.OnChangeCallback();
+        this.onChangeCallback();
         return this;
     }
 
-    public boolean Equals(Quaternion quaternion){
+    public boolean equals(Quaternion quaternion){
         return ( quaternion.x == this.x ) && ( quaternion.y == this.y ) && ( quaternion.z == this.z ) && ( quaternion.w == this.w );
     }
 
-    public Quaternion FromArray(float[] array, int offset){
+    public Quaternion fromArray(float[] array, int offset){
         this.x = array[ offset ];
         this.y = array[ offset + 1 ];
         this.z = array[ offset + 2 ];
         this.w = array[ offset + 3 ];
 
-        this.OnChangeCallback();
+        this.onChangeCallback();
         return this;
     }
 
-    public float[] ToArray(float[] array, int offset){
+    public float[] toArray(float[] array, int offset){
         array[ offset ] = this.x;
         array[ offset + 1 ] = this.y;
         array[ offset + 2 ] = this.z;

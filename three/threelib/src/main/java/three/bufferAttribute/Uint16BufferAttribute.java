@@ -18,19 +18,19 @@ public class Uint16BufferAttribute extends BufferAttribute{
         this.count = array.length / itemSize;
     }
 
-    public Uint16BufferAttribute Clone(){
+    public Uint16BufferAttribute clone(){
         return this;
     }
 
-    public short GetX(int index){
+    public short getX(int index){
         return this.array.get(index * this.itemSize);
     }
 
-    public short GetY(int index){
+    public short getY(int index){
         return this.array.get(index * this.itemSize + 1);
     }
 
-    public short GetZ(int index){
+    public short getZ(int index){
         return this.array.get(index * this.itemSize + 2);
     }
 }

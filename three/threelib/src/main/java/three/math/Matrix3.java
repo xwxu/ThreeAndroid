@@ -1,6 +1,5 @@
 package three.math;
 
-import three.bufferAttribute.BufferAttribute;
 import three.bufferAttribute.Float32BufferAttribute;
 
 public class Matrix3 {
@@ -12,9 +11,9 @@ public class Matrix3 {
                 0,0,1};
     }
 
-    public Matrix3 Set(float n11,float n12,float n13,
-                       float n21,float n22,float n23,
-                       float n31,float n32,float n33){
+    public Matrix3 set(float n11, float n12, float n13,
+                       float n21, float n22, float n23,
+                       float n31, float n32, float n33){
         float[] te = this.elements;
         te[0] = n11; te[3] = n12; te[6] = n13;
         te[1] = n21; te[4] = n22; te[7] = n23;
@@ -22,8 +21,8 @@ public class Matrix3 {
         return this;
     }
 
-    public Matrix3 Identity(){
-        this.Set(
+    public Matrix3 identity(){
+        this.set(
                 1,0,0,
                 0,1,0,
                 0,0,1
@@ -31,11 +30,11 @@ public class Matrix3 {
         return this;
     }
 
-    public Matrix3 Clone(){
-        return new Matrix3().FromArray(this.elements, 0);
+    public Matrix3 clone(){
+        return new Matrix3().fromArray(this.elements, 0);
     }
 
-    public Matrix3 Copy(Matrix3 m){
+    public Matrix3 copy(Matrix3 m){
         float[] te = this.elements;
         float[] me = m.elements;
         te[ 0 ] = me[ 0 ]; te[ 1 ] = me[ 1 ]; te[ 2 ] = me[ 2 ];
@@ -45,10 +44,10 @@ public class Matrix3 {
         return this;
     }
 
-    public Matrix3 SetFromMatrix4(Matrix4 m){
+    public Matrix3 setFromMatrix4(Matrix4 m){
         float[] me = m.elements;
 
-        this.Set(
+        this.set(
                 me[ 0 ], me[ 4 ], me[ 8 ],
                 me[ 1 ], me[ 5 ], me[ 9 ],
                 me[ 2 ], me[ 6 ], me[ 10 ]
@@ -57,15 +56,15 @@ public class Matrix3 {
         return this;
     }
 
-    public Matrix3 Multiply(Matrix3 m){
-        return this.MultiplyMatrices(this, m);
+    public Matrix3 multiply(Matrix3 m){
+        return this.multiplyMatrices(this, m);
     }
 
-    public Matrix3 Premultiply(Matrix3 m){
-        return this.MultiplyMatrices(m, this);
+    public Matrix3 premultiply(Matrix3 m){
+        return this.multiplyMatrices(m, this);
     }
 
-    public Matrix3 MultiplyMatrices(Matrix3 a, Matrix3 b){
+    public Matrix3 multiplyMatrices(Matrix3 a, Matrix3 b){
         float[] ae = a.elements;
         float[] be = b.elements;
         float[] te = this.elements;
@@ -92,7 +91,7 @@ public class Matrix3 {
         return this;
     }
 
-    public Matrix3 MultiplyScalar(float s){
+    public Matrix3 multiplyScalar(float s){
         float[] te = this.elements;
 
         te[ 0 ] *= s; te[ 3 ] *= s; te[ 6 ] *= s;
@@ -101,23 +100,23 @@ public class Matrix3 {
         return this;
     }
 
-    public Matrix3 ApplyToBufferAttribute(Float32BufferAttribute attribute){
+    public Matrix3 applyToBufferAttribute(Float32BufferAttribute attribute){
         Vector3 v1 = new Vector3();
         for ( int i = 0, l = attribute.count; i < l; i ++ ) {
 
-            v1.x = attribute.GetX( i );
-            v1.y = attribute.GetY( i );
-            v1.z = attribute.GetZ( i );
+            v1.x = attribute.getX( i );
+            v1.y = attribute.getY( i );
+            v1.z = attribute.getZ( i );
 
-            v1.ApplyMatrix3( this );
+            v1.applyMatrix3( this );
 
-            attribute.SetXYZ( i, v1.x, v1.y, v1.z );
+            attribute.setXYZ( i, v1.x, v1.y, v1.z );
 
         }
         return this;
     }
 
-    public float Determinant(){
+    public float determinant(){
         float[] te = this.elements;
 
         float a = te[ 0 ], b = te[ 1 ], c = te[ 2 ],
@@ -127,7 +126,7 @@ public class Matrix3 {
         return a * e * i - a * f * h - b * d * i + b * f * g + c * d * h - c * e * g;
     }
 
-    public Matrix3 Transpose(){
+    public Matrix3 transpose(){
         float[] m = this.elements;
         float tmp;
 
@@ -137,7 +136,7 @@ public class Matrix3 {
         return this;
     }
 
-    public Matrix3 GetInverse(Matrix3 m){
+    public Matrix3 getInverse(Matrix3 m){
         float[] te = this.elements;
         float[] me = m.elements;
 
@@ -153,7 +152,7 @@ public class Matrix3 {
 
         if ( det == 0 ) {
             System.out.println("det is 0");
-            return this.Identity();
+            return this.identity();
         }
 
         float detInv = 1 / det;
@@ -172,18 +171,18 @@ public class Matrix3 {
         return this;
     }
 
-    public Matrix3 GetNormalMatrix(Matrix4 matrix4){
-        return this.SetFromMatrix4( matrix4 ).GetInverse( this ).Transpose();
+    public Matrix3 getNormalMatrix(Matrix4 matrix4){
+        return this.setFromMatrix4( matrix4 ).getInverse( this ).transpose();
     }
 
-    public Matrix3 Scale(float sx, float sy){
+    public Matrix3 scale(float sx, float sy){
         float[] te = this.elements;
         te[ 0 ] *= sx; te[ 3 ] *= sx; te[ 6 ] *= sx;
         te[ 1 ] *= sy; te[ 4 ] *= sy; te[ 7 ] *= sy;
         return this;
     }
 
-    public boolean Equals(Matrix3 matrix){
+    public boolean equals(Matrix3 matrix){
         float[] te = this.elements;
         float[] me = matrix.elements;
 
@@ -193,14 +192,14 @@ public class Matrix3 {
         return true;
     }
 
-    public Matrix3 FromArray(float[] array, int offset){
+    public Matrix3 fromArray(float[] array, int offset){
         for ( int i = 0; i < 9; i ++ ) {
             this.elements[ i ] = array[ i + offset ];
         }
         return this;
     }
 
-    public float[] ToArray(float[] array, int offset) {
+    public float[] toArray(float[] array, int offset) {
         float[] te = this.elements;
 
         array[ offset ] = te[ 0 ];

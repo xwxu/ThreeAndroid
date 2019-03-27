@@ -6,8 +6,6 @@ import android.text.TextUtils;
 import java.nio.IntBuffer;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -123,7 +121,7 @@ public class GLProgram {
 
         float gammaFactorDefine = ( renderer.gammaFactor > 0 ) ? renderer.gammaFactor : 1.0f;
 
-        String customDefines = GenerateDefines( defines );
+        String customDefines = generateDefines( defines );
 
         program = GLES20.glCreateProgram();
 
@@ -257,39 +255,39 @@ public class GLProgram {
             fragment.add("uniform mat4 viewMatrix;");
             fragment.add("uniform vec3 cameraPosition;");
             fragment.add(( parameters.toneMapping != NoToneMapping ) ? "#define TONE_MAPPING" : "");
-            fragment.add(( parameters.toneMapping != NoToneMapping ) ? chunks.Get("tonemapping_pars_fragment"): "");
-            fragment.add(( parameters.toneMapping != NoToneMapping ) ? GetToneMappingFunction( "toneMapping", parameters.toneMapping ) : "");
+            fragment.add(( parameters.toneMapping != NoToneMapping ) ? chunks.get("tonemapping_pars_fragment"): "");
+            fragment.add(( parameters.toneMapping != NoToneMapping ) ? getToneMappingFunction( "toneMapping", parameters.toneMapping ) : "");
             fragment.add(parameters.dithering ? "#define DITHERING" : "");
             fragment.add(( parameters.outputEncoding != 0 || parameters.mapEncoding != 0 || parameters.matcapEncoding != 0 ||
                     parameters.envMapEncoding != 0 || parameters.emissiveMapEncoding != 0) ?
-                    chunks.Get("encodings_pars_fragment"): "");
-            fragment.add(parameters.mapEncoding != 0 ? GetTexelDecodingFunction( "mapTexelToLinear", parameters.mapEncoding ) : "");
-            fragment.add(parameters.matcapEncoding != 0 ? GetTexelDecodingFunction( "matcapTexelToLinear", parameters.matcapEncoding ) : "");
-            fragment.add(parameters.envMapEncoding != 0 ? GetTexelDecodingFunction( "envMapTexelToLinear", parameters.envMapEncoding ) : "");
-            fragment.add(parameters.emissiveMapEncoding != 0 ? GetTexelDecodingFunction( "emissiveMapTexelToLinear", parameters.emissiveMapEncoding ) : "");
-            fragment.add(parameters.outputEncoding != 0 ? GetTexelEncodingFunction( "linearToOutputTexel", parameters.outputEncoding ) : "");
+                    chunks.get("encodings_pars_fragment"): "");
+            fragment.add(parameters.mapEncoding != 0 ? getTexelDecodingFunction( "mapTexelToLinear", parameters.mapEncoding ) : "");
+            fragment.add(parameters.matcapEncoding != 0 ? getTexelDecodingFunction( "matcapTexelToLinear", parameters.matcapEncoding ) : "");
+            fragment.add(parameters.envMapEncoding != 0 ? getTexelDecodingFunction( "envMapTexelToLinear", parameters.envMapEncoding ) : "");
+            fragment.add(parameters.emissiveMapEncoding != 0 ? getTexelDecodingFunction( "emissiveMapTexelToLinear", parameters.emissiveMapEncoding ) : "");
+            fragment.add(parameters.outputEncoding != 0 ? getTexelEncodingFunction( "linearToOutputTexel", parameters.outputEncoding ) : "");
             fragment.add(parameters.depthPacking ? "#define DEPTH_PACKING " + material.depthPacking : "");
             fragment.add("\n");
 
             prefixFragment = TextUtils.join("\n", fragment);
         }
 
-        vertexShader = ParseIncludes( vertexShader );
-        vertexShader = ReplaceLightNums( vertexShader, parameters );
-        vertexShader = ReplaceClippingPlaneNums( vertexShader, parameters );
+        vertexShader = parseIncludes( vertexShader );
+        vertexShader = replaceLightNums( vertexShader, parameters );
+        vertexShader = replaceClippingPlaneNums( vertexShader, parameters );
 
-        fragmentShader = ParseIncludes( fragmentShader );
-        fragmentShader = ReplaceLightNums( fragmentShader, parameters );
-        fragmentShader = ReplaceClippingPlaneNums( fragmentShader, parameters );
+        fragmentShader = parseIncludes( fragmentShader );
+        fragmentShader = replaceLightNums( fragmentShader, parameters );
+        fragmentShader = replaceClippingPlaneNums( fragmentShader, parameters );
 
-        vertexShader = UnrollLoops( vertexShader );
-        fragmentShader = UnrollLoops( fragmentShader );
+        vertexShader = unrollLoops( vertexShader );
+        fragmentShader = unrollLoops( fragmentShader );
 
         String vertexGlsl = prefixVertex + vertexShader;
         String fragmentGlsl = prefixFragment + fragmentShader;
 
-        int glVertexShader = GLShader.CreateShader( GLES20.GL_VERTEX_SHADER, vertexGlsl );
-        int glFragmentShader = GLShader.CreateShader( GLES20.GL_FRAGMENT_SHADER, fragmentGlsl );
+        int glVertexShader = GLShader.createShader( GLES20.GL_VERTEX_SHADER, vertexGlsl );
+        int glFragmentShader = GLShader.createShader( GLES20.GL_FRAGMENT_SHADER, fragmentGlsl );
 
         GLES20.glAttachShader( program, glVertexShader );
         GLES20.glAttachShader( program, glFragmentShader );
@@ -315,7 +313,7 @@ public class GLProgram {
         GLES20.glDeleteShader( glFragmentShader );
     }
 
-    public GLUniforms GetUniforms(){
+    public GLUniforms getUniforms(){
         if ( cachedUniforms == null ) {
             cachedUniforms = new GLUniforms( program, renderer );
         }
@@ -323,20 +321,20 @@ public class GLProgram {
         return cachedUniforms;
     }
 
-    public HashMap<String, Integer> GetAttributes() {
+    public HashMap<String, Integer> getAttributes() {
         if ( cachedAttributes == null ) {
-            cachedAttributes = FetchAttributeLocations( program );
+            cachedAttributes = fetchAttributeLocations( program );
         }
 
         return cachedAttributes;
     }
 
-    public void Destroy(){
+    public void destroy(){
         GLES20.glDeleteProgram(program);
         this.program = -1;
     }
 
-    private ArrayList<String> GetEncodingComponents(int encoding){
+    private ArrayList<String> getEncodingComponents(int encoding){
         ArrayList<String> list = new ArrayList<>();
         switch (encoding){
             case LinearEncoding:
@@ -371,17 +369,17 @@ public class GLProgram {
         return list;
     }
 
-    private String GetTexelDecodingFunction(String functionName, int encoding){
-        ArrayList components = GetEncodingComponents( encoding );
+    private String getTexelDecodingFunction(String functionName, int encoding){
+        ArrayList components = getEncodingComponents( encoding );
         return "vec4 " + functionName + "( vec4 value ) { return " + components.get(0) + "ToLinear" + components.get(1) + "; }";
     }
 
-    private String GetTexelEncodingFunction(String functionName, int encoding) {
-        ArrayList components = GetEncodingComponents( encoding );
+    private String getTexelEncodingFunction(String functionName, int encoding) {
+        ArrayList components = getEncodingComponents( encoding );
         return "vec4 " + functionName + "( vec4 value ) { return LinearTo" + components.get(0) + components.get(1) + "; }";
     }
 
-    private String GetToneMappingFunction(String functionName, int toneMapping){
+    private String getToneMappingFunction(String functionName, int toneMapping){
         String toneMappingName = "";
 
         switch ( toneMapping ) {
@@ -407,7 +405,7 @@ public class GLProgram {
         return "vec3 " + functionName + "( vec3 color ) { return " + toneMappingName + "ToneMapping( color ); }";
     }
 
-    private String GenerateDefines(HashMap<String, Boolean> defines){
+    private String generateDefines(HashMap<String, Boolean> defines){
         if(defines == null){
             return "";
         }
@@ -426,7 +424,7 @@ public class GLProgram {
         return result;
     }
 
-    private HashMap<String, Integer> FetchAttributeLocations(int program){
+    private HashMap<String, Integer> fetchAttributeLocations(int program){
         HashMap<String,Integer> attributes = new HashMap<>();
         IntBuffer buf = IntBuffer.allocate(1);
         GLES20.glGetProgramiv(program, GLES20.GL_ACTIVE_ATTRIBUTES, buf);
@@ -437,7 +435,7 @@ public class GLProgram {
             int[] size = new int[1];
             int[] type = new int[1];
             GLES20.glGetActiveAttrib(program, i, 20, null, 0, size, 0, type, 0, nameBuf, 0);
-            byte[] trimed = GLUtils.TrimZero(nameBuf);
+            byte[] trimed = GLUtils.trimZero(nameBuf);
             String name = new String(trimed);
             attributes.put(name, GLES20.glGetAttribLocation(program, name));
         }
@@ -445,11 +443,11 @@ public class GLProgram {
         return attributes;
     }
 
-    private boolean FilterEmptyline(String string){
+    private boolean filterEmptyline(String string){
         return !string.equals("");
     }
 
-    private String ReplaceLightNums(String string, Parameters parameters){
+    private String replaceLightNums(String string, Parameters parameters){
         String dirlights = "NUM_DIR_LIGHTS";
         string = string.replaceAll(dirlights, String.valueOf(parameters.numDirLights));
         String spotlights = "NUM_SPOT_LIGHTS";
@@ -463,7 +461,7 @@ public class GLProgram {
         return string;
     }
 
-    private String ReplaceClippingPlaneNums(String string, Parameters parameters){
+    private String replaceClippingPlaneNums(String string, Parameters parameters){
         String clippingPlanes = "NUM_CLIPPING_PLANES";
         string = string.replaceAll(clippingPlanes, String.valueOf(parameters.numClippingPlanes));
         String union_clipping_planes = "UNION_CLIPPING_PLANES";
@@ -471,26 +469,34 @@ public class GLProgram {
         return string;
     }
 
-    public static String ParseIncludes(String string){
+    public static String parseIncludes(String string){
 
         String regex = "[\t]*#include[\\s]*<([\\w\\d]+)>";
 
         Pattern pattern = Pattern.compile(regex);
+        String[] split = pattern.split(string);
+        int index = 0;
+        StringBuilder res = new StringBuilder(split[0]);
+
         Matcher m = pattern.matcher(string);
         while (m.find()){
             String s =  m.group();
             int start = s.indexOf("<");
             int end = s.indexOf(">");
             String chunkName = s.substring(start+1, end);
-            String chunkCode = chunks.Get(chunkName);
-            string = string.replace(s, chunkCode);
-            m.reset(string);
+            String chunkCode = chunks.get(chunkName);
+
+            res.append(chunkCode);
+            index++;
+            if(index < split.length){
+                res.append(split[index]);
+            }
         }
 
-        return string;
+        return res.toString();
     }
 
-    private String UnrollLoops(String string){
+    private String unrollLoops(String string){
         String regex = "#pragma unroll_loop[\\s]+?for \\( int i \\= (\\d+)\\; i < (\\d+)\\; i \\+\\+ \\) \\{([\\s\\S]+?)(?=\\})\\}";
         Pattern p = Pattern.compile(regex);
         Matcher  matcher = p.matcher(string);
@@ -503,10 +509,10 @@ public class GLProgram {
 
         int index = 0;
         String[] split = p.split(string);
-        String res = split[0];
+        StringBuilder res = new StringBuilder(split[0]);
 
         while(matcher.find()){
-            String newContent = "";
+            StringBuilder newContent = new StringBuilder();
             String group = matcher.group();
 
             Matcher matcherCond = patternCond.matcher(group);
@@ -528,20 +534,20 @@ public class GLProgram {
                     String bracketContent = matcherBracket.group();
                     for(int i = startIndex; i < endIndex; ++i){
                         String content = bracketContent.substring(1, bracketContent.length() - 1);
-                        newContent += content.replaceAll("\\[ i \\]", "\\[" + i + "\\]");
+                        newContent.append(content.replaceAll("\\[ i \\]", "\\[" + i + "\\]"));
                     }
                 }
 
-                res += newContent;
+                res.append(newContent.toString());
                 index++;
                 if(index < split.length){
-                    res += split[index];
+                    res.append(split[index]);
                 }
             }
 
         }
 
-        return res;
+        return res.toString();
     }
 
 

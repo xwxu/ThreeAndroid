@@ -170,15 +170,15 @@ public class GLRenderer {
         this._preserveDrawingBuffer = parameters.preserveDrawingBuffer;
         this._powerPreference = parameters.powerPreference;
 
-        InitGLContext();
+        initGLContext();
     }
 
-    public void InitGLContext(){
+    public void initGLContext(){
         state = new GLState();
         _viewport = new Vector4(0, 0, _width, _height);
         _scissor = new Vector4(0, 0, _width, _height);
-        state.Scissor(_currentScissor.Copy(_scissor).MultiplyScalar(_pixelRatio));
-        state.Viewport(_currentViewport.Copy(_viewport).MultiplyScalar(_pixelRatio));
+        state.scissor(_currentScissor.copy(_scissor).multiplyScalar(_pixelRatio));
+        state.viewport(_currentViewport.copy(_viewport).multiplyScalar(_pixelRatio));
 
         info = new GLInfo();
         properties = new GLProperties();
@@ -198,30 +198,30 @@ public class GLRenderer {
     }
 
 
-    public void SetRenderTarget(GLRenderTarget renderTarget){
+    public void setRenderTarget(GLRenderTarget renderTarget){
         _currentRenderTarget = renderTarget;
 
-        if ( renderTarget != null && properties.GetRenderTarget( renderTarget ).__glFramebuffer < 0 ) {
-            textures.SetupRenderTarget( renderTarget );
+        if ( renderTarget != null && properties.getRenderTarget( renderTarget ).__glFramebuffer < 0 ) {
+            textures.setupRenderTarget( renderTarget );
         }
 
         int framebuffer = _framebuffer;
         boolean isCube = false;
 
         if ( renderTarget != null ) {
-            int __glFramebuffer = properties.GetRenderTarget( renderTarget ).__glFramebuffer;
+            int __glFramebuffer = properties.getRenderTarget( renderTarget ).__glFramebuffer;
             if ( renderTarget instanceof GLRenderTargetCube ) {
                 // todo
             } else {
                 framebuffer = __glFramebuffer;
             }
-            _currentViewport.Copy( renderTarget.viewport );
-            _currentScissor.Copy( renderTarget.scissor );
+            _currentViewport.copy( renderTarget.viewport );
+            _currentScissor.copy( renderTarget.scissor );
             _currentScissorTest = renderTarget.scissorTest;
 
         } else {
-            _currentViewport.Copy( _viewport ).MultiplyScalar( _pixelRatio );
-            _currentScissor.Copy( _scissor ).MultiplyScalar( _pixelRatio );
+            _currentViewport.copy( _viewport ).multiplyScalar( _pixelRatio );
+            _currentScissor.copy( _scissor ).multiplyScalar( _pixelRatio );
             _currentScissorTest = _scissorTest;
         }
 
@@ -230,24 +230,24 @@ public class GLRenderer {
             _currentFramebuffer = framebuffer;
         }
 
-        state.Viewport( _currentViewport );
-        state.Scissor( _currentScissor );
-        state.SetScissorTest( _currentScissorTest );
+        state.viewport( _currentViewport );
+        state.scissor( _currentScissor );
+        state.setScissorTest( _currentScissorTest );
 
         if ( isCube ) {
-            TextureProperties textureProperties = properties.GetTexture( renderTarget.texture );
+            TextureProperties textureProperties = properties.getTexture( renderTarget.texture );
 //            GLES20.glFramebufferTexture2D( GLES20.GL_FRAMEBUFFER, GLES20.GL_COLOR_ATTACHMENT0,
 //                    GLES20.GL_TEXTURE_CUBE_MAP_POSITIVE_X + renderTarget.activeCubeFace, textureProperties.__glTexture, renderTarget.activeMipMapLevel );
         }
 
     }
 
-    private float GetTargetPixelRatio(){
+    private float getTargetPixelRatio(){
         return _currentRenderTarget == null ? _pixelRatio : 1;
     }
 
 
-    public void Render(Scene scene, Camera camera, GLRenderTarget renderTarget, boolean forceClear) throws IllegalAccessException {
+    public void render(Scene scene, Camera camera, GLRenderTarget renderTarget, boolean forceClear) throws IllegalAccessException {
 
         // reset caching for this frame;
         _currentGeometryProgram_geometry = 0;
@@ -257,43 +257,43 @@ public class GLRenderer {
         _currentCamera = null;
 
         // update scene graph
-        if ( scene.autoUpdate == true ) scene.UpdateMatrixWorld(true);
+        if ( scene.autoUpdate == true ) scene.updateMatrixWorld(true);
 
-        if ( camera.parent == null ) camera.UpdateMatrixWorld(true);
+        if ( camera.parent == null ) camera.updateMatrixWorld(true);
 
-        currentRenderState = renderStates.Get(scene, camera);
-        currentRenderState.Init();
+        currentRenderState = renderStates.get(scene, camera);
+        currentRenderState.init();
 
-        //scene.OnBeforeRender( this, scene, camera, renderTarget );
+        //scene.onBeforeRender( this, scene, camera, renderTarget );
 
-        _projScreenMatrix.MultiplyMatrices( camera.projectionMatrix, camera.matrixWorldInverse );
-        _frustum.SetFromMatrix( _projScreenMatrix );
+        _projScreenMatrix.multiplyMatrices( camera.projectionMatrix, camera.matrixWorldInverse );
+        _frustum.setFromMatrix( _projScreenMatrix );
 
         _localClippingEnabled = this.localClippingEnabled;
-        _clippingEnabled = _clipping.Init( this.clippingPlanes, _localClippingEnabled, camera );
+        _clippingEnabled = _clipping.init( this.clippingPlanes, _localClippingEnabled, camera );
 
-        currentRenderList = renderLists.Get( scene, camera );
-        currentRenderList.Init();
+        currentRenderList = renderLists.get( scene, camera );
+        currentRenderList.init();
 
-        ProjectObject( scene, camera, this.sortObjects );
+        projectObject( scene, camera, this.sortObjects );
 
         if (sortObjects) {
-            currentRenderList.Sort();
+            currentRenderList.sort();
         }
 
-        if ( _clippingEnabled ) _clipping.BeginShadows();
+        if ( _clippingEnabled ) _clipping.beginShadows();
         ArrayList<Light> shadowsArray = currentRenderState.shadowsArray;
-        shadowMap.Render( shadowsArray, scene, camera );
-        currentRenderState.SetupLights( camera );
-        if ( _clippingEnabled ) _clipping.EndShadows();
+        shadowMap.render( shadowsArray, scene, camera );
+        currentRenderState.setupLights( camera );
+        if ( _clippingEnabled ) _clipping.endShadows();
 
 
-        if ( this.info.autoReset ) this.info.Reset();
+        if ( this.info.autoReset ) this.info.reset();
 
-        this.SetRenderTarget( renderTarget );
+        this.setRenderTarget( renderTarget );
 
         // render background
-        background.Render( currentRenderList, scene, camera, forceClear );
+        background.render( currentRenderList, scene, camera, forceClear );
 
         // render scene
         ArrayList<RenderItem> opaqueObjects = currentRenderList.opaque;
@@ -303,22 +303,22 @@ public class GLRenderer {
 
             Material overrideMaterial = scene.overrideMaterial;
 
-            if ( opaqueObjects.size() > 0 ) RenderObjects( opaqueObjects, scene, camera, overrideMaterial );
-            if ( transparentObjects.size() > 0 ) RenderObjects( transparentObjects, scene, camera, overrideMaterial );
+            if ( opaqueObjects.size() > 0 ) renderObjects( opaqueObjects, scene, camera, overrideMaterial );
+            if ( transparentObjects.size() > 0 ) renderObjects( transparentObjects, scene, camera, overrideMaterial );
 
         } else {
 
             // opaque pass (front-to-back order)
-            if ( opaqueObjects.size() > 0 ) RenderObjects( opaqueObjects, scene, camera, null );
+            if ( opaqueObjects.size() > 0 ) renderObjects( opaqueObjects, scene, camera, null );
 
             // transparent pass (back-to-front order)
-            if ( transparentObjects.size() > 0 ) RenderObjects( transparentObjects, scene, camera, null );
+            if ( transparentObjects.size() > 0 ) renderObjects( transparentObjects, scene, camera, null );
 
         }
 
         // Generate mipmap if we're using any kind of mipmap filtering
         if ( renderTarget != null ) {
-            textures.UpdateRenderTargetMipmap( renderTarget );
+            textures.updateRenderTargetMipmap( renderTarget );
         }
 
         // Ensure depth buffer writing is enabled so it can be cleared on next render
@@ -327,13 +327,13 @@ public class GLRenderer {
         state.depthBuffer.SetMask( true );
         state.colorBuffer.SetMask( true );
 
-        state.SetPolygonOffset( false, 0, 0 );
+        state.setPolygonOffset( false, 0, 0 );
 
         currentRenderList = null;
         currentRenderState = null;
     }
 
-    private void RenderObjects(ArrayList<RenderItem> renderList, Scene scene, Camera camera, Material overrideMaterial) throws IllegalAccessException {
+    private void renderObjects(ArrayList<RenderItem> renderList, Scene scene, Camera camera, Material overrideMaterial) throws IllegalAccessException {
         for ( int i = 0, l = renderList.size(); i < l; i ++ ) {
 
             RenderItem renderItem = renderList.get(i);
@@ -346,35 +346,35 @@ public class GLRenderer {
             //TODO: array camera
 
             _currentArrayCamera = null;
-            RenderObject( object, scene, camera, geometry, material, group );
+            renderObject( object, scene, camera, geometry, material, group );
         }
     }
 
-    private void RenderObject(Object3D object, Scene scene, Camera camera, BufferGeometry geometry, Material material, GeoMatGroup group) throws IllegalAccessException {
-        object.OnBeforeRender(this, scene, camera);
-        currentRenderState = renderStates.Get( scene, camera );
+    private void renderObject(Object3D object, Scene scene, Camera camera, BufferGeometry geometry, Material material, GeoMatGroup group) throws IllegalAccessException {
+        object.onBeforeRender(this, scene, camera);
+        currentRenderState = renderStates.get( scene, camera );
 
-        object.modelViewMatrix.MultiplyMatrices( camera.matrixWorldInverse, object.matrixWorld );
-        object.normalMatrix.GetNormalMatrix( object.modelViewMatrix );
+        object.modelViewMatrix.multiplyMatrices( camera.matrixWorldInverse, object.matrixWorld );
+        object.normalMatrix.getNormalMatrix( object.modelViewMatrix );
 
         // TODO: immediateRenderObject
         if ( false ) {
 
         } else {
-            RenderBufferDirect( camera, scene.fog, geometry, material, object, group );
+            renderBufferDirect( camera, scene.fog, geometry, material, object, group );
         }
 
         //object.onAfterRender( _this, scene, camera, geometry, material, group );
-        currentRenderState = renderStates.Get( scene, camera );
+        currentRenderState = renderStates.get( scene, camera );
 
     }
 
-    public void RenderBufferDirect(Camera camera, Fog fog, BufferGeometry geometry, Material material, Object3D object, GeoMatGroup group) throws IllegalAccessException {
-        boolean frontFaceCW = ( object instanceof Mesh && object.normalMatrix.Determinant() < 0 );
+    public void renderBufferDirect(Camera camera, Fog fog, BufferGeometry geometry, Material material, Object3D object, GeoMatGroup group) throws IllegalAccessException {
+        boolean frontFaceCW = ( object instanceof Mesh && object.normalMatrix.determinant() < 0 );
 
-        state.SetMaterial( material, frontFaceCW );
+        state.setMaterial( material, frontFaceCW );
 
-        GLProgram program = SetProgram( camera, fog, material, object );
+        GLProgram program = setProgram( camera, fog, material, object );
 
         boolean updateBuffers = false;
 
@@ -396,7 +396,7 @@ public class GLRenderer {
         int rangeFactor = 1;
 
         if (material.wireframe) {
-            index = geometries.GetWireframeAttribute( geometry );
+            index = geometries.getWireframeAttribute( geometry );
             rangeFactor = 2;
         }
 
@@ -404,13 +404,13 @@ public class GLRenderer {
         GLBufferRenderer renderer = bufferRenderer;
 
         if ( index != null ) {
-            attribute = attributes.Get( index );
-            indexedBufferRenderer.SetIndex( attribute );
+            attribute = attributes.get( index );
+            indexedBufferRenderer.setIndex( attribute );
             renderer = indexedBufferRenderer;
         }
 
         if ( updateBuffers ) {
-            SetupVertexAttributes( material, program, geometry );
+            setupVertexAttributes( material, program, geometry );
             if ( index != null ) {
                 GLES20.glBindBuffer(GLES20.GL_ELEMENT_ARRAY_BUFFER, attribute.buffer[0]);
             }
@@ -442,20 +442,20 @@ public class GLRenderer {
             if (material.wireframe) {
                 if(material instanceof MeshMaterial){
                     MeshMaterial meshmat = (MeshMaterial)material;
-                    state.SetLineWidth( meshmat.wireframeLinewidth * GetTargetPixelRatio() );
-                    renderer.SetMode( GLES20.GL_LINES );
+                    state.setLineWidth( meshmat.wireframeLinewidth * getTargetPixelRatio() );
+                    renderer.setMode( GLES20.GL_LINES );
                 }
 
             } else {
                 switch ( ((Mesh)object).drawMode ) {
                     case TrianglesDrawMode:
-                        renderer.SetMode( GLES20.GL_TRIANGLES );
+                        renderer.setMode( GLES20.GL_TRIANGLES );
                         break;
                     case TriangleStripDrawMode:
-                        renderer.SetMode( GLES20.GL_TRIANGLE_STRIP );
+                        renderer.setMode( GLES20.GL_TRIANGLE_STRIP );
                         break;
                     case TriangleFanDrawMode:
-                        renderer.SetMode( GLES20.GL_TRIANGLE_FAN );
+                        renderer.setMode( GLES20.GL_TRIANGLE_FAN );
                         break;
                 }
             }
@@ -465,40 +465,40 @@ public class GLRenderer {
             LineMaterial linemat = (LineMaterial) material;
             float lineWidth = linemat.linewidth;
 
-            state.SetLineWidth( lineWidth * GetTargetPixelRatio() );
+            state.setLineWidth( lineWidth * getTargetPixelRatio() );
 
             if (object.type.equals("LineSegments")) {
-                renderer.SetMode( GLES20.GL_LINES );
+                renderer.setMode( GLES20.GL_LINES );
 
             } else if (object.type.equals("LineLoop")) {
-                renderer.SetMode( GLES20.GL_LINE_LOOP );
+                renderer.setMode( GLES20.GL_LINE_LOOP );
 
             } else {
-                renderer.SetMode( GLES20.GL_LINE_STRIP );
+                renderer.setMode( GLES20.GL_LINE_STRIP );
             }
 
         } else if ( object instanceof Points ) {
-            renderer.SetMode( GLES20.GL_POINTS );
+            renderer.setMode( GLES20.GL_POINTS );
 
         } else if ( object instanceof Sprite ) {
-            renderer.SetMode(GLES20.GL_TRIANGLES ); 
+            renderer.setMode(GLES20.GL_TRIANGLES );
 
         }
 
         // TODO: draw instances
 
-        renderer.Render( drawStart, drawCount );
+        renderer.render( drawStart, drawCount );
 
     }
 
-    private void SetupVertexAttributes(Material material, GLProgram program, BufferGeometry geometry) {
+    private void setupVertexAttributes(Material material, GLProgram program, BufferGeometry geometry) {
 
-        state.InitAttributes();
+        state.initAttributes();
 
         HashMap<String, BufferAttribute> geometryAttributes = geometry.attributes;
-        HashMap<String, Integer> programAttributes = program.GetAttributes();
+        HashMap<String, Integer> programAttributes = program.getAttributes();
 
-        Field defaultAttributeField = material.GetProperty("defaultAttributeValues");
+        Field defaultAttributeField = material.getProperty("defaultAttributeValues");
 
         for (Object o : programAttributes.entrySet()) {
             HashMap.Entry pair = (HashMap.Entry) o;
@@ -513,7 +513,7 @@ public class GLRenderer {
                     boolean normalized = geometryAttribute.normalized;
                     int size = geometryAttribute.itemSize;
 
-                    BufferData attribute = attributes.Get(geometryAttribute);
+                    BufferData attribute = attributes.get(geometryAttribute);
 
                     if (attribute == null) continue;
 
@@ -529,7 +529,7 @@ public class GLRenderer {
                             // TODO: instanced BufferAttribute
 
                         } else {
-                            state.EnableAttribute(programAttribute);
+                            state.enableAttribute(programAttribute);
                         }
 
                         GLES20.glBindBuffer(GLES20.GL_ARRAY_BUFFER, buffer);
@@ -568,14 +568,14 @@ public class GLRenderer {
             }
         }
 
-        state.DisableUnusedAttributes();
+        state.disableUnusedAttributes();
 
     }
 
-    private GLProgram SetProgram(Camera camera, Fog fog, Material material, Object3D object) throws IllegalAccessException {
+    private GLProgram setProgram(Camera camera, Fog fog, Material material, Object3D object) throws IllegalAccessException {
         _usedTextureUnits = 0;
 
-        MaterialProperties materialProperties = properties.GetMaterial(material);
+        MaterialProperties materialProperties = properties.getMaterial(material);
         GLLights lights = currentRenderState.lights;
 
         LightHash lightsHash = materialProperties.lightsHash;
@@ -584,7 +584,7 @@ public class GLRenderer {
             if ( _localClippingEnabled || camera != _currentCamera ) {
                 boolean useCache = camera == _currentCamera &&  material.id == _currentMaterialId;
 
-                _clipping.SetState(
+                _clipping.setState(
                         material.clippingPlanes, material.clipIntersection, material.clipShadows,
                         camera, materialProperties.clippingState, useCache );
             }
@@ -618,7 +618,7 @@ public class GLRenderer {
         }
 
         if ( material.needsUpdate ) {
-            InitMaterial( material, fog, object );
+            initMaterial( material, fog, object );
             material.needsUpdate = false;
         }
 
@@ -627,10 +627,10 @@ public class GLRenderer {
         boolean refreshLights = false;
 
         GLProgram program = materialProperties.program;
-        GLUniforms p_uniforms = program.GetUniforms();
+        GLUniforms p_uniforms = program.getUniforms();
         UniformsObject m_uniforms = materialProperties.shader.uniforms;
 
-        if ( state.UseProgram( program.program ) ) {
+        if ( state.useProgram( program.program ) ) {
             refreshProgram = true;
             refreshMaterial = true;
             refreshLights = true;
@@ -643,10 +643,10 @@ public class GLRenderer {
 
         if ( refreshProgram || _currentCamera != camera ) {
 
-            p_uniforms.SetValue4fm("projectionMatrix", camera.projectionMatrix);
+            p_uniforms.setValue4Fm("projectionMatrix", camera.projectionMatrix);
 
 //            if ( capabilities.logarithmicDepthBuffer ) {
-//                p_uniforms.SetValue(  "logDepthBufFC",
+//                p_uniforms.setValue(  "logDepthBufFC",
 //                        2.0 / ( Math.log( camera.far + 1.0 ) / Math_.LN2 ) );
 //            }
 
@@ -662,12 +662,12 @@ public class GLRenderer {
             if (material.type.equals("ShaderMaterial") ||
                     material.type.equals("MeshPhongMaterial") ||
                     material.type.equals("MeshStandardMaterial") ||
-                    material.GetProperty("envMap") != null) {
+                    material.getProperty("envMap") != null) {
 
                 SingleUniform uCamPos = (SingleUniform) p_uniforms.map.get("cameraPosition");
 
                 if (uCamPos != null) {
-                    uCamPos.SetValue3fv(_vector3.SetFromMatrixPosition(camera.matrixWorld));
+                    uCamPos.setValue3Fv(_vector3.setFromMatrixPosition(camera.matrixWorld));
                 }
 
             }
@@ -678,7 +678,7 @@ public class GLRenderer {
                     material.type.equals("MeshStandardMaterial") ||
                     material.type.equals("ShaderMaterial")) {
 
-                p_uniforms.SetValue4fm("viewMatrix", camera.matrixWorldInverse);
+                p_uniforms.setValue4Fm("viewMatrix", camera.matrixWorldInverse);
 
             }
         }
@@ -687,169 +687,169 @@ public class GLRenderer {
 
         if ( refreshMaterial ) {
 
-            p_uniforms.SetValue1f(  "toneMappingExposure", toneMappingExposure );
-            p_uniforms.SetValue1f(  "toneMappingWhitePoint", toneMappingWhitePoint );
+            p_uniforms.setValue1F(  "toneMappingExposure", toneMappingExposure );
+            p_uniforms.setValue1F(  "toneMappingWhitePoint", toneMappingWhitePoint );
 
             if ( material.lights ) {
-                MarkUniformsLightsNeedsUpdate( m_uniforms, refreshLights );
+                markUniformsLightsNeedsUpdate( m_uniforms, refreshLights );
             }
 
             // refresh uniforms common to several materials
             if ( fog != null && material.fog ) {
-                RefreshUniformsFog( m_uniforms, fog );
+                refreshUniformsFog( m_uniforms, fog );
             }
 
             if (material.type.equals("MeshBasicMaterial")) {
-                RefreshUniformsCommon( m_uniforms, material );
+                refreshUniformsCommon( m_uniforms, material );
 
             } else if (material.type.equals("MeshLambertMaterial")) {
 
-                RefreshUniformsCommon( m_uniforms, material );
-                RefreshUniformsLambert( m_uniforms, material );
+                refreshUniformsCommon( m_uniforms, material );
+                refreshUniformsLambert( m_uniforms, material );
 
             } else if (material.type.equals("MeshPhongMaterial")) {
-                RefreshUniformsCommon( m_uniforms, material );
+                refreshUniformsCommon( m_uniforms, material );
 
                 if (material.type.equals("MeshToonMaterial")) {
-                    RefreshUniformsToon( m_uniforms, material );
+                    refreshUniformsToon( m_uniforms, material );
 
                 } else {
-                    RefreshUniformsPhong( m_uniforms, material );
+                    refreshUniformsPhong( m_uniforms, material );
                 }
 
             } else if (material.type.equals("MeshStandardMaterial")) {
-                RefreshUniformsCommon( m_uniforms, material );
+                refreshUniformsCommon( m_uniforms, material );
                 if (material.type.equals("MeshPhysicalMaterial")) {
-                    RefreshUniformsPhysical( m_uniforms, material );
+                    refreshUniformsPhysical( m_uniforms, material );
                 } else {
-                    RefreshUniformsStandard( m_uniforms, material );
+                    refreshUniformsStandard( m_uniforms, material );
                 }
 
             } else if (material.type.equals("MeshMatcapMaterial")) {
-                RefreshUniformsCommon( m_uniforms, material );
-                RefreshUniformsMatcap( m_uniforms, material );
+                refreshUniformsCommon( m_uniforms, material );
+                refreshUniformsMatcap( m_uniforms, material );
 
             } else if (material.type.equals("MeshDepthMaterial")) {
-                RefreshUniformsCommon( m_uniforms, material );
-                RefreshUniformsDepth( m_uniforms, material );
+                refreshUniformsCommon( m_uniforms, material );
+                refreshUniformsDepth( m_uniforms, material );
 
             } else if (material.type.equals("MeshDistanceMaterial")) {
-                RefreshUniformsCommon( m_uniforms, material );
-                RefreshUniformsDistance( m_uniforms, material );
+                refreshUniformsCommon( m_uniforms, material );
+                refreshUniformsDistance( m_uniforms, material );
 
             } else if (material.type.equals("MeshNormalMaterial")) {
-                RefreshUniformsCommon( m_uniforms, material );
-                RefreshUniformsNormal( m_uniforms, material );
+                refreshUniformsCommon( m_uniforms, material );
+                refreshUniformsNormal( m_uniforms, material );
 
             } else if (material.type.equals("LineBasicMaterial")) {
-                RefreshUniformsLine( m_uniforms, material );
+                refreshUniformsLine( m_uniforms, material );
                 if (material.type.equals("LineDashedMaterial")) {
-                    RefreshUniformsDash( m_uniforms, material );
+                    refreshUniformsDash( m_uniforms, material );
                 }
 
             } else if (material.type.equals("PointsMaterial")) {
-                RefreshUniformsPoints( m_uniforms, material );
+                refreshUniformsPoints( m_uniforms, material );
 
             } else if (material.type.equals("SpriteMaterial")) {
-                RefreshUniformsSprites( m_uniforms, material );
+                refreshUniformsSprites( m_uniforms, material );
 
             } else if (material.type.equals("ShadowMaterial")) {
-                Field colorField = material.GetProperty("color");
-                m_uniforms.Put("color", colorField.get(material));
-                m_uniforms.Put("opacity", material.opacity);
+                Field colorField = material.getProperty("color");
+                m_uniforms.put("color", colorField.get(material));
+                m_uniforms.put("opacity", material.opacity);
 
             }
 
-            GLUniforms.Upload( materialProperties.uniformsList, m_uniforms, this );
+            GLUniforms.upload( materialProperties.uniformsList, m_uniforms, this );
         }
 
         if (material.type.equals("ShaderMaterial") && ((ShaderMaterial) material).uniformsNeedUpdate) {
-            GLUniforms.Upload( materialProperties.uniformsList, m_uniforms, this );
+            GLUniforms.upload( materialProperties.uniformsList, m_uniforms, this );
             ((ShaderMaterial)material).uniformsNeedUpdate = false;
         }
 
         if (material.type.equals("SpriteMaterial")) {
-            p_uniforms.SetValue2fv("center", ((Sprite)object).center );
+            p_uniforms.setValue2Fv("center", ((Sprite)object).center );
         }
 
         // common matrices
-        p_uniforms.SetValue4fm( "modelViewMatrix", object.modelViewMatrix );
-        p_uniforms.SetValue3fm( "normalMatrix", object.normalMatrix );
-        p_uniforms.SetValue4fm( "modelMatrix", object.matrixWorld );
+        p_uniforms.setValue4Fm( "modelViewMatrix", object.modelViewMatrix );
+        p_uniforms.setValue3Fm( "normalMatrix", object.normalMatrix );
+        p_uniforms.setValue4Fm( "modelMatrix", object.matrixWorld );
 
         return program;
     }
 
-    private void RefreshUniformsCommon(UniformsObject uniforms, Material material) throws IllegalAccessException {
-        uniforms.Put("opacity", material.opacity);
+    private void refreshUniformsCommon(UniformsObject uniforms, Material material) throws IllegalAccessException {
+        uniforms.put("opacity", material.opacity);
 
-        Field colorField = material.GetProperty("color");
+        Field colorField = material.getProperty("color");
         if ( colorField != null ) {
-            uniforms.Put("diffuse", colorField.get(material));
+            uniforms.put("diffuse", colorField.get(material));
         }
 
-        Field emissiveField = material.GetProperty("emissive");
+        Field emissiveField = material.getProperty("emissive");
         if ( emissiveField != null ) {
             Color emissive = (Color) emissiveField.get(material);
-            Field emissiveIntensityField = material.GetProperty("emissiveIntensity");
+            Field emissiveIntensityField = material.getProperty("emissiveIntensity");
             float emissiveIntensity = (float) emissiveIntensityField.get(material);
-            ((Color)uniforms.Get("emissive")).Copy( emissive.MultiplyScalar( emissiveIntensity ));
+            ((Color)uniforms.get("emissive")).copy( emissive.multiplyScalar( emissiveIntensity ));
         }
 
-        Field mapField = material.GetProperty("map");
-        if ( material.CheckFieldValid("map") ) {
-            uniforms.Put("map", mapField.get(material));
+        Field mapField = material.getProperty("map");
+        if ( material.checkFieldValid("map") ) {
+            uniforms.put("map", mapField.get(material));
         }
 
-        Field alphaMapField = material.GetProperty("alphaMap");
-        if ( material.CheckFieldValid("alphaMap") ) {
-            uniforms.Put("alphaMap", alphaMapField.get(material));
+        Field alphaMapField = material.getProperty("alphaMap");
+        if ( material.checkFieldValid("alphaMap") ) {
+            uniforms.put("alphaMap", alphaMapField.get(material));
         }
 
-        Field specularMapField = material.GetProperty("specularMap");
-        if ( material.CheckFieldValid("specularMap") ) {
-            uniforms.Put("specularMap", specularMapField.get(material));
+        Field specularMapField = material.getProperty("specularMap");
+        if ( material.checkFieldValid("specularMap") ) {
+            uniforms.put("specularMap", specularMapField.get(material));
         }
 
-        Field envMapField = material.GetProperty("envMap");
-        if ( material.CheckFieldValid("envMap") ) {
+        Field envMapField = material.getProperty("envMap");
+        if ( material.checkFieldValid("envMap") ) {
             Texture envMap = (Texture) envMapField.get(material);
-            uniforms.Put("envMap", envMap);
+            uniforms.put("envMap", envMap);
 
             // don't flip CubeTexture envMaps, flip everything else:
             //  WebGLRenderTargetCube will be flipped for backwards compatibility
             //  WebGLRenderTargetCube.texture will be flipped because it's a Texture and NOT a CubeTexture
             // this check must be handled differently, or removed entirely, if WebGLRenderTargetCube uses a CubeTexture in the future
 
-            uniforms.Put("flipEnvMap", envMap instanceof CubeTexture ? - 1 : 1);
+            uniforms.put("flipEnvMap", envMap instanceof CubeTexture ? - 1 : 1);
 
-            Field reflectivityField = material.GetProperty("reflectivity");
+            Field reflectivityField = material.getProperty("reflectivity");
             if(reflectivityField != null){
-                uniforms.Put("reflectivity", reflectivityField.get(material));
+                uniforms.put("reflectivity", reflectivityField.get(material));
             }
 
-            Field refractionRatioField = material.GetProperty("refractionRatio");
+            Field refractionRatioField = material.getProperty("refractionRatio");
             if(refractionRatioField != null){
-                uniforms.Put("refractionRatio", refractionRatioField.get(material));
+                uniforms.put("refractionRatio", refractionRatioField.get(material));
             }
 
-            uniforms.Put("maxMipLevel", properties.GetTexture( envMap ).__maxMipLevel);
+            uniforms.put("maxMipLevel", properties.getTexture( envMap ).__maxMipLevel);
         }
 
-        Field lightMapField = material.GetProperty("lightMap");
-        if ( material.CheckFieldValid("lightMap") ) {
-            Field lightMapIntensityField = material.GetProperty("lightMapIntensity");
+        Field lightMapField = material.getProperty("lightMap");
+        if ( material.checkFieldValid("lightMap") ) {
+            Field lightMapIntensityField = material.getProperty("lightMapIntensity");
             float lightMapIntensity = (float) lightMapIntensityField.get(material);
-            uniforms.Put("lightMap", lightMapField.get(material));
-            uniforms.Put("lightMapIntensity", lightMapIntensity);
+            uniforms.put("lightMap", lightMapField.get(material));
+            uniforms.put("lightMapIntensity", lightMapIntensity);
         }
 
-        Field aoMapField = material.GetProperty("aoMap");
-        if ( material.CheckFieldValid("aoMap") ) {
-            Field aoMapIntensityField = material.GetProperty("aoMapIntensity");
+        Field aoMapField = material.getProperty("aoMap");
+        if ( material.checkFieldValid("aoMap") ) {
+            Field aoMapIntensityField = material.getProperty("aoMapIntensity");
             float aoMapIntensity = (float) aoMapIntensityField.get(material);
-            uniforms.Put("aoMap", alphaMapField.get(material));
-            uniforms.Put("aoMapIntensity", aoMapIntensity);
+            uniforms.put("aoMap", alphaMapField.get(material));
+            uniforms.put("aoMapIntensity", aoMapIntensity);
         }
 
         // uv repeat and offset setting priorities
@@ -861,11 +861,11 @@ public class GLRenderer {
         // 6. emissive map
 
         Texture uvScaleMap = null;
-        Field displacementMapField = material.GetProperty("displacementMap");
-        Field normalMapField = material.GetProperty("normalMap");
-        Field bumpMapField = material.GetProperty("bumpMap");
-        Field roughnessMapField = material.GetProperty("roughnessMap");
-        Field metalnessMapField = material.GetProperty("metalnessMap");
+        Field displacementMapField = material.getProperty("displacementMap");
+        Field normalMapField = material.getProperty("normalMap");
+        Field bumpMapField = material.getProperty("bumpMap");
+        Field roughnessMapField = material.getProperty("roughnessMap");
+        Field metalnessMapField = material.getProperty("metalnessMap");
 
         if ( mapField != null ) {
             uvScaleMap = (Texture) mapField.get(material);
@@ -898,180 +898,180 @@ public class GLRenderer {
 
         if ( uvScaleMap != null ) {
             if (uvScaleMap.matrixAutoUpdate) {
-                uvScaleMap.UpdateMatrix();
+                uvScaleMap.updateMatrix();
             }
-            ((Matrix3)uniforms.Get("unTransform")).Copy( uvScaleMap.matrix );
+            ((Matrix3)uniforms.get("unTransform")).copy( uvScaleMap.matrix );
         }
     }
 
-    private void RefreshUniformsPoints(UniformsObject uniforms, Material material) {
+    private void refreshUniformsPoints(UniformsObject uniforms, Material material) {
 
     }
 
-    private void RefreshUniformsSprites(UniformsObject uniforms, Material material) {
+    private void refreshUniformsSprites(UniformsObject uniforms, Material material) {
     }
 
-    private void RefreshUniformsDash(UniformsObject uniforms, Material material) {
+    private void refreshUniformsDash(UniformsObject uniforms, Material material) {
     }
 
-    private void RefreshUniformsLine(UniformsObject uniforms, Material material) throws IllegalAccessException {
-        Field colorField = material.GetProperty("color");
+    private void refreshUniformsLine(UniformsObject uniforms, Material material) throws IllegalAccessException {
+        Field colorField = material.getProperty("color");
         if ( colorField != null ) {
-            uniforms.Put("diffuse", colorField.get(material));
+            uniforms.put("diffuse", colorField.get(material));
         }
-        uniforms.Put("opacity", material.opacity);
+        uniforms.put("opacity", material.opacity);
     }
 
-    private void RefreshUniformsNormal(UniformsObject uniforms, Material material) {
+    private void refreshUniformsNormal(UniformsObject uniforms, Material material) {
         MeshNormalMaterial meshNormalMaterial = (MeshNormalMaterial) material;
         if ( meshNormalMaterial.bumpMap != null ) {
-            uniforms.Put("bumpMap", meshNormalMaterial.bumpMap);
+            uniforms.put("bumpMap", meshNormalMaterial.bumpMap);
             if(material.side == BackSide){
-                uniforms.Put("bumpScale", meshNormalMaterial.bumpScale * -1);
+                uniforms.put("bumpScale", meshNormalMaterial.bumpScale * -1);
             }else{
-                uniforms.Put("bumpScale", meshNormalMaterial.bumpScale);
+                uniforms.put("bumpScale", meshNormalMaterial.bumpScale);
             }
         }
 
         if ( meshNormalMaterial.normalMap != null) {
-            uniforms.Put("normalMap", meshNormalMaterial.normalMap);
+            uniforms.put("normalMap", meshNormalMaterial.normalMap);
             if(material.side == BackSide){
-                ((Vector2)uniforms.Get("normalScale")).Copy(meshNormalMaterial.normalScale).Negate();
+                ((Vector2)uniforms.get("normalScale")).copy(meshNormalMaterial.normalScale).negate();
             }else{
-                ((Vector2)uniforms.Get("normalScale")).Copy(meshNormalMaterial.normalScale);
+                ((Vector2)uniforms.get("normalScale")).copy(meshNormalMaterial.normalScale);
             }
         }
 
         if ( meshNormalMaterial.displacementMap != null) {
-            uniforms.Put("displacementMap", meshNormalMaterial.displacementMap);
-            uniforms.Put("displacementScale", meshNormalMaterial.displacementScale);
-            uniforms.Put("displacementBias", meshNormalMaterial.displacementBias);
+            uniforms.put("displacementMap", meshNormalMaterial.displacementMap);
+            uniforms.put("displacementScale", meshNormalMaterial.displacementScale);
+            uniforms.put("displacementBias", meshNormalMaterial.displacementBias);
         }
     }
 
-    private void RefreshUniformsDistance(UniformsObject uniforms, Material material) {
+    private void refreshUniformsDistance(UniformsObject uniforms, Material material) {
     }
 
-    private void RefreshUniformsDepth(UniformsObject uniforms, Material material) {
+    private void refreshUniformsDepth(UniformsObject uniforms, Material material) {
     }
 
-    private void RefreshUniformsMatcap(UniformsObject m_uniforms, Material material) {
+    private void refreshUniformsMatcap(UniformsObject m_uniforms, Material material) {
     }
 
-    private void RefreshUniformsStandard(UniformsObject uniforms, Material material) {
+    private void refreshUniformsStandard(UniformsObject uniforms, Material material) {
         MeshStandardMaterial meshStandardMaterial = (MeshStandardMaterial) material;
-        uniforms.Put("roughness", meshStandardMaterial.roughness);
-        uniforms.Put("metalness", meshStandardMaterial.metalness);
+        uniforms.put("roughness", meshStandardMaterial.roughness);
+        uniforms.put("metalness", meshStandardMaterial.metalness);
 
         if ( meshStandardMaterial.roughnessMap != null ) {
-            uniforms.Put("roughnessMap", meshStandardMaterial.roughnessMap);
+            uniforms.put("roughnessMap", meshStandardMaterial.roughnessMap);
         }
 
         if ( meshStandardMaterial.metalnessMap != null ) {
-            uniforms.Put("metalnessMap", meshStandardMaterial.metalnessMap);
+            uniforms.put("metalnessMap", meshStandardMaterial.metalnessMap);
         }
 
         if ( meshStandardMaterial.emissiveMap != null ) {
-            uniforms.Put("emissiveMap", meshStandardMaterial.emissiveMap);
+            uniforms.put("emissiveMap", meshStandardMaterial.emissiveMap);
         }
 
         if ( meshStandardMaterial.bumpMap != null ) {
-            uniforms.Put("bumpMap", meshStandardMaterial.bumpMap);
+            uniforms.put("bumpMap", meshStandardMaterial.bumpMap);
             if(material.side == BackSide){
-                uniforms.Put("bumpScale", meshStandardMaterial.bumpScale * -1);
+                uniforms.put("bumpScale", meshStandardMaterial.bumpScale * -1);
             }else{
-                uniforms.Put("bumpScale", meshStandardMaterial.bumpScale);
+                uniforms.put("bumpScale", meshStandardMaterial.bumpScale);
             }
         }
 
         if ( meshStandardMaterial.normalMap != null) {
-            uniforms.Put("normalMap", meshStandardMaterial.normalMap);
+            uniforms.put("normalMap", meshStandardMaterial.normalMap);
             if(material.side == BackSide){
-                ((Vector2)uniforms.Get("normalScale")).Copy(meshStandardMaterial.normalScale).Negate();
+                ((Vector2)uniforms.get("normalScale")).copy(meshStandardMaterial.normalScale).negate();
             }else{
-                ((Vector2)uniforms.Get("normalScale")).Copy(meshStandardMaterial.normalScale);
+                ((Vector2)uniforms.get("normalScale")).copy(meshStandardMaterial.normalScale);
             }
         }
 
         if ( meshStandardMaterial.displacementMap != null) {
-            uniforms.Put("displacementMap", meshStandardMaterial.displacementMap);
-            uniforms.Put("displacementScale", meshStandardMaterial.displacementScale);
-            uniforms.Put("displacementBias", meshStandardMaterial.displacementBias);
+            uniforms.put("displacementMap", meshStandardMaterial.displacementMap);
+            uniforms.put("displacementScale", meshStandardMaterial.displacementScale);
+            uniforms.put("displacementBias", meshStandardMaterial.displacementBias);
         }
 
         if ( meshStandardMaterial.envMap != null ) {
-            uniforms.Put("envMapIntensity", meshStandardMaterial.envMapIntensity);
+            uniforms.put("envMapIntensity", meshStandardMaterial.envMapIntensity);
         }
     }
 
-    private void RefreshUniformsPhysical(UniformsObject uniforms, Material material) {
-        RefreshUniformsStandard( uniforms, material );
+    private void refreshUniformsPhysical(UniformsObject uniforms, Material material) {
+        refreshUniformsStandard( uniforms, material );
 
         MeshPhysicalMaterial meshPhysicalMaterial = (MeshPhysicalMaterial) material;
-        uniforms.Put("clearCoat", meshPhysicalMaterial.clearCoat);
-        uniforms.Put("clearCoatRoughness", meshPhysicalMaterial.clearCoatRoughness);
+        uniforms.put("clearCoat", meshPhysicalMaterial.clearCoat);
+        uniforms.put("clearCoatRoughness", meshPhysicalMaterial.clearCoatRoughness);
     }
 
-    private void RefreshUniformsPhong(UniformsObject uniforms, Material material) {
+    private void refreshUniformsPhong(UniformsObject uniforms, Material material) {
         MeshPhongMaterial meshPhongMaterial = (MeshPhongMaterial) material;
-        uniforms.Put("specular", meshPhongMaterial.specular);
-        uniforms.Put("shininess", (float)Math.max( meshPhongMaterial.shininess, 1e-4 ));
+        uniforms.put("specular", meshPhongMaterial.specular);
+        uniforms.put("shininess", (float)Math.max( meshPhongMaterial.shininess, 1e-4 ));
 
         if ( meshPhongMaterial.emissiveMap != null ) {
-            uniforms.Put("emissiveMap", meshPhongMaterial.emissiveMap);
+            uniforms.put("emissiveMap", meshPhongMaterial.emissiveMap);
         }
 
         if ( meshPhongMaterial.bumpMap != null ) {
-            uniforms.Put("bumpMap", meshPhongMaterial.bumpMap);
+            uniforms.put("bumpMap", meshPhongMaterial.bumpMap);
             if(material.side == BackSide){
-                uniforms.Put("bumpScale", meshPhongMaterial.bumpScale * -1);
+                uniforms.put("bumpScale", meshPhongMaterial.bumpScale * -1);
             }else{
-                uniforms.Put("bumpScale", meshPhongMaterial.bumpScale);
+                uniforms.put("bumpScale", meshPhongMaterial.bumpScale);
             }
         }
 
         if ( meshPhongMaterial.normalMap != null) {
-            uniforms.Put("normalMap", meshPhongMaterial.normalMap);
+            uniforms.put("normalMap", meshPhongMaterial.normalMap);
             if(material.side == BackSide){
-                ((Vector2)uniforms.Get("normalScale")).Copy(meshPhongMaterial.normalScale).Negate();
+                ((Vector2)uniforms.get("normalScale")).copy(meshPhongMaterial.normalScale).negate();
             }else{
-                ((Vector2)uniforms.Get("normalScale")).Copy(meshPhongMaterial.normalScale);
+                ((Vector2)uniforms.get("normalScale")).copy(meshPhongMaterial.normalScale);
             }
         }
 
         if ( meshPhongMaterial.displacementMap != null) {
-            uniforms.Put("displacementMap", meshPhongMaterial.displacementMap);
-            uniforms.Put("displacementScale", meshPhongMaterial.displacementScale);
-            uniforms.Put("displacementBias", meshPhongMaterial.displacementBias);
+            uniforms.put("displacementMap", meshPhongMaterial.displacementMap);
+            uniforms.put("displacementScale", meshPhongMaterial.displacementScale);
+            uniforms.put("displacementBias", meshPhongMaterial.displacementBias);
         }
     }
 
-    private void RefreshUniformsToon(UniformsObject uniforms, Material material) {
-        RefreshUniformsPhong( uniforms, material );
+    private void refreshUniformsToon(UniformsObject uniforms, Material material) {
+        refreshUniformsPhong( uniforms, material );
 
         MeshToonMaterial meshToonMaterial = (MeshToonMaterial)material;
         if ( meshToonMaterial.gradientMap != null ) {
-            uniforms.Put("gradientMap", meshToonMaterial.gradientMap);
+            uniforms.put("gradientMap", meshToonMaterial.gradientMap);
         }
     }
 
-    private void RefreshUniformsLambert(UniformsObject uniforms, Material material) {
+    private void refreshUniformsLambert(UniformsObject uniforms, Material material) {
         MeshLambertMaterial meshLambertMaterial = (MeshLambertMaterial) material;
         if ( meshLambertMaterial.emissiveMap != null ) {
-            uniforms.Put("emissiveMap", meshLambertMaterial.emissiveMap);
+            uniforms.put("emissiveMap", meshLambertMaterial.emissiveMap);
         }
     }
 
-    private void RefreshUniformsFog(UniformsObject uniforms, Fog fog) {
-        uniforms.Put("fogColor", fog.color);
+    private void refreshUniformsFog(UniformsObject uniforms, Fog fog) {
+        uniforms.put("fogColor", fog.color);
 
-        uniforms.Put("fogNear", fog.near);
-        uniforms.Put("fogFar", fog.far);
+        uniforms.put("fogNear", fog.near);
+        uniforms.put("fogFar", fog.far);
 
         // TODO: FogExp2
     }
 
-    private void MarkUniformsLightsNeedsUpdate(UniformsObject uniformsObject, boolean value) {
+    private void markUniformsLightsNeedsUpdate(UniformsObject uniformsObject, boolean value) {
         uniformsObject.uniforms.get("ambientLightColor").needsUpdate = value;
         uniformsObject.uniforms.get("directionalLights").needsUpdate = value;
         uniformsObject.uniforms.get("pointLights").needsUpdate = value;
@@ -1080,18 +1080,18 @@ public class GLRenderer {
         uniformsObject.uniforms.get("hemisphereLights").needsUpdate = value;
     }
 
-    private void InitMaterial(Material material, Fog fog, Object3D object) {
-        MaterialProperties materialProperties = properties.GetMaterial(material);
+    private void initMaterial(Material material, Fog fog, Object3D object) {
+        MaterialProperties materialProperties = properties.getMaterial(material);
 
         GLLights lights = currentRenderState.lights;
         ArrayList<Light> shadowsArray = currentRenderState.shadowsArray;
 
         LightHash lightsHash = materialProperties.lightsHash;
 
-        Parameters parameters = programCache.GetParameters(
+        Parameters parameters = programCache.getParameters(
                 material, lights, shadowsArray, fog, _clipping.numPlanes, _clipping.numIntersection, object );
 
-        String code = programCache.GetProgramCode( material, parameters );
+        String code = programCache.getProgramCode( material, parameters );
 
         GLProgram program = materialProperties.program;
         boolean programChange = true;
@@ -1103,7 +1103,7 @@ public class GLRenderer {
         } else if (!program.code.equals(code)) {
 
             // changed glsl or parameters
-            ReleaseMaterialProgramReference( material );
+            releaseMaterialProgramReference( material );
 
         } else if ( lightsHash.stateID != lights.hash_stateID ||
                 lightsHash.directionalLength != lights.hash_directionalLength ||
@@ -1133,11 +1133,11 @@ public class GLRenderer {
 
         if ( programChange ) {
             if ( parameters.shaderID != null ) {
-                ShaderObject shader = shaderLib.Get(parameters.shaderID);
+                ShaderObject shader = shaderLib.get(parameters.shaderID);
 
                 ShaderObject shaderObject = new ShaderObject();
                 shaderObject.name = material.type;
-                shaderObject.uniforms = UniformUtils.CloneUniforms(shader.uniforms);
+                shaderObject.uniforms = UniformUtils.cloneUniforms(shader.uniforms);
                 shaderObject.vertexShader = shader.vertexShader;
                 shaderObject.fragmentShader = shader.fragmentShader;
                 materialProperties.shader = shaderObject;
@@ -1154,8 +1154,8 @@ public class GLRenderer {
             }
 
             // Computing code again as onBeforeCompile may have changed the shaders
-            code = programCache.GetProgramCode( material, parameters );
-            program = programCache.AcquireProgram( material, materialProperties.shader, parameters, code );
+            code = programCache.getProgramCode( material, parameters );
+            program = programCache.acquireProgram( material, materialProperties.shader, parameters, code );
 
             materialProperties.program = program;
             material.program = program;
@@ -1171,7 +1171,7 @@ public class GLRenderer {
 
             materialProperties.numClippingPlanes = _clipping.numPlanes;
             materialProperties.numIntersection = _clipping.numIntersection;
-            uniforms.Put("clippingPlanes", _clipping.uniform);
+            uniforms.put("clippingPlanes", _clipping.uniform);
 
         }
 
@@ -1193,58 +1193,58 @@ public class GLRenderer {
         if ( material.lights ) {
 
             // wire up the material to this renderer's lighting state
-            uniforms.Put("ambientLightColor", lights.ambient);
-            uniforms.Put("directionalLights", lights.directional);
+            uniforms.put("ambientLightColor", lights.ambient);
+            uniforms.put("directionalLights", lights.directional);
             //uniforms..value = lights.state.directional;
-            uniforms.Put("spotLights", lights.spot);
-            uniforms.Put("rectAreaLights", lights.rectArea);
-            uniforms.Put("pointLights", lights.point);
-            uniforms.Put("hemisphereLights",lights.hemi);
+            uniforms.put("spotLights", lights.spot);
+            uniforms.put("rectAreaLights", lights.rectArea);
+            uniforms.put("pointLights", lights.point);
+            uniforms.put("hemisphereLights",lights.hemi);
 
-            uniforms.Put("directionalShadowMap", lights.directionalShadowMap);
-            uniforms.Put("directionalShadowMatrix", lights.directionalShadowMatrix);
-            uniforms.Put("spotShadowMap", lights.spotShadowMap);
-            uniforms.Put("spotShadowMatrix", lights.spotShadowMatrix);
-            uniforms.Put("pointShadowMap", lights.pointShadowMap);
-            uniforms.Put("pointShadowMatrix", lights.pointShadowMatrix);
+            uniforms.put("directionalShadowMap", lights.directionalShadowMap);
+            uniforms.put("directionalShadowMatrix", lights.directionalShadowMatrix);
+            uniforms.put("spotShadowMap", lights.spotShadowMap);
+            uniforms.put("spotShadowMatrix", lights.spotShadowMatrix);
+            uniforms.put("pointShadowMap", lights.pointShadowMap);
+            uniforms.put("pointShadowMatrix", lights.pointShadowMatrix);
 
         }
 
-        GLUniforms progUniforms = materialProperties.program.GetUniforms();
-        ArrayList<AbstractUniform> uniformsList =  GLUniforms.SeqWithValue( progUniforms.seq, uniforms );
+        GLUniforms progUniforms = materialProperties.program.getUniforms();
+        ArrayList<AbstractUniform> uniformsList =  GLUniforms.seqWithValue( progUniforms.seq, uniforms );
 
         materialProperties.uniformsList = uniformsList;
     }
 
-    private void ReleaseMaterialProgramReference(Material material) {
+    private void releaseMaterialProgramReference(Material material) {
     }
 
-    private void ProjectObject(Object3D object, Camera camera, boolean sortObjects){
+    private void projectObject(Object3D object, Camera camera, boolean sortObjects){
         if (!object.visible) return;
 
         //boolean visible = object.layers.test( camera.layers );
 
         if ( true ) {
             if ( object instanceof Light) {
-                currentRenderState.PushLight( (Light) object );
+                currentRenderState.pushLight( (Light) object );
                 if ( object.castShadow ) {
-                    currentRenderState.PushShadow( (Light) object );
+                    currentRenderState.pushShadow( (Light) object );
                 }
 
             } else if ( object instanceof Sprite) {
 
-                if ( ! object.frustumCulled || _frustum.IntersectsSprite( object ) ) {
+                if ( ! object.frustumCulled || _frustum.intersectsSprite( object ) ) {
 
                     if ( sortObjects ) {
-                        _vector3.SetFromMatrixPosition( object.matrixWorld )
-                                .ApplyMatrix4( _projScreenMatrix );
+                        _vector3.setFromMatrixPosition( object.matrixWorld )
+                                .applyMatrix4( _projScreenMatrix );
                     }
 
                     Sprite sprite = (Sprite) object;
-                    BufferGeometry geometry = objects.Update( object );
+                    BufferGeometry geometry = objects.update( object );
                     Material material = sprite.material;
 
-                    currentRenderList.Push( object, geometry, material, (int)_vector3.z, null );
+                    currentRenderList.push( object, geometry, material, (int)_vector3.z, null );
 
                 }
 
@@ -1256,19 +1256,19 @@ public class GLRenderer {
 
                 // TODO update skined mesh
 
-                if ( ! object.frustumCulled || _frustum.IntersectsObject( object ) ) {
+                if ( ! object.frustumCulled || _frustum.intersectsObject( object ) ) {
                     if ( sortObjects ) {
-                        _vector3.SetFromMatrixPosition( object.matrixWorld )
-                                .ApplyMatrix4( _projScreenMatrix );
+                        _vector3.setFromMatrixPosition( object.matrixWorld )
+                                .applyMatrix4( _projScreenMatrix );
                     }
 
-                    BufferGeometry geometry = objects.Update( object );
+                    BufferGeometry geometry = objects.update( object );
                     Material material = object.material;
 
                     // TODO: material arrays
 
                     if ( material.visible ) {
-                        currentRenderList.Push( object, geometry, material, (int)_vector3.z, null );
+                        currentRenderList.push( object, geometry, material, (int)_vector3.z, null );
                     }
                 }
 
@@ -1279,13 +1279,13 @@ public class GLRenderer {
         ArrayList<Object3D> children = object.children;
 
         for ( int i = 0, l = children.size(); i < l; i ++ ) {
-            ProjectObject( children.get(i), camera, sortObjects );
+            projectObject( children.get(i), camera, sortObjects );
         }
     }
 
-    public void Compile(){}
+    public void compile(){}
 
-    public int AllocTextureUnit() {
+    public int allocTextureUnit() {
         int textureUnit = _usedTextureUnits;
 
         if ( textureUnit >= capabilities.maxTextures ) {
@@ -1297,31 +1297,31 @@ public class GLRenderer {
         return textureUnit;
     }
 
-    public void SetTexture2D(Texture texture, int slot) {
-        textures.SetTexture2D( texture, slot );
+    public void setTexture2D(Texture texture, int slot) {
+        textures.setTexture2D( texture, slot );
     }
 
-    public void SetTexture3D(Texture texture, int slot) {
-        textures.SetTexture3D( texture, slot );
+    public void setTexture3D(Texture texture, int slot) {
+        textures.setTexture3D( texture, slot );
     }
 
-    public void SetTextureCube(CubeTexture texture, int slot) {
-        textures.SetTextureCube( texture, slot );
+    public void setTextureCube(CubeTexture texture, int slot) {
+        textures.setTextureCube( texture, slot );
     }
     
-    public void SetSize(int width, int height){
+    public void setSize(int width, int height){
         _width = width;
         _height = height;
 
-        this.SetViewport( 0, 0, width, height );
+        this.setViewport( 0, 0, width, height );
     }
 
-    private void SetViewport(int x, int y, int width, int height) {
-        _viewport.Set( x, _height - y - height, width, height );
-        state.Viewport( _currentViewport.Copy( _viewport ).MultiplyScalar( _pixelRatio ) );
+    private void setViewport(int x, int y, int width, int height) {
+        _viewport.set( x, _height - y - height, width, height );
+        state.viewport( _currentViewport.copy( _viewport ).multiplyScalar( _pixelRatio ) );
     }
 
-    public void Clear(boolean color, boolean depth, boolean stencil) {
+    public void clear(boolean color, boolean depth, boolean stencil) {
         int bits = 0;
 
         if (  color ) bits |= GLES20.GL_COLOR_BUFFER_BIT;
@@ -1331,7 +1331,7 @@ public class GLRenderer {
         GLES20.glClear( bits );
     }
 
-    public GLRenderTarget GetRenderTarget() {
+    public GLRenderTarget getRenderTarget() {
         return _currentRenderTarget;
     }
 }

@@ -18,17 +18,17 @@ public class LightShadow {
         this.camera = camera;
     }
 
-    public LightShadow Copy(LightShadow source){
-        this.camera = source.camera.Clone();
+    public LightShadow copy(LightShadow source){
+        this.camera = source.camera.clone();
         this.bias = source.bias;
         this.radius = source.radius;
 
-        this.mapSize.Copy( source.mapSize );
+        this.mapSize.copy( source.mapSize );
 
         return this;
     }
 
-    public LightShadow Clone(){
-        return new LightShadow(this.camera).Copy(this);
+    public LightShadow clone(){
+        return new LightShadow(this.camera).copy(this);
     }
 }

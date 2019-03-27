@@ -49,7 +49,7 @@ public class Object3D extends Observable {
 
     public Object3D(){
         this.id = object3DId++;
-        this.uuid = Math_.GenerateUUID();
+        this.uuid = Math_.generateUUID();
         this.name = "";
         this.type = "Object3D";
         this.parent = null;
@@ -58,8 +58,8 @@ public class Object3D extends Observable {
         this.position = new Vector3();
         this.rotation = new Euler();
         this.quaternion = new Quaternion();
-        this.rotation.SetOnchangeCallback(this.quaternion);
-        this.quaternion.SetOnchangeCallback(this.rotation);
+        this.rotation.setOnchangeCallback(this.quaternion);
+        this.quaternion.setOnchangeCallback(this.rotation);
         this.scale = new Vector3(1, 1, 1);
         this.modelViewMatrix = new Matrix4();
         this.normalMatrix = new Matrix3();
@@ -76,149 +76,149 @@ public class Object3D extends Observable {
 
     }
 
-    public void ApplyMatrix(Matrix4 matrix){
-        this.matrix.MultiplyMatrices( matrix, this.matrix );
-        this.matrix.Decompose( this.position, this.quaternion, this.scale );
+    public void applyMatrix(Matrix4 matrix){
+        this.matrix.multiplyMatrices( matrix, this.matrix );
+        this.matrix.decompose( this.position, this.quaternion, this.scale );
     }
 
-    public Object3D ApplyQuaternion(Quaternion q){
-        this.quaternion.Premultiply( q );
+    public Object3D applyQuaternion(Quaternion q){
+        this.quaternion.premultiply( q );
         return this;
     }
 
-    public void SetRotationFromAxisAngle(Vector3 axis, float angle){
-        this.quaternion.SetFromAxisAngle( axis, angle );
+    public void setRotationFromAxisAngle(Vector3 axis, float angle){
+        this.quaternion.setFromAxisAngle( axis, angle );
     }
 
-    public void SetRotationFromEuler(Euler euler){
-        this.quaternion.SetFromEuler( euler, true );
+    public void setRotationFromEuler(Euler euler){
+        this.quaternion.setFromEuler( euler, true );
     }
 
-    public void SetRotationFromMatrix(Matrix4 m){
-        this.quaternion.SetFromRotationMatrix( m );
+    public void setRotationFromMatrix(Matrix4 m){
+        this.quaternion.setFromRotationMatrix( m );
     }
 
-    public void SetRotationFromQuaternion(Quaternion q){
-        this.quaternion.Copy( q );
+    public void setRotationFromQuaternion(Quaternion q){
+        this.quaternion.copy( q );
     }
 
-    public void RotateOnAxis(Vector3 axis, float angle){
+    public void rotateOnAxis(Vector3 axis, float angle){
         // rotate object on axis in object space
         // axis is assumed to be normalized
         Quaternion q1 = new Quaternion();
-        q1.SetFromAxisAngle( axis, angle );
-        this.quaternion.Multiply( q1 );
+        q1.setFromAxisAngle( axis, angle );
+        this.quaternion.multiply( q1 );
     }
 
-    public void RotateOnWorldAxis(Vector3 axis, float angle){
+    public void rotateOnWorldAxis(Vector3 axis, float angle){
         // rotate object on axis in world space
         // axis is assumed to be normalized
         // method assumes no rotated parent
         Quaternion q1 = new Quaternion();
-        q1.SetFromAxisAngle( axis, angle );
-        this.quaternion.Premultiply( q1 );
+        q1.setFromAxisAngle( axis, angle );
+        this.quaternion.premultiply( q1 );
     }
 
-    public void RotateX(float angle){
+    public void rotateX(float angle){
         Vector3 v1 = new Vector3( 1, 0, 0 );
-        this.RotateOnAxis( v1, angle );
+        this.rotateOnAxis( v1, angle );
     }
 
-    public void RotateY(float angle){
+    public void rotateY(float angle){
         Vector3 v1 = new Vector3( 0, 1, 0 );
-        this.RotateOnAxis( v1, angle );
+        this.rotateOnAxis( v1, angle );
     }
 
-    public void RotateZ(float angle){
+    public void rotateZ(float angle){
         Vector3 v1 = new Vector3( 0, 0, 1 );
-        this.RotateOnAxis( v1, angle );
+        this.rotateOnAxis( v1, angle );
     }
 
-    public void TranslateOnAxis(Vector3 axis, float distance){
+    public void translateOnAxis(Vector3 axis, float distance){
         // translate object by distance along axis in object space
         // axis is assumed to be normalized
         Vector3 v1 = new Vector3();
-        v1.Copy( axis ).ApplyQuaternion( this.quaternion );
-        this.position.Add( v1.MultiplyScalar( distance ) );
+        v1.copy( axis ).applyQuaternion( this.quaternion );
+        this.position.add( v1.multiplyScalar( distance ) );
     }
 
-    public void TranslateX(float distance){
+    public void translateX(float distance){
         Vector3 v1 = new Vector3( 1, 0, 0 );
-        this.TranslateOnAxis( v1, distance );
+        this.translateOnAxis( v1, distance );
     }
 
-    public void TranslateY(float distance){
+    public void translateY(float distance){
         Vector3 v1 = new Vector3( 0, 1, 0 );
-        this.TranslateOnAxis( v1, distance );
+        this.translateOnAxis( v1, distance );
     }
 
-    public void TranslateZ(float distance){
+    public void translateZ(float distance){
         Vector3 v1 = new Vector3( 0, 0, 1 );
-        this.TranslateOnAxis( v1, distance );
+        this.translateOnAxis( v1, distance );
     }
 
 
-    public Vector3 LocalToWorld(Vector3 vector){
-        return vector.ApplyMatrix4( this.matrixWorld );
+    public Vector3 localToWorld(Vector3 vector){
+        return vector.applyMatrix4( this.matrixWorld );
     }
 
-    public Vector3 WorldToLocal(Vector3 vector){
+    public Vector3 worldToLocal(Vector3 vector){
         Matrix4 m1 = new Matrix4();
-        return vector.ApplyMatrix4( m1.GetInverse( this.matrixWorld ) );
+        return vector.applyMatrix4( m1.getInverse( this.matrixWorld ) );
     }
 
-    public void LookAt(Vector3 v){
+    public void lookAt(Vector3 v){
         // This method does not support objects having non-uniformly-scaled parent(s)
         Quaternion q1 = new Quaternion();
         Matrix4 m1 = new Matrix4();
         Vector3 target = new Vector3();
         Vector3 position = new Vector3();
 
-        target.Copy( v );
+        target.copy( v );
         Object3D parent = this.parent;
-        this.UpdateWorldMatrix( true, false );
-        position.SetFromMatrixPosition( this.matrixWorld );
+        this.updateWorldMatrix( true, false );
+        position.setFromMatrixPosition( this.matrixWorld );
 
         if ( this instanceof Camera || this instanceof Light) {
-            m1.LookAt( position, target, this.up );
+            m1.lookAt( position, target, this.up );
         } else {
-            m1.LookAt( target, position, this.up );
+            m1.lookAt( target, position, this.up );
         }
 
-        this.quaternion.SetFromRotationMatrix( m1 );
+        this.quaternion.setFromRotationMatrix( m1 );
 
         if ( parent != null ) {
-            m1.ExtractRotation( parent.matrixWorld );
-            q1.SetFromRotationMatrix( m1 );
-            this.quaternion.Premultiply( q1.Inverse() );
+            m1.extractRotation( parent.matrixWorld );
+            q1.setFromRotationMatrix( m1 );
+            this.quaternion.premultiply( q1.inverse() );
         }
     }
 
-    public void Add(Object3D object){
+    public void add(Object3D object){
         if(object.equals(this)){
             return;
         }
 
         if ( object.parent != null ) {
-            object.parent.Remove( object );
+            object.parent.remove( object );
         }
 
         object.parent = this;
         this.children.add( object );
     }
 
-    public void Remove(Object3D object){
+    public void remove(Object3D object){
         boolean removed = this.children.remove(object);
         if ( removed ) {
             object.parent = null;
         }
     }
 
-    public Object3D GetObjectById(int id){
+    public Object3D getObjectById(int id){
         if ( this.id == id ) return this;
         for ( int i = 0, l = this.children.size(); i < l; i ++ ) {
             Object3D child = this.children.get(i);
-            Object3D object = child.GetObjectById(id);
+            Object3D object = child.getObjectById(id);
             if ( object != null ) {
                 return object;
             }
@@ -227,11 +227,11 @@ public class Object3D extends Observable {
         return null;
     }
 
-    public Object3D GetObjectByName(String name){
+    public Object3D getObjectByName(String name){
         if ( this.name == name ) return this;
         for ( int i = 0, l = this.children.size(); i < l; i ++ ) {
             Object3D child = this.children.get(i);
-            Object3D object = child.GetObjectByName(name);
+            Object3D object = child.getObjectByName(name);
             if ( object != null ) {
                 return object;
             }
@@ -240,54 +240,54 @@ public class Object3D extends Observable {
         return null;
     }
 
-    public Vector3 GetWorldPosition(Vector3 target){
-        this.UpdateMatrixWorld(true);
-        return target.SetFromMatrixPosition( this.matrixWorld );
+    public Vector3 getWorldPosition(Vector3 target){
+        this.updateMatrixWorld(true);
+        return target.setFromMatrixPosition( this.matrixWorld );
     }
 
-    public Quaternion GetWorldQuaternion(Quaternion target){
+    public Quaternion getWorldQuaternion(Quaternion target){
         Vector3 position = new Vector3();
         Vector3 scale = new Vector3();
 
-        this.UpdateMatrixWorld( true );
-        this.matrixWorld.Decompose( position, target, scale );
+        this.updateMatrixWorld( true );
+        this.matrixWorld.decompose( position, target, scale );
         return target;
     }
 
-    public Vector3 GetWorldScale(Vector3 target){
+    public Vector3 getWorldScale(Vector3 target){
         Vector3 position = new Vector3();
         Quaternion quaternion = new Quaternion();
 
-        this.UpdateMatrixWorld( true );
-        this.matrixWorld.Decompose( position, quaternion, target );
+        this.updateMatrixWorld( true );
+        this.matrixWorld.decompose( position, quaternion, target );
         return target;
     }
 
-    public Vector3 GetWorldDirection(Vector3 target){
-        this.UpdateMatrixWorld( true );
+    public Vector3 getWorldDirection(Vector3 target){
+        this.updateMatrixWorld( true );
         float[] e = this.matrixWorld.elements;
-        return target.Set( e[ 8 ], e[ 9 ], e[ 10 ] ).Normalize();
+        return target.set( e[ 8 ], e[ 9 ], e[ 10 ] ).normalize();
     }
 
-    public void Raycast(Raycaster raycaster, ArrayList<Intersect> intersects){}
+    public void raycast(Raycaster raycaster, ArrayList<Intersect> intersects){}
 
-    public void Traverse(){
+    public void traverse(){
         // not implemented
     }
 
-    public void UpdateMatrix(){
-        this.matrix.Compose( this.position, this.quaternion, this.scale );
+    public void updateMatrix(){
+        this.matrix.compose( this.position, this.quaternion, this.scale );
         this.matrixWorldNeedsUpdate = true;
     }
 
-    public void UpdateMatrixWorld(boolean force){
-        if ( this.matrixAutoUpdate ) this.UpdateMatrix();
+    public void updateMatrixWorld(boolean force){
+        if ( this.matrixAutoUpdate ) this.updateMatrix();
 
         if ( this.matrixWorldNeedsUpdate || force ) {
             if ( this.parent == null ) {
-                this.matrixWorld.Copy( this.matrix );
+                this.matrixWorld.copy( this.matrix );
             } else {
-                this.matrixWorld.MultiplyMatrices( this.parent.matrixWorld, this.matrix );
+                this.matrixWorld.multiplyMatrices( this.parent.matrixWorld, this.matrix );
             }
 
             this.matrixWorldNeedsUpdate = false;
@@ -297,48 +297,48 @@ public class Object3D extends Observable {
         // update children
         ArrayList<Object3D> children = this.children;
         for ( int i = 0, l = children.size(); i < l; i ++ ) {
-            children.get(i).UpdateMatrixWorld( force );
+            children.get(i).updateMatrixWorld( force );
         }
     }
 
-    public void UpdateWorldMatrix(boolean updateParents, boolean updateChildren){
+    public void updateWorldMatrix(boolean updateParents, boolean updateChildren){
         Object3D parent = this.parent;
 
-        if ( updateParents == true && parent != null ) {
-            parent.UpdateWorldMatrix( true, false );
+        if (updateParents && parent != null ) {
+            parent.updateWorldMatrix( true, false );
         }
 
-        if ( this.matrixAutoUpdate ) this.UpdateMatrix();
+        if ( this.matrixAutoUpdate ) this.updateMatrix();
 
         if ( this.parent == null ) {
-            this.matrixWorld.Copy( this.matrix );
+            this.matrixWorld.copy( this.matrix );
         } else {
-            this.matrixWorld.MultiplyMatrices( this.parent.matrixWorld, this.matrix );
+            this.matrixWorld.multiplyMatrices( this.parent.matrixWorld, this.matrix );
         }
 
         // update children
-        if ( updateChildren == true ) {
+        if (updateChildren) {
             ArrayList<Object3D> children = this.children;
             for ( int i = 0, l = children.size(); i < l; i ++ ) {
-                children.get(i).UpdateWorldMatrix( false, true );
+                children.get(i).updateWorldMatrix( false, true );
             }
         }
     }
 
-    public Object3D Clone(boolean recursive){
-        return new Object3D().Copy( this, recursive );
+    public Object3D clone(boolean recursive){
+        return new Object3D().copy( this, recursive );
     }
 
-    public Object3D Copy(Object3D source, boolean recursive){
+    public Object3D copy(Object3D source, boolean recursive){
         this.name = source.name;
-        this.up.Copy( source.up );
+        this.up.copy( source.up );
 
-        this.position.Copy( source.position );
-        this.quaternion.Copy( source.quaternion );
-        this.scale.Copy( source.scale );
+        this.position.copy( source.position );
+        this.quaternion.copy( source.quaternion );
+        this.scale.copy( source.scale );
 
-        this.matrix.Copy( source.matrix );
-        this.matrixWorld.Copy( source.matrixWorld );
+        this.matrix.copy( source.matrix );
+        this.matrixWorld.copy( source.matrixWorld );
 
         this.matrixAutoUpdate = source.matrixAutoUpdate;
         this.matrixWorldNeedsUpdate = source.matrixWorldNeedsUpdate;
@@ -352,16 +352,16 @@ public class Object3D extends Observable {
         this.frustumCulled = source.frustumCulled;
         this.renderOrder = source.renderOrder;
 
-        if ( recursive == true ) {
+        if (recursive) {
             for ( int i = 0; i < source.children.size(); i ++ ) {
                 Object3D child = source.children.get(i);
-                this.Add( child.Clone(true) );
+                this.add( child.clone(true) );
             }
         }
 
         return this;
     }
 
-    public void OnBeforeRender(GLRenderer renderer, Scene scene, Camera camera){}
+    public void onBeforeRender(GLRenderer renderer, Scene scene, Camera camera){}
 
 }

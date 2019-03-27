@@ -1,7 +1,5 @@
 package three.math;
 
-import three.materials.Material;
-
 public class Line3 {
     public Vector3 start;
     public Vector3 end;
@@ -16,79 +14,79 @@ public class Line3 {
         this.end = end;
     }
 
-    public Line3 Set(Vector3 start, Vector3 end){
-        this.start.Copy(start);
-        this.end.Copy(end);
+    public Line3 set(Vector3 start, Vector3 end){
+        this.start.copy(start);
+        this.end.copy(end);
         return this;
     }
 
-    public Line3 Clone(){
+    public Line3 clone(){
         Line3 clone = new Line3();
-        clone.Copy(this);
+        clone.copy(this);
         return clone;
     }
 
-    public Line3 Copy(Line3 line){
-        this.start.Copy(line.start);
-        this.end.Copy(line.end);
+    public Line3 copy(Line3 line){
+        this.start.copy(line.start);
+        this.end.copy(line.end);
         return this;
     }
 
-    public Vector3 GetCenter(Vector3 target){
+    public Vector3 getCenter(Vector3 target){
         if(target == null){
             target = new Vector3();
         }
 
-        return target.AddVectors(this.start, this.end).MultiplyScalar(0.5f);
+        return target.addVectors(this.start, this.end).multiplyScalar(0.5f);
     }
 
-    public Vector3 Delta(Vector3 target){
-        return target.SubVectors( this.end, this.start );
+    public Vector3 delta(Vector3 target){
+        return target.subVectors( this.end, this.start );
     }
 
-    public float DistanceSq(){
-        return this.start.DistanceToSquared( this.end );
+    public float distanceSq(){
+        return this.start.distanceToSquared( this.end );
     }
 
-    public float Distance(){
-        return this.start.DistanceTo( this.end );
+    public float distance(){
+        return this.start.distanceTo( this.end );
     }
 
-    public Vector3 At(float t, Vector3 target){
-        return this.Delta( target ).MultiplyScalar( t ).Add( this.start );
+    public Vector3 at(float t, Vector3 target){
+        return this.delta( target ).multiplyScalar( t ).add( this.start );
     }
 
-    public float ClosestPointToPointParameter(Vector3 point, boolean clampToLine){
+    public float closestPointToPointParameter(Vector3 point, boolean clampToLine){
         Vector3 startP = new Vector3();
         Vector3 startEnd = new Vector3();
 
-        startP.SubVectors( point, this.start );
-        startEnd.SubVectors( this.end, this.start );
+        startP.subVectors( point, this.start );
+        startEnd.subVectors( this.end, this.start );
 
-        float startEnd2 = startEnd.Dot( startEnd );
-        float startEnd_startP = startEnd.Dot( startP );
+        float startEnd2 = startEnd.dot( startEnd );
+        float startEnd_startP = startEnd.dot( startP );
 
         float t = startEnd_startP / startEnd2;
 
         if ( clampToLine ) {
-            t = Math_.Clamp( t, 0, 1 );
+            t = Math_.clamp( t, 0, 1 );
         }
 
         return t;
     }
 
-    public Vector3 ClosestPointToPoint(Vector3 point, boolean clampToLine, Vector3 target){
-        float t = this.ClosestPointToPointParameter( point, clampToLine );
-        return this.Delta( target ).MultiplyScalar( t ).Add( this.start );
+    public Vector3 closestPointToPoint(Vector3 point, boolean clampToLine, Vector3 target){
+        float t = this.closestPointToPointParameter( point, clampToLine );
+        return this.delta( target ).multiplyScalar( t ).add( this.start );
     }
 
-    public Line3 ApplyMatrix4(Matrix4 matrix){
-        this.start.ApplyMatrix4( matrix );
-        this.end.ApplyMatrix4( matrix );
+    public Line3 applyMatrix4(Matrix4 matrix){
+        this.start.applyMatrix4( matrix );
+        this.end.applyMatrix4( matrix );
         return this;
     }
 
-    public boolean Equals(Line3 line){
+    public boolean equals(Line3 line){
         return line.start.equals( this.start ) && line.end.equals( this.end );
     }
 

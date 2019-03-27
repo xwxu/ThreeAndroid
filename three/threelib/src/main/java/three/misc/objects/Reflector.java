@@ -3,7 +3,6 @@ package three.misc.objects;
 import android.text.TextUtils;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 import three.cameras.Camera;
 import three.cameras.PerspectiveCamera;
@@ -29,7 +28,7 @@ import static three.constants.RGBFormat;
 
 public class Reflector extends Mesh {
 
-    static ShaderObject shader = ReflectorShader();
+    static ShaderObject shader = reflectorShader();
 
     private float clipBias;
     private Matrix4 textureMatrix = new Matrix4();
@@ -50,7 +49,7 @@ public class Reflector extends Mesh {
         parameters.stencilBuffer = false;
         renderTarget = new GLRenderTarget( textureWidth, textureHeight, parameters );
 
-        if ( ! Math_.IsPowerOfTwo( textureWidth ) || ! Math_.IsPowerOfTwo( textureHeight ) ) {
+        if ( ! Math_.isPowerOfTwo( textureWidth ) || ! Math_.isPowerOfTwo( textureHeight ) ) {
             renderTarget.texture.generateMipmaps = false;
         }
 
@@ -58,9 +57,9 @@ public class Reflector extends Mesh {
         shaderParameters.vertexShader = shader.vertexShader;
         shaderParameters.fragmentShader = shader.fragmentShader;
         ShaderMaterial material = new ShaderMaterial(shaderParameters);
-        material.uniforms.Put("tDiffuse", renderTarget.texture);
-        material.uniforms.Put("color", color);
-        material.uniforms.Put("textureMatrix", textureMatrix);
+        material.uniforms.put("tDiffuse", renderTarget.texture);
+        material.uniforms.put("color", color);
+        material.uniforms.put("textureMatrix", textureMatrix);
 
         this.material = material;
         this.renderOrder = Integer.MIN_VALUE; // render first
@@ -68,7 +67,7 @@ public class Reflector extends Mesh {
     }
 
     @Override
-    public void OnBeforeRender(GLRenderer renderer, Scene scene, Camera camera){
+    public void onBeforeRender(GLRenderer renderer, Scene scene, Camera camera){
         Vector3 cameraWorldPosition = new Vector3();
         Vector3 reflectorWorldPosition = new Vector3();
         Matrix4 rotationMatrix = new Matrix4();
@@ -84,61 +83,61 @@ public class Reflector extends Mesh {
         Vector4 q = new Vector4();
         PerspectiveCamera virtualCamera = new PerspectiveCamera();
 
-        reflectorWorldPosition.SetFromMatrixPosition( matrixWorld );
-        cameraWorldPosition.SetFromMatrixPosition( camera.matrixWorld );
+        reflectorWorldPosition.setFromMatrixPosition( matrixWorld );
+        cameraWorldPosition.setFromMatrixPosition( camera.matrixWorld );
 
-        rotationMatrix.ExtractRotation( matrixWorld );
+        rotationMatrix.extractRotation( matrixWorld );
 
-        normal.Set( 0, 0, 1 );
-        normal.ApplyMatrix4( rotationMatrix );
+        normal.set( 0, 0, 1 );
+        normal.applyMatrix4( rotationMatrix );
 
-        view.SubVectors( reflectorWorldPosition, cameraWorldPosition );
+        view.subVectors( reflectorWorldPosition, cameraWorldPosition );
 
         // Avoid rendering when reflector is facing away
 
-        if ( view.Dot( normal ) > 0 ) return;
+        if ( view.dot( normal ) > 0 ) return;
 
-        view.Reflect( normal ).Negate();
-        view.Add( reflectorWorldPosition );
+        view.reflect( normal ).negate();
+        view.add( reflectorWorldPosition );
 
-        rotationMatrix.ExtractRotation( camera.matrixWorld );
+        rotationMatrix.extractRotation( camera.matrixWorld );
 
-        lookAtPosition.Set( 0, 0, - 1 );
-        lookAtPosition.ApplyMatrix4( rotationMatrix );
-        lookAtPosition.Add( cameraWorldPosition );
+        lookAtPosition.set( 0, 0, - 1 );
+        lookAtPosition.applyMatrix4( rotationMatrix );
+        lookAtPosition.add( cameraWorldPosition );
 
-        target.SubVectors( reflectorWorldPosition, lookAtPosition );
-        target.Reflect( normal ).Negate();
-        target.Add( reflectorWorldPosition );
+        target.subVectors( reflectorWorldPosition, lookAtPosition );
+        target.reflect( normal ).negate();
+        target.add( reflectorWorldPosition );
 
-        virtualCamera.position.Copy( view );
-        virtualCamera.up.Set( 0, 1, 0 );
-        virtualCamera.up.ApplyMatrix4( rotationMatrix );
-        virtualCamera.up.Reflect( normal );
-        virtualCamera.LookAt( target );
+        virtualCamera.position.copy( view );
+        virtualCamera.up.set( 0, 1, 0 );
+        virtualCamera.up.applyMatrix4( rotationMatrix );
+        virtualCamera.up.reflect( normal );
+        virtualCamera.lookAt( target );
 
         virtualCamera.far = ((PerspectiveCamera)camera).far; // Used in WebGLBackground
 
-        virtualCamera.UpdateMatrixWorld(true);
-        virtualCamera.projectionMatrix.Copy( camera.projectionMatrix );
+        virtualCamera.updateMatrixWorld(true);
+        virtualCamera.projectionMatrix.copy( camera.projectionMatrix );
 
-        // Update the texture matrix
-        textureMatrix.Set(
+        // update the texture matrix
+        textureMatrix.set(
                 0.5f, 0.0f, 0.0f, 0.5f,
                 0.0f, 0.5f, 0.0f, 0.5f,
                 0.0f, 0.0f, 0.5f, 0.5f,
                 0.0f, 0.0f, 0.0f, 1.0f
         );
-        textureMatrix.Multiply( virtualCamera.projectionMatrix );
-        textureMatrix.Multiply( virtualCamera.matrixWorldInverse );
-        textureMatrix.Multiply( matrixWorld );
+        textureMatrix.multiply( virtualCamera.projectionMatrix );
+        textureMatrix.multiply( virtualCamera.matrixWorldInverse );
+        textureMatrix.multiply( matrixWorld );
 
         // Now update projection matrix with new clip plane, implementing code from: http://www.terathon.com/code/oblique.html
         // Paper explaining this technique: http://www.terathon.com/lengyel/Lengyel-Oblique.pdf
-        reflectorPlane.SetFromNormalAndCoplanarPoint( normal, reflectorWorldPosition );
+        reflectorPlane.setFromNormalAndCoplanarPoint( normal, reflectorWorldPosition );
         reflectorPlane.ApplyMatrix4( virtualCamera.matrixWorldInverse, null );
 
-        clipPlane.Set( reflectorPlane.normal.x, reflectorPlane.normal.y, reflectorPlane.normal.z, reflectorPlane.constant );
+        clipPlane.set( reflectorPlane.normal.x, reflectorPlane.normal.y, reflectorPlane.normal.z, reflectorPlane.constant );
 
         Matrix4 projectionMatrix = virtualCamera.projectionMatrix;
 
@@ -150,7 +149,7 @@ public class Reflector extends Mesh {
         q.w = ( 1.0f + projectionMatrix.elements[ 10 ] ) / projectionMatrix.elements[ 14 ];
 
         // Calculate the scaled plane vector
-        clipPlane.MultiplyScalar( 2.0f / clipPlane.Dot( q ) );
+        clipPlane.multiplyScalar( 2.0f / clipPlane.dot( q ) );
 
         // Replacing the third row of the projection matrix
         projectionMatrix.elements[ 2 ] = clipPlane.x;
@@ -160,31 +159,31 @@ public class Reflector extends Mesh {
 
         this.visible = false;
 
-        GLRenderTarget currentRenderTarget = renderer.GetRenderTarget();
+        GLRenderTarget currentRenderTarget = renderer.getRenderTarget();
 
         boolean currentShadowAutoUpdate = renderer.shadowMap.autoUpdate;
 
         renderer.shadowMap.autoUpdate = false; // Avoid re-computing shadows
 
         try {
-            renderer.Render( scene, virtualCamera, renderTarget, true );
+            renderer.render( scene, virtualCamera, renderTarget, true );
         } catch (IllegalAccessException ignored) {
         }
 
         renderer.shadowMap.autoUpdate = currentShadowAutoUpdate;
 
-        renderer.SetRenderTarget( currentRenderTarget );
+        renderer.setRenderTarget( currentRenderTarget );
 
         //todo: Restore viewport
 
         this.visible = true;
     }
 
-    private static ShaderObject ReflectorShader(){
+    private static ShaderObject reflectorShader(){
         UniformsObject uniforms = new UniformsObject();
-        uniforms.Put("color", null);
-        uniforms.Put("tDiffuse", null);
-        uniforms.Put("textureMatrix", null);
+        uniforms.put("color", null);
+        uniforms.put("tDiffuse", null);
+        uniforms.put("textureMatrix", null);
 
         ArrayList<String> listVert = new ArrayList<>();
         listVert.add("uniform mat4 textureMatrix;");
@@ -214,7 +213,7 @@ public class Reflector extends Mesh {
 
         ShaderObject shader = new ShaderObject();
 
-        shader.name = "ReflectorShader";
+        shader.name = "reflectorShader";
         shader.uniforms = uniforms;
         shader.vertexShader = vertexShader;
         shader.fragmentShader = fragShader;

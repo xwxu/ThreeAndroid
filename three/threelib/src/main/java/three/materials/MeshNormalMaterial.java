@@ -4,8 +4,6 @@ import three.materials.parameters.MeshNormalParameters;
 import three.math.Vector2;
 import three.textures.Texture;
 
-import static three.constants.TangentSpaceNormalMap;
-
 public class MeshNormalMaterial extends MeshMaterial{
 
     public Texture bumpMap;
@@ -35,15 +33,15 @@ public class MeshNormalMaterial extends MeshMaterial{
         morphNormals = parameters.morphNormals;
     }
 
-    public MeshNormalMaterial Copy(MeshNormalMaterial source){
-        super.Copy(source);
+    public MeshNormalMaterial copy(MeshNormalMaterial source){
+        super.copy(source);
         type = "MeshNormalMaterial";
         this.bumpMap = source.bumpMap;
         this.bumpScale = source.bumpScale;
 
         this.normalMap = source.normalMap;
         this.normalMapType = source.normalMapType;
-        this.normalScale.Copy( source.normalScale );
+        this.normalScale.copy( source.normalScale );
 
         this.displacementMap = source.displacementMap;
         this.displacementScale = source.displacementScale;

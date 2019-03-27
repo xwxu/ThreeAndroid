@@ -17,8 +17,8 @@ public class MeshToonMaterial extends MeshPhongMaterial{
         gradientMap = parameters.gradientMap;
     }
 
-    public MeshToonMaterial Copy(MeshToonMaterial source){
-        super.Copy(source);
+    public MeshToonMaterial copy(MeshToonMaterial source){
+        super.copy(source);
         this.gradientMap = source.gradientMap;
         return this;
     }

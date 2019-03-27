@@ -18,27 +18,26 @@ public class GLObjects {
         this.info = info;
     }
 
-    public BufferGeometry Update(Object3D object){
+    public BufferGeometry update(Object3D object){
         int frame = info.render.frame;
         AbstractGeometry geometry = object.geometry;
-        BufferGeometry buffergeometry =  geometries.Get(object, geometry);
+        BufferGeometry buffergeometry =  geometries.get(object, geometry);
 
-        // Update once per frame
-
+        // update once per frame
         if ( !updateList.containsKey(buffergeometry.id) ||
                 updateList.get(buffergeometry.id) != frame ) {
             if ( geometry instanceof Geometry ) {
-                buffergeometry.UpdateFromObject( object );
+                buffergeometry.updateFromObject( object );
             }
 
-            geometries.Update( buffergeometry );
+            geometries.update( buffergeometry );
             updateList.put(buffergeometry.id, frame);
         }
 
         return buffergeometry;
     }
 
-    public void Dispose(){
+    public void dispose(){
         updateList.clear();
     }
 }

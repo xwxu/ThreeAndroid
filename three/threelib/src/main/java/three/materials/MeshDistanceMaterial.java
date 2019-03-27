@@ -33,10 +33,10 @@ public class MeshDistanceMaterial extends MeshMaterial{
 
     }
 
-    public MeshDistanceMaterial Copy(MeshDistanceMaterial source){
-        super.Copy(source);
+    public MeshDistanceMaterial copy(MeshDistanceMaterial source){
+        super.copy(source);
 
-        this.referencePosition.Copy( source.referencePosition );
+        this.referencePosition.copy( source.referencePosition );
         this.nearDistance = source.nearDistance;
         this.farDistance = source.farDistance;
 

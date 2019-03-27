@@ -69,7 +69,7 @@ public class Material {
 
     public Material(MaterialParameters parameters){
         this.id = materialId ++;
-        this.uuid = Math_.GenerateUUID();
+        this.uuid = Math_.generateUUID();
         this.name = "";
         this.fog = parameters.fog;
         this.lights = parameters.lights;
@@ -115,11 +115,11 @@ public class Material {
         this.needsUpdate = true;
     }
 
-    public Material Clone(){
-        return new Material(new MaterialParameters()).Copy(this);
+    public Material clone(){
+        return new Material(new MaterialParameters()).copy(this);
     }
 
-    public Material Copy(Material source){
+    public Material copy(Material source){
         this.name = source.name;
 
         this.fog = source.fog;
@@ -168,7 +168,7 @@ public class Material {
         if ( srcPlanes != null ) {
             dstPlanes = new ArrayList<Plane>();
             for ( int i = 0; i < srcPlanes.size(); ++ i ){
-                dstPlanes.set(i, srcPlanes.get(i).Clone());
+                dstPlanes.set(i, srcPlanes.get(i).clone());
             }
         }
 
@@ -179,7 +179,7 @@ public class Material {
         return this;
     }
 
-    public Field GetProperty(String name){
+    public Field getProperty(String name){
         Class cls = this.getClass();
         Field f = null;
         try {
@@ -189,7 +189,7 @@ public class Material {
         return f;
     }
 
-    public boolean CheckFieldValid(String name){
+    public boolean checkFieldValid(String name){
         boolean valid = false;
         Class cls = this.getClass();
         Field f = null;

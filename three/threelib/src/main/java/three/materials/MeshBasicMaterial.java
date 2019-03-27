@@ -48,9 +48,9 @@ public class MeshBasicMaterial extends MeshMaterial{
         this.lights = false;
     }
 
-    public MeshBasicMaterial Copy(MeshBasicMaterial source){
-        super.Copy(source);
-        this.color.Copy( source.color );
+    public MeshBasicMaterial copy(MeshBasicMaterial source){
+        super.copy(source);
+        this.color.copy( source.color );
 
         this.map = source.map;
 

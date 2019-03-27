@@ -1,6 +1,5 @@
 package three.math;
 
-import three.bufferAttribute.BufferAttribute;
 import three.bufferAttribute.Float32BufferAttribute;
 
 public class Matrix4 {
@@ -13,10 +12,10 @@ public class Matrix4 {
                 0,0,0,1};
     }
 
-    public Matrix4 Set(float n11,float n12,float n13,float n14,
-                       float n21,float n22,float n23,float n24,
-                       float n31,float n32,float n33,float n34,
-                       float n41,float n42,float n43,float n44){
+    public Matrix4 set(float n11, float n12, float n13, float n14,
+                       float n21, float n22, float n23, float n24,
+                       float n31, float n32, float n33, float n34,
+                       float n41, float n42, float n43, float n44){
         float[] te = this.elements;
         te[0] = n11; te[4] = n12; te[8] = n13; te[12] = n14;
         te[1] = n21; te[5] = n22; te[9] = n23; te[13] = n24;
@@ -25,8 +24,8 @@ public class Matrix4 {
         return this;
     }
 
-    public Matrix4 Identity(){
-        this.Set(
+    public Matrix4 identity(){
+        this.set(
                 1,0,0,0,
                 0,1,0,0,
                 0,0,1,0,
@@ -35,11 +34,11 @@ public class Matrix4 {
         return this;
     }
 
-    public Matrix4 Clone(){
-        return new Matrix4().FromArray(this.elements, 0);
+    public Matrix4 clone(){
+        return new Matrix4().fromArray(this.elements, 0);
     }
 
-    public Matrix4 Copy(Matrix4 m){
+    public Matrix4 copy(Matrix4 m){
         float[] te = this.elements;
         float[] me = m.elements;
         te[ 0 ] = me[ 0 ]; te[ 1 ] = me[ 1 ]; te[ 2 ] = me[ 2 ]; te[ 3 ] = me[ 3 ];
@@ -50,7 +49,7 @@ public class Matrix4 {
         return this;
     }
 
-    public Matrix4 CopyPosition(Matrix4 m){
+    public Matrix4 copyPosition(Matrix4 m){
         float[] te = this.elements, me = m.elements;
 
         te[ 12 ] = me[ 12 ];
@@ -60,15 +59,15 @@ public class Matrix4 {
         return this;
     }
 
-    public Matrix4 ExtractBasis(Vector3 xAxis, Vector3 yAxis, Vector3 zAxis){
-        xAxis.SetFromMatrixColumn( this, 0 );
-        yAxis.SetFromMatrixColumn( this, 1 );
-        zAxis.SetFromMatrixColumn( this, 2 );
+    public Matrix4 extractBasis(Vector3 xAxis, Vector3 yAxis, Vector3 zAxis){
+        xAxis.setFromMatrixColumn( this, 0 );
+        yAxis.setFromMatrixColumn( this, 1 );
+        zAxis.setFromMatrixColumn( this, 2 );
         return this;
     }
 
-    public Matrix4 MakeBasis(Vector3 xAxis, Vector3 yAxis, Vector3 zAxis){
-        this.Set(
+    public Matrix4 makeBasis(Vector3 xAxis, Vector3 yAxis, Vector3 zAxis){
+        this.set(
                 xAxis.x, yAxis.x, zAxis.x, 0,
                 xAxis.y, yAxis.y, zAxis.y, 0,
                 xAxis.z, yAxis.z, zAxis.z, 0,
@@ -77,14 +76,14 @@ public class Matrix4 {
         return this;
     }
 
-    public Matrix4 ExtractRotation(Matrix4 m){
+    public Matrix4 extractRotation(Matrix4 m){
         Vector3 v1 = new Vector3();
         float[] te = this.elements;
         float[] me = m.elements;
 
-        float scaleX = 1 / v1.SetFromMatrixColumn( m, 0 ).Length();
-        float scaleY = 1 / v1.SetFromMatrixColumn( m, 1 ).Length();
-        float scaleZ = 1 / v1.SetFromMatrixColumn( m, 2 ).Length();
+        float scaleX = 1 / v1.setFromMatrixColumn( m, 0 ).length();
+        float scaleY = 1 / v1.setFromMatrixColumn( m, 1 ).length();
+        float scaleZ = 1 / v1.setFromMatrixColumn( m, 2 ).length();
 
         te[ 0 ] = me[ 0 ] * scaleX;
         te[ 1 ] = me[ 1 ] * scaleX;
@@ -108,7 +107,7 @@ public class Matrix4 {
         return this;
     }
 
-    public Matrix4 MakeRotationFromEuler(Euler euler){
+    public Matrix4 makeRotationFromEuler(Euler euler){
         float[] te = this.elements;
 
         float x = euler.x, y = euler.y, z = euler.z;
@@ -201,41 +200,41 @@ public class Matrix4 {
         return this;
     }
 
-    public Matrix4 MakeRotationFromQuaternion(Quaternion q){
+    public Matrix4 makeRotationFromQuaternion(Quaternion q){
         Vector3 zero = new Vector3();
         Vector3 one = new Vector3(1,1,1);
-        return this.Compose(zero, q, one);
+        return this.compose(zero, q, one);
     }
 
-    public Matrix4 LookAt(Vector3 eye, Vector3 target, Vector3 up){
+    public Matrix4 lookAt(Vector3 eye, Vector3 target, Vector3 up){
         Vector3 x = new Vector3();
         Vector3 y = new Vector3();
         Vector3 z = new Vector3();
         float[] te = this.elements;
 
-        z.SubVectors( eye, target );
+        z.subVectors( eye, target );
 
-        if ( z.LengthSq() == 0 ) {
+        if ( z.lengthSq() == 0 ) {
             // eye and target are in the same position
             z.z = 1;
         }
 
-        z.Normalize();
-        x.CrossVectors( up, z );
+        z.normalize();
+        x.crossVectors( up, z );
 
-        if ( x.LengthSq() == 0 ) {
+        if ( x.lengthSq() == 0 ) {
             // up and z are parallel
             if ( Math.abs( up.z ) == 1 ) {
                 z.x += 0.0001;
             } else {
                 z.z += 0.0001;
             }
-            z.Normalize();
-            x.CrossVectors( up, z );
+            z.normalize();
+            x.crossVectors( up, z );
         }
 
-        x.Normalize();
-        y.CrossVectors( z, x );
+        x.normalize();
+        y.crossVectors( z, x );
 
         te[ 0 ] = x.x; te[ 4 ] = y.x; te[ 8 ] = z.x;
         te[ 1 ] = x.y; te[ 5 ] = y.y; te[ 9 ] = z.y;
@@ -244,15 +243,15 @@ public class Matrix4 {
         return this;
     }
 
-    public Matrix4 Multiply(Matrix4 m){
-        return this.MultiplyMatrices(this, m);
+    public Matrix4 multiply(Matrix4 m){
+        return this.multiplyMatrices(this, m);
     }
 
-    public Matrix4 Premultiply(Matrix4 m){
-        return this.MultiplyMatrices(m, this);
+    public Matrix4 premultiply(Matrix4 m){
+        return this.multiplyMatrices(m, this);
     }
 
-    public Matrix4 MultiplyMatrices(Matrix4 a, Matrix4 b){
+    public Matrix4 multiplyMatrices(Matrix4 a, Matrix4 b){
         float[] ae = a.elements;
         float[] be = b.elements;
         float[] te = this.elements;
@@ -289,7 +288,7 @@ public class Matrix4 {
         return this;
     }
 
-    public Matrix4 MultiplyScalar(float s){
+    public Matrix4 multiplyScalar(float s){
         float[] te = this.elements;
 
         te[ 0 ] *= s; te[ 4 ] *= s; te[ 8 ] *= s; te[ 12 ] *= s;
@@ -299,23 +298,23 @@ public class Matrix4 {
         return this;
     }
 
-    public Matrix4 ApplyToBufferAttribute(Float32BufferAttribute attribute){
+    public Matrix4 applyToBufferAttribute(Float32BufferAttribute attribute){
         Vector3 v1 = new Vector3();
         for ( int i = 0, l = attribute.count; i < l; i ++ ) {
 
-            v1.x = attribute.GetX( i );
-            v1.y = attribute.GetY( i );
-            v1.z = attribute.GetZ( i );
+            v1.x = attribute.getX( i );
+            v1.y = attribute.getY( i );
+            v1.z = attribute.getZ( i );
 
-            v1.ApplyMatrix4( this );
+            v1.applyMatrix4( this );
 
-            attribute.SetXYZ( i, v1.x, v1.y, v1.z );
+            attribute.setXYZ( i, v1.x, v1.y, v1.z );
 
         }
         return this;
     }
 
-    public float Determinant(){
+    public float determinant(){
         float[] te = this.elements;
 
         float n11 = te[ 0 ], n12 = te[ 4 ], n13 = te[ 8 ], n14 = te[ 12 ];
@@ -360,7 +359,7 @@ public class Matrix4 {
         );
     }
 
-    public Matrix4 Transpose(){
+    public Matrix4 transpose(){
         float[] te = this.elements;
         float tmp;
 
@@ -374,7 +373,7 @@ public class Matrix4 {
         return this;
     }
 
-    public Matrix4 SetPosition(Vector3 v){
+    public Matrix4 setPosition(Vector3 v){
         float[] te = this.elements;
 
         te[ 12 ] = v.x;
@@ -383,7 +382,7 @@ public class Matrix4 {
         return this;
     }
 
-    public Matrix4 GetInverse(Matrix4 m){
+    public Matrix4 getInverse(Matrix4 m){
         float[] te = this.elements;
         float[] me = m.elements;
 
@@ -401,7 +400,7 @@ public class Matrix4 {
 
         if ( det == 0 ) {
             System.out.println("det is 0");
-            return this.Identity();
+            return this.identity();
         }
 
         float detInv = 1 / det;
@@ -429,7 +428,7 @@ public class Matrix4 {
         return this;
     }
 
-    public Matrix4 Scale(Vector3 v){
+    public Matrix4 scale(Vector3 v){
         float[] te = this.elements;
         float x = v.x, y = v.y, z = v.z;
 
@@ -440,7 +439,7 @@ public class Matrix4 {
         return this;
     }
 
-    public float GetMaxScaleOnAxis(){
+    public float getMaxScaleOnAxis(){
         float[] te = this.elements;
 
         float scaleXSq = te[ 0 ] * te[ 0 ] + te[ 1 ] * te[ 1 ] + te[ 2 ] * te[ 2 ];
@@ -450,8 +449,8 @@ public class Matrix4 {
         return (float)Math.sqrt( Math.max( Math.max( scaleXSq, scaleYSq), scaleZSq ) );
     }
 
-    public Matrix4 MakeTranslation(float x, float y, float z){
-        this.Set(
+    public Matrix4 makeTranslation(float x, float y, float z){
+        this.set(
             1, 0, 0, x,
             0, 1, 0, y,
             0, 0, 1, z,
@@ -460,9 +459,9 @@ public class Matrix4 {
         return this;
     }
 
-    public Matrix4 MakeRotationX(float theta){
+    public Matrix4 makeRotationX(float theta){
         float c = (float)Math.cos( theta ), s = (float)Math.sin( theta );
-        this.Set(
+        this.set(
             1, 0, 0, 0,
             0, c, - s, 0,
             0, s, c, 0,
@@ -471,9 +470,9 @@ public class Matrix4 {
         return this;
     }
 
-    public Matrix4 MakeRotationY(float theta){
+    public Matrix4 makeRotationY(float theta){
         float c = (float)Math.cos( theta ), s = (float)Math.sin( theta );
-        this.Set(
+        this.set(
             c, 0, s, 0,
             0, 1, 0, 0,
             - s, 0, c, 0,
@@ -482,9 +481,9 @@ public class Matrix4 {
         return this;
     }
 
-    public Matrix4 MakeRotationZ(float theta){
+    public Matrix4 makeRotationZ(float theta){
         float c = (float)Math.cos( theta ), s = (float)Math.sin( theta );
-        this.Set(
+        this.set(
             c, - s, 0, 0,
             s, c, 0, 0,
             0, 0, 1, 0,
@@ -493,13 +492,13 @@ public class Matrix4 {
         return this;
     }
 
-    public Matrix4 MakeRotationOnAxis(Vector3 axis, float angle){
+    public Matrix4 makeRotationOnAxis(Vector3 axis, float angle){
         float c = (float)Math.cos( angle );
         float s = (float)Math.sin( angle );
         float t = 1 - c;
         float x = axis.x, y = axis.y, z = axis.z;
         float tx = t * x, ty = t * y;
-        this.Set(
+        this.set(
         tx * x + c, tx * y - s * z, tx * z + s * y, 0,
         tx * y + s * z, ty * y + c, ty * z - s * x, 0,
         tx * z - s * y, ty * z + s * x, t * z * z + c, 0,
@@ -508,8 +507,8 @@ public class Matrix4 {
         return this;
     }
 
-    public Matrix4 MakeScale(float x, float y, float z){
-        this.Set(
+    public Matrix4 makeScale(float x, float y, float z){
+        this.set(
             x, 0, 0, 0,
             0, y, 0, 0,
             0, 0, z, 0,
@@ -518,8 +517,8 @@ public class Matrix4 {
         return this;
     }
 
-    public Matrix4 MakeShear(float x, float y, float z){
-        this.Set(
+    public Matrix4 makeShear(float x, float y, float z){
+        this.set(
             1, y, z, 0,
             x, 1, z, 0,
             x, y, 1, 0,
@@ -528,7 +527,7 @@ public class Matrix4 {
         return this;
     }
 
-    public Matrix4 Compose(Vector3 position, Quaternion quaternion, Vector3 scale){
+    public Matrix4 compose(Vector3 position, Quaternion quaternion, Vector3 scale){
         float[] te = this.elements;
 
         float x = quaternion.x, y = quaternion.y, z = quaternion.z, w = quaternion.w;
@@ -561,18 +560,18 @@ public class Matrix4 {
         return this;
     }
 
-    public Matrix4 Decompose(Vector3 position, Quaternion quaternion, Vector3 scale){
+    public Matrix4 decompose(Vector3 position, Quaternion quaternion, Vector3 scale){
         Vector3 vector = new Vector3();
         Matrix4 matrix = new Matrix4();
 
         float[] te = this.elements;
 
-        float sx = vector.Set( te[ 0 ], te[ 1 ], te[ 2 ] ).Length();
-        float sy = vector.Set( te[ 4 ], te[ 5 ], te[ 6 ] ).Length();
-        float sz = vector.Set( te[ 8 ], te[ 9 ], te[ 10 ] ).Length();
+        float sx = vector.set( te[ 0 ], te[ 1 ], te[ 2 ] ).length();
+        float sy = vector.set( te[ 4 ], te[ 5 ], te[ 6 ] ).length();
+        float sz = vector.set( te[ 8 ], te[ 9 ], te[ 10 ] ).length();
 
         // if determine is negative, we need to invert one scale
-        float det = this.Determinant();
+        float det = this.determinant();
         if ( det < 0 ) sx = - sx;
 
         position.x = te[ 12 ];
@@ -580,7 +579,7 @@ public class Matrix4 {
         position.z = te[ 14 ];
 
         // scale the rotation part
-        matrix.Copy( this );
+        matrix.copy( this );
 
         float invSX = 1 / sx;
         float invSY = 1 / sy;
@@ -598,7 +597,7 @@ public class Matrix4 {
         matrix.elements[ 9 ] *= invSZ;
         matrix.elements[ 10 ] *= invSZ;
 
-        quaternion.SetFromRotationMatrix( matrix );
+        quaternion.setFromRotationMatrix( matrix );
 
         scale.x = sx;
         scale.y = sy;
@@ -606,7 +605,7 @@ public class Matrix4 {
         return this;
     }
 
-    public Matrix4 MakePerspective(float left, float right, float top, float bottom, float near, float far){
+    public Matrix4 makePerspective(float left, float right, float top, float bottom, float near, float far){
         float[] te = this.elements;
         float x = 2 * near / ( right - left );
         float y = 2 * near / ( top - bottom );
@@ -623,7 +622,7 @@ public class Matrix4 {
         return this;
     }
 
-    public Matrix4 MakeOrthographic(float left, float right, float top, float bottom, float near, float far){
+    public Matrix4 makeOrthographic(float left, float right, float top, float bottom, float near, float far){
         float[] te = this.elements;
         float w = 1.0f / ( right - left );
         float h = 1.0f / ( top - bottom );
@@ -640,7 +639,7 @@ public class Matrix4 {
         return this;
     }
 
-    public boolean Equals(Matrix4 matrix){
+    public boolean equals(Matrix4 matrix){
         float[] te = this.elements;
         float[] me = matrix.elements;
 
@@ -650,14 +649,14 @@ public class Matrix4 {
         return true;
     }
 
-    public Matrix4 FromArray(float[] array, int offset){
+    public Matrix4 fromArray(float[] array, int offset){
         for ( int i = 0; i < 16; i ++ ) {
             this.elements[ i ] = array[ i + offset ];
         }
         return this;
     }
 
-    public float[] ToArray(float[] array, int offset) {
+    public float[] toArray(float[] array, int offset) {
         float[] te = this.elements;
 
         array[ offset ] = te[ 0 ];

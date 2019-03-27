@@ -28,7 +28,7 @@ public class GLRenderTarget {
         this.depthTexture = options.depthTexture;
     }
 
-    public void SetSize(int width, int height){
+    public void setSize(int width, int height){
         if ( this.width != width || this.height != height ) {
 
             this.width = width;
@@ -37,19 +37,19 @@ public class GLRenderTarget {
             this.Dispose();
         }
 
-        this.viewport.Set( 0, 0, width, height );
-        this.scissor.Set( 0, 0, width, height );
+        this.viewport.set( 0, 0, width, height );
+        this.scissor.set( 0, 0, width, height );
     }
 
     public GLRenderTarget Clone(){
-        return new GLRenderTarget(0,0, null).Copy(this);
+        return new GLRenderTarget(0,0, null).copy(this);
     }
 
-    public GLRenderTarget Copy(GLRenderTarget source){
+    public GLRenderTarget copy(GLRenderTarget source){
         this.width = source.width;
         this.height = source.height;
 
-        this.viewport.Copy( source.viewport );
+        this.viewport.copy( source.viewport );
 
         this.texture = source.texture.Clone();
 

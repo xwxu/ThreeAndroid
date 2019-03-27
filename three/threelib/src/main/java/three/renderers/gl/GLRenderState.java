@@ -16,20 +16,20 @@ public class GLRenderState {
         this.shadowsArray = new ArrayList();
     }
 
-    public void Init(){
+    public void init(){
         lightsArray.clear();
         shadowsArray.clear();
     }
 
-    public void PushLight(Light light){
+    public void pushLight(Light light){
         lightsArray.add(light);
     }
 
-    public void PushShadow(Light shadowLight){
+    public void pushShadow(Light shadowLight){
         shadowsArray.add(shadowLight);
     }
 
-    public void SetupLights(Camera camera){
-        lights.Setup( lightsArray, shadowsArray, camera );
+    public void setupLights(Camera camera){
+        lights.setup( lightsArray, shadowsArray, camera );
     }
 }

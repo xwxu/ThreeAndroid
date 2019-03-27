@@ -50,7 +50,7 @@ public class GLLights {
     public ArrayList<HemisphereLightUniform> hemi = new ArrayList<>();
 
 
-    public void Setup(ArrayList<Light> lights, ArrayList<Light> shadows, Camera camera) {
+    public void setup(ArrayList<Light> lights, ArrayList<Light> shadows, Camera camera) {
         float r = 0, g = 0, b = 0;
 
         int directionalLength = 0;
@@ -94,21 +94,21 @@ public class GLLights {
 
             } else if ( light instanceof DirectionalLight) {
                 DirectionalLight dirlight = (DirectionalLight) light;
-                DirectionalLightUniform uniforms = (DirectionalLightUniform)cache.Get( light );
+                DirectionalLightUniform uniforms = (DirectionalLightUniform)cache.get( light );
 
-                ((Color)uniforms.Get("color")).Copy( light.color ).MultiplyScalar( light.intensity );
-                ((Vector3)uniforms.Get("direction")).SetFromMatrixPosition( light.matrixWorld );
-                vector3.SetFromMatrixPosition( dirlight.target.matrixWorld );
-                ((Vector3)uniforms.Get("direction")).Sub( vector3 );
-                ((Vector3)uniforms.Get("direction")).TransformDirection( viewMatrix );
+                ((Color)uniforms.get("color")).copy( light.color ).multiplyScalar( light.intensity );
+                ((Vector3)uniforms.get("direction")).setFromMatrixPosition( light.matrixWorld );
+                vector3.setFromMatrixPosition( dirlight.target.matrixWorld );
+                ((Vector3)uniforms.get("direction")).sub( vector3 );
+                ((Vector3)uniforms.get("direction")).transformDirection( viewMatrix );
 
-                uniforms.Put("shadow", light.castShadow);
+                uniforms.put("shadow", light.castShadow);
 
                 if ( light.castShadow ) {
                     LightShadow shadow = dirlight.shadow;
-                    uniforms.Put("shadowBias", shadow.bias);
-                    uniforms.Put("shadowRadius", shadow.radius);
-                    uniforms.Put("shadowMapSize",shadow.mapSize);
+                    uniforms.put("shadowBias", shadow.bias);
+                    uniforms.put("shadowRadius", shadow.radius);
+                    uniforms.put("shadowMapSize",shadow.mapSize);
                 }
 
                 directionalShadowMap.add(shadowMap);
@@ -119,26 +119,26 @@ public class GLLights {
 
             } else if ( light instanceof SpotLight) {
                 SpotLight spotLight = (SpotLight) light;
-                SpotLightUniform uniforms = (SpotLightUniform)cache.Get( light );
+                SpotLightUniform uniforms = (SpotLightUniform)cache.get( light );
 
-                ((Vector3)uniforms.Get("position")).SetFromMatrixPosition( light.matrixWorld );
-                ((Vector3)uniforms.Get("position")).ApplyMatrix4( viewMatrix );
-                ((Color)uniforms.Get("color")).Copy( color ).MultiplyScalar( intensity );
-                uniforms.Put("distance", distance);
-                ((Vector3)uniforms.Get("direction")).SetFromMatrixPosition( light.matrixWorld );
-                vector3.SetFromMatrixPosition( spotLight.target.matrixWorld );
-                ((Vector3)uniforms.Get("direction")).Sub( vector3 );
-                ((Vector3)uniforms.Get("direction")).TransformDirection( viewMatrix );
-                uniforms.Put("coneCos", (float) Math.cos( spotLight.angle ));
-                uniforms.Put("penumbraCos", (float) Math.cos( spotLight.angle * ( 1 - spotLight.penumbra ) ));
-                uniforms.Put("decay", spotLight.decay);
-                uniforms.Put("shadow", spotLight.castShadow);
+                ((Vector3)uniforms.get("position")).setFromMatrixPosition( light.matrixWorld );
+                ((Vector3)uniforms.get("position")).applyMatrix4( viewMatrix );
+                ((Color)uniforms.get("color")).copy( color ).multiplyScalar( intensity );
+                uniforms.put("distance", distance);
+                ((Vector3)uniforms.get("direction")).setFromMatrixPosition( light.matrixWorld );
+                vector3.setFromMatrixPosition( spotLight.target.matrixWorld );
+                ((Vector3)uniforms.get("direction")).sub( vector3 );
+                ((Vector3)uniforms.get("direction")).transformDirection( viewMatrix );
+                uniforms.put("coneCos", (float) Math.cos( spotLight.angle ));
+                uniforms.put("penumbraCos", (float) Math.cos( spotLight.angle * ( 1 - spotLight.penumbra ) ));
+                uniforms.put("decay", spotLight.decay);
+                uniforms.put("shadow", spotLight.castShadow);
 
                 if ( light.castShadow ) {
                     LightShadow shadow = light.shadow;
-                    uniforms.Put("shadowBias", shadow.bias);
-                    uniforms.Put("shadowRadius", shadow.radius);
-                    uniforms.Put("shadowMapSize",shadow.mapSize);
+                    uniforms.put("shadowBias", shadow.bias);
+                    uniforms.put("shadowRadius", shadow.radius);
+                    uniforms.put("shadowMapSize",shadow.mapSize);
                 }
 
                 spotShadowMap.add(shadowMap);
@@ -149,27 +149,27 @@ public class GLLights {
 
             } else if ( light instanceof RectAreaLight) {
 
-                RectAreaLightUniform uniforms = (RectAreaLightUniform)cache.Get( light );
+                RectAreaLightUniform uniforms = (RectAreaLightUniform)cache.get( light );
 
                 // (a) intensity is the total visible light emitted
                 //uniforms.color.copy( color ).multiplyScalar( intensity / ( light.width * light.height * Math.PI ) );
                 // (b) intensity is the brightness of the light
-                ((Color)uniforms.Get("color")).Copy( color ).MultiplyScalar( intensity );
+                ((Color)uniforms.get("color")).copy( color ).multiplyScalar( intensity );
 
-                ((Vector3)uniforms.Get("position")).SetFromMatrixPosition( light.matrixWorld );
-                ((Vector3)uniforms.Get("position")).ApplyMatrix4( viewMatrix );
+                ((Vector3)uniforms.get("position")).setFromMatrixPosition( light.matrixWorld );
+                ((Vector3)uniforms.get("position")).applyMatrix4( viewMatrix );
 
                 // extract local rotation of light to derive width/height half vectors
-                matrix42.Identity();
-                matrix4.Copy( light.matrixWorld );
-                matrix4.Premultiply( viewMatrix );
-                matrix42.ExtractRotation( matrix4 );
+                matrix42.identity();
+                matrix4.copy( light.matrixWorld );
+                matrix4.premultiply( viewMatrix );
+                matrix42.extractRotation( matrix4 );
 
-                ((Vector3)uniforms.Get("halfWidth")).Set( ((RectAreaLight)light).width * 0.5f, 0.0f, 0.0f);
-                ((Vector3)uniforms.Get("halfHeight")).Set( 0.0f, ((RectAreaLight)light).height * 0.5f, 0.0f );
+                ((Vector3)uniforms.get("halfWidth")).set( ((RectAreaLight)light).width * 0.5f, 0.0f, 0.0f);
+                ((Vector3)uniforms.get("halfHeight")).set( 0.0f, ((RectAreaLight)light).height * 0.5f, 0.0f );
 
-                ((Vector3)uniforms.Get("halfWidth")).ApplyMatrix4( matrix42 );
-                ((Vector3)uniforms.Get("halfHeight")).ApplyMatrix4( matrix42 );
+                ((Vector3)uniforms.get("halfWidth")).applyMatrix4( matrix42 );
+                ((Vector3)uniforms.get("halfHeight")).applyMatrix4( matrix42 );
 
                 rectArea.add(uniforms);
 
@@ -177,24 +177,24 @@ public class GLLights {
 
             } else if ( light instanceof PointLight) {
 
-                PointLightUniform uniforms = (PointLightUniform)cache.Get( light );
+                PointLightUniform uniforms = (PointLightUniform)cache.get( light );
 
-                ((Vector3)uniforms.Get("position")).SetFromMatrixPosition( light.matrixWorld );
-                ((Vector3)uniforms.Get("position")).ApplyMatrix4( viewMatrix );
+                ((Vector3)uniforms.get("position")).setFromMatrixPosition( light.matrixWorld );
+                ((Vector3)uniforms.get("position")).applyMatrix4( viewMatrix );
 
-                ((Color)uniforms.Get("color")).Copy( light.color ).MultiplyScalar( light.intensity );
-                uniforms.Put("distance", light.distance);
-                uniforms.Put("decay", ((PointLight)light).decay);
+                ((Color)uniforms.get("color")).copy( light.color ).multiplyScalar( light.intensity );
+                uniforms.put("distance", light.distance);
+                uniforms.put("decay", ((PointLight)light).decay);
 
-                uniforms.Put("shadow", light.castShadow);
+                uniforms.put("shadow", light.castShadow);
 
                 if ( light.castShadow ) {
                     LightShadow shadow = light.shadow;
-                    uniforms.Put("shadowBias", shadow.bias);
-                    uniforms.Put("shadowRadius", shadow.radius);
-                    uniforms.Put("shadowMapSize",shadow.mapSize);
-                    uniforms.Put("shadowCameraNear", ((PerspectiveCamera)shadow.camera).near);
-                    uniforms.Put("shadowCameraFar", ((PerspectiveCamera)shadow.camera).far);
+                    uniforms.put("shadowBias", shadow.bias);
+                    uniforms.put("shadowRadius", shadow.radius);
+                    uniforms.put("shadowMapSize",shadow.mapSize);
+                    uniforms.put("shadowCameraNear", ((PerspectiveCamera)shadow.camera).near);
+                    uniforms.put("shadowCameraFar", ((PerspectiveCamera)shadow.camera).far);
                 }
 
                 pointShadowMap.add(shadowMap);
@@ -205,15 +205,15 @@ public class GLLights {
 
             } else if ( light instanceof HemisphereLight) {
 
-                HemisphereLightUniform uniforms = (HemisphereLightUniform)cache.Get( light );
+                HemisphereLightUniform uniforms = (HemisphereLightUniform)cache.get( light );
 
-                ((Vector3)uniforms.Get("direction")).SetFromMatrixPosition( light.matrixWorld );
-                ((Vector3)uniforms.Get("direction")).TransformDirection( viewMatrix );
-                ((Vector3)uniforms.Get("direction")).Normalize();
+                ((Vector3)uniforms.get("direction")).setFromMatrixPosition( light.matrixWorld );
+                ((Vector3)uniforms.get("direction")).transformDirection( viewMatrix );
+                ((Vector3)uniforms.get("direction")).normalize();
 
                 ;
-                ((Color)uniforms.Get("skyColor")).Copy( light.color ).MultiplyScalar( intensity );
-                ((Color)uniforms.Get("groundColor")).Copy( ((HemisphereLight)light).groundColor ).MultiplyScalar( intensity );
+                ((Color)uniforms.get("skyColor")).copy( light.color ).multiplyScalar( intensity );
+                ((Color)uniforms.get("groundColor")).copy( ((HemisphereLight)light).groundColor ).multiplyScalar( intensity );
 
                 hemi.add(uniforms);
 

@@ -12,7 +12,7 @@ public class GLRenderStates {
         renderStates = new HashMap<Integer, HashMap<Integer, GLRenderState>>();
     }
 
-    public GLRenderState Get(Scene scene, Camera camera){
+    public GLRenderState get(Scene scene, Camera camera){
         GLRenderState renderState;
         HashMap<Integer, GLRenderState> cameras = renderStates.get(scene.id);
 
@@ -32,7 +32,7 @@ public class GLRenderStates {
         return renderState;
     }
 
-    public void Dispose(){
+    public void dispose(){
         this.renderStates.clear();
     }
 }

@@ -81,8 +81,8 @@ public class GLState {
         this.currentScissor = new Vector4();
         this.currentViewport = new Vector4();
 
-        emptyTextures.put(GLES20.GL_TEXTURE_2D, CreateTexture(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_2D, 1));
-        emptyTextures.put(GLES20.GL_TEXTURE_CUBE_MAP, CreateTexture(GLES20.GL_TEXTURE_CUBE_MAP, GLES20.GL_TEXTURE_CUBE_MAP_POSITIVE_X, 6));
+        emptyTextures.put(GLES20.GL_TEXTURE_2D, createTexture(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_2D, 1));
+        emptyTextures.put(GLES20.GL_TEXTURE_CUBE_MAP, createTexture(GLES20.GL_TEXTURE_CUBE_MAP, GLES20.GL_TEXTURE_CUBE_MAP_POSITIVE_X, 6));
 
         this.colorBuffer.SetClear(0 , 0, 0, 1, false);
         this.depthBuffer.SetClear(1);
@@ -91,14 +91,14 @@ public class GLState {
         GLES20.glEnable(GLES20.GL_DEPTH_TEST);
         this.depthBuffer.SetFunc(LessEqualDepth);
 
-        SetFlipSided(false);
-        SetCullFace(CullFaceBack);
+        setFlipSided(false);
+        setCullFace(CullFaceBack);
         GLES20.glEnable(GLES20.GL_CULL_FACE);
-        SetBlending( NoBlending, 0, 0, 0, 0, 0, 0, false );
+        setBlending( NoBlending, 0, 0, 0, 0, 0, 0, false );
 
     }
 
-    private int CreateTexture(int type, int target, int count){
+    private int createTexture(int type, int target, int count){
         ByteBuffer data = ByteBuffer.allocateDirect(4);
 
         final int textureBuf[] = new int[1];
@@ -116,17 +116,17 @@ public class GLState {
         return texture;
     }
 
-    public void InitAttributes(){
+    public void initAttributes(){
         for ( int i = 0, l = newAttributes.capacity(); i < l; i ++ ) {
             newAttributes.put(i, 0);
         }
     }
 
-    public void EnableAttribute(int attribute){
-        EnableAttributeAndDivisor(attribute, 0);
+    public void enableAttribute(int attribute){
+        enableAttributeAndDivisor(attribute, 0);
     }
 
-    public void EnableAttributeAndDivisor(int attribute, int meshPerAttribute){
+    public void enableAttributeAndDivisor(int attribute, int meshPerAttribute){
         newAttributes.put(attribute, 1);
 
         if ( enabledAttributes.get(attribute) == 0 ) {
@@ -139,7 +139,7 @@ public class GLState {
         }
     }
 
-    public void DisableUnusedAttributes(){
+    public void disableUnusedAttributes(){
         for ( int i = 0, l = enabledAttributes.capacity(); i != l; ++ i ) {
             if ( enabledAttributes.get(i) != newAttributes.get(i) ) {
                 GLES20.glDisableVertexAttribArray( i );
@@ -148,7 +148,7 @@ public class GLState {
         }
     }
 
-    public boolean UseProgram(int program){
+    public boolean useProgram(int program){
         if ( currentProgram != program ) {
             GLES20.glUseProgram( program );
             currentProgram = program;
@@ -158,7 +158,7 @@ public class GLState {
         return false;
     }
 
-    public void SetBlending(int blending, int blendEquation, int blendSrc, int blendDst, int blendEquationAlpha,
+    public void setBlending(int blending, int blendEquation, int blendSrc, int blendDst, int blendEquationAlpha,
                             int blendSrcAlpha, int blendDstAlpha, boolean premultipliedAlpha){
         if ( blending == NoBlending ) {
             if ( currentBlendingEnabled ) {
@@ -234,13 +234,13 @@ public class GLState {
         blendDstAlpha = blendDstAlpha;
 
         if ( blendEquation != currentBlendEquation || blendEquationAlpha != currentBlendEquationAlpha ) {
-            GLES20.glBlendEquationSeparate( GLUtils.Convert( blendEquation ), GLUtils.Convert( blendEquationAlpha ) );
+            GLES20.glBlendEquationSeparate( GLUtils.convert( blendEquation ), GLUtils.convert( blendEquationAlpha ) );
             currentBlendEquation = blendEquation;
             currentBlendEquationAlpha = blendEquationAlpha;
         }
 
         if ( blendSrc != currentBlendSrc || blendDst != currentBlendDst || blendSrcAlpha != currentBlendSrcAlpha || blendDstAlpha != currentBlendDstAlpha ) {
-            GLES20.glBlendFuncSeparate( GLUtils.Convert( blendSrc ), GLUtils.Convert( blendDst ), GLUtils.Convert( blendSrcAlpha ), GLUtils.Convert( blendDstAlpha ) );
+            GLES20.glBlendFuncSeparate( GLUtils.convert( blendSrc ), GLUtils.convert( blendDst ), GLUtils.convert( blendSrcAlpha ), GLUtils.convert( blendDstAlpha ) );
 
             currentBlendSrc = blendSrc;
             currentBlendDst = blendDst;
@@ -252,7 +252,7 @@ public class GLState {
         currentPremultipledAlpha = false;
     }
 
-    public void SetMaterial(Material material, boolean frontFaceCW){
+    public void setMaterial(Material material, boolean frontFaceCW){
         if(material.side == DoubleSide){
             GLES20.glDisable(GLES20.GL_CULL_FACE);
         }else{
@@ -262,12 +262,12 @@ public class GLState {
         boolean flipSided = ( material.side == BackSide );
         if ( frontFaceCW ) flipSided = ! flipSided;
 
-        SetFlipSided( flipSided );
+        setFlipSided( flipSided );
 
         if(material.blending == NormalBlending && !material.transparent){
-            SetBlending( NoBlending, 0, 0, 0, 0, 0, 0, false );
+            setBlending( NoBlending, 0, 0, 0, 0, 0, 0, false );
         }else{
-            SetBlending( material.blending, material.blendEquation, material.blendSrc, material.blendDst,
+            setBlending( material.blending, material.blendEquation, material.blendSrc, material.blendDst,
                     material.blendEquationAlpha, material.blendSrcAlpha, material.blendDstAlpha, material.premultipliedAlpha );
         }
 
@@ -276,11 +276,11 @@ public class GLState {
         depthBuffer.SetMask( material.depthWrite );
         colorBuffer.SetMask( material.colorWrite );
 
-        SetPolygonOffset( material.polygonOffset, material.polygonOffsetFactor, material.polygonOffsetUnits );
+        setPolygonOffset( material.polygonOffset, material.polygonOffsetFactor, material.polygonOffsetUnits );
     }
 
 
-    public void SetFlipSided( boolean flipSided ){
+    public void setFlipSided(boolean flipSided ){
         if ( currentFlipSided != flipSided ) {
 
             if ( flipSided ) {
@@ -293,8 +293,7 @@ public class GLState {
         }
     }
 
-    public void SetCullFace(int cullFace){
-
+    public void setCullFace(int cullFace){
         if ( cullFace != CullFaceNone ) {
             GLES20.glEnable(GLES20.GL_CULL_FACE);
             if ( cullFace != currentCullFace ) {
@@ -313,14 +312,14 @@ public class GLState {
         currentCullFace = cullFace;
     }
 
-    public void SetLineWidth(float width){
+    public void setLineWidth(float width){
         if ( width != currentLineWidth ) {
             GLES20.glLineWidth(width);
             currentLineWidth = width;
         }
     }
 
-    public void SetPolygonOffset(boolean polygonOffset, float factor, float units){
+    public void setPolygonOffset(boolean polygonOffset, float factor, float units){
         if ( polygonOffset ) {
             GLES20.glEnable(GLES20.GL_POLYGON_OFFSET_FILL);
             if ( currentPolygonOffsetFactor != factor || currentPolygonOffsetUnits != units ) {
@@ -333,7 +332,7 @@ public class GLState {
         }
     }
 
-    public void SetScissorTest(boolean scissorTest){
+    public void setScissorTest(boolean scissorTest){
         if ( scissorTest ) {
             GLES20.glEnable(GLES20.GL_SCISSOR_TEST);
         } else {
@@ -341,7 +340,7 @@ public class GLState {
         }
     }
 
-    public void ActiveTexture(int slot){
+    public void activeTexture(int slot){
         if ( slot == -1 ) slot = GLES20.GL_TEXTURE0 + maxTextures - 1;
 
         if ( currentTextureSlot != slot ) {
@@ -350,9 +349,9 @@ public class GLState {
         }
     }
 
-    public void BindTexture(int glType, int glTexture){
+    public void bindTexture(int glType, int glTexture){
         if ( currentTextureSlot == -1 ) {
-            ActiveTexture(-1);
+            activeTexture(-1);
         }
 
         BoundTexture boundTexture = currentBoundTextures.get(currentTextureSlot);
@@ -372,30 +371,30 @@ public class GLState {
         }
     }
 
-    public void TexImage2D(int target, int level, int internalFormat, int type, Bitmap image) {
+    public void texImage2D(int target, int level, int internalFormat, int type, Bitmap image) {
         //GLES20.glTexImage2D(target, level, internalFormat, glFormat, );
         android.opengl.GLUtils.texImage2D(target, level, internalFormat, image, type, 0);
     }
 
-    public void TexImage2D(int target, int level, int internalFormat, int width, int height, int border, int format, int type, Buffer pixels){
+    public void texImage2D(int target, int level, int internalFormat, int width, int height, int border, int format, int type, Buffer pixels){
         GLES20.glTexImage2D(target, level, internalFormat, width, height, border, format, type, pixels);
     }
 
-    public void Scissor( Vector4 scissor){
-        if (!currentScissor.Equals( scissor )) {
+    public void scissor(Vector4 scissor){
+        if (!currentScissor.equals( scissor )) {
             GLES20.glScissor((int)scissor.x, (int)scissor.y, (int)scissor.z, (int)scissor.w);
-            currentScissor.Copy( scissor );
+            currentScissor.copy( scissor );
         }
     }
 
-    public void Viewport( Vector4 viewport){
-        if (!currentViewport.Equals(viewport)) {
+    public void viewport(Vector4 viewport){
+        if (!currentViewport.equals(viewport)) {
             GLES20.glViewport( (int)viewport.x, (int)viewport.y, (int)viewport.z, (int)viewport.w );
-            currentViewport.Copy( viewport );
+            currentViewport.copy( viewport );
         }
     }
 
-    public void Reset(){
+    public void reset(){
         for ( int i = 0; i < enabledAttributes.capacity(); i ++ ) {
             if ( enabledAttributes.get(i) == 1 ) {
                 GLES20.glDisableVertexAttribArray( i );

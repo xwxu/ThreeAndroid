@@ -17,28 +17,28 @@ public class Camera extends Object3D {
         this.projectionMatrixInverse = new Matrix4();
     }
 
-    public Camera Copy(Camera source){
-        super.Copy(source, true);
-        this.matrixWorldInverse.Copy( source.matrixWorldInverse );
-        this.projectionMatrix.Copy( source.projectionMatrix );
-        this.projectionMatrixInverse.Copy( source.projectionMatrixInverse );
+    public Camera copy(Camera source){
+        super.copy(source, true);
+        this.matrixWorldInverse.copy( source.matrixWorldInverse );
+        this.projectionMatrix.copy( source.projectionMatrix );
+        this.projectionMatrixInverse.copy( source.projectionMatrixInverse );
         return this;
     }
 
-    public Vector3 GetWorldDirection(Vector3 target){
-        this.UpdateMatrixWorld( true );
+    public Vector3 getWorldDirection(Vector3 target){
+        this.updateMatrixWorld( true );
 
         float[] e = this.matrixWorld.elements;
 
-        return target.Set( - e[ 8 ], - e[ 9 ], - e[ 10 ] ).Normalize();
+        return target.set( - e[ 8 ], - e[ 9 ], - e[ 10 ] ).normalize();
     }
 
-    public void UpdateMatrixWorld(boolean force){
-        super.UpdateMatrixWorld(force);
-        this.matrixWorldInverse.GetInverse(this.matrixWorld);
+    public void updateMatrixWorld(boolean force){
+        super.updateMatrixWorld(force);
+        this.matrixWorldInverse.getInverse(this.matrixWorld);
     }
 
-    public Camera Clone(){
-        return new Camera().Copy(this);
+    public Camera clone(){
+        return new Camera().copy(this);
     }
 }

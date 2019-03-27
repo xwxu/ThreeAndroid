@@ -24,13 +24,13 @@ public class GLRenderList {
         transparent = new ArrayList<>();
     }
 
-    public void Init(){
+    public void init(){
         renderItemsIndex = 0;
         opaque.clear();
         transparent.clear();
     }
 
-    private RenderItem GetNextRenderItem(Object3D object, BufferGeometry geometry, Material material, int z, GeoMatGroup group){
+    private RenderItem getNextRenderItem(Object3D object, BufferGeometry geometry, Material material, int z, GeoMatGroup group){
         RenderItem renderItem = null;
         if(renderItems.size() > renderItemsIndex){
             renderItem = renderItems.get(renderItemsIndex);
@@ -65,8 +65,8 @@ public class GLRenderList {
         return renderItem;
     }
 
-    public void Push(Object3D object, BufferGeometry geometry, Material material, int z, GeoMatGroup group){
-        RenderItem renderItem = GetNextRenderItem( object, geometry, material, z, group );
+    public void push(Object3D object, BufferGeometry geometry, Material material, int z, GeoMatGroup group){
+        RenderItem renderItem = getNextRenderItem( object, geometry, material, z, group );
         if(material.transparent){
             transparent.add(renderItem);
         }else{
@@ -74,8 +74,8 @@ public class GLRenderList {
         }
     }
 
-    public void Unshift(Object3D object, BufferGeometry geometry, Material material, int z, GeoMatGroup group){
-        RenderItem renderItem = GetNextRenderItem( object, geometry, material, z, group );
+    public void unshift(Object3D object, BufferGeometry geometry, Material material, int z, GeoMatGroup group){
+        RenderItem renderItem = getNextRenderItem( object, geometry, material, z, group );
 
         if(material.transparent){
             transparent.add(0, renderItem);
@@ -85,7 +85,7 @@ public class GLRenderList {
 
     }
 
-    public void Sort(){
+    public void sort(){
         if(opaque.size() > 1){
             Collections.sort(opaque, new PainterSortStable());
         }

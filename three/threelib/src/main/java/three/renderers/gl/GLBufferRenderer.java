@@ -13,12 +13,12 @@ public class GLBufferRenderer {
         this.capabilities = capabilities;
     }
 
-    public void SetMode(int value){
+    public void setMode(int value){
         mode = value;
     }
 
-    public void Render(int start, int count){
+    public void render(int start, int count){
         GLES20.glDrawArrays(mode, start, count);
-        info.Update(count, mode, 0);
+        info.update(count, mode, 0);
     }
 }

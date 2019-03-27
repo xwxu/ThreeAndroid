@@ -105,7 +105,7 @@ public class GLShadowMap {
         }
     }
 
-    public void Render(ArrayList<Light> lights, Scene scene, Camera camera){
+    public void render(ArrayList<Light> lights, Scene scene, Camera camera){
 //        if (!enabled) return;
 //        if (!autoUpdate && !needsUpdate) return;
 //
@@ -114,7 +114,7 @@ public class GLShadowMap {
 //        // TODO Clean up (needed in case of contextlost)
 //        GLState _state = _renderer.state;
 //
-//        // Set GL state for depth map.
+//        // set GL state for depth map.
 //        _state.disable( _gl.BLEND );
 //        _state.buffers.color.setClear( 1, 1, 1, 1 );
 //        _state.buffers.depth.setTest( true );
@@ -195,7 +195,7 @@ public class GLShadowMap {
 //            var shadowMap = shadow.map;
 //            var shadowMatrix = shadow.matrix;
 //
-//            _lightPositionWorld.SetFromMatrixPosition( light.matrixWorld );
+//            _lightPositionWorld.setFromMatrixPosition( light.matrixWorld );
 //            shadowCamera.position.copy( _lightPositionWorld );
 //
 //            if ( isPointLight ) {
@@ -205,7 +205,7 @@ public class GLShadowMap {
 //                // for point lights we set the shadow matrix to be a translation-only matrix
 //                // equal to inverse of the light's position
 //
-//                shadowMatrix.MakeTranslation( - _lightPositionWorld.x, - _lightPositionWorld.y, - _lightPositionWorld.z );
+//                shadowMatrix.makeTranslation( - _lightPositionWorld.x, - _lightPositionWorld.y, - _lightPositionWorld.z );
 //
 //            } else {
 //

@@ -12,7 +12,7 @@ public class GLRenderLists {
         lists = new HashMap<>();
     }
 
-    public GLRenderList Get(Scene scene, Camera camera){
+    public GLRenderList get(Scene scene, Camera camera){
         GLRenderList renderList;
         HashMap<Integer, GLRenderList> cameras = lists.get(scene.id);
 
@@ -32,7 +32,7 @@ public class GLRenderLists {
         return renderList;
     }
 
-    public void Dispose(){
+    public void dispose(){
         this.lists.clear();
     }
 }

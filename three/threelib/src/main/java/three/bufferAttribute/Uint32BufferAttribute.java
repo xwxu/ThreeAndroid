@@ -19,19 +19,19 @@ public class Uint32BufferAttribute extends BufferAttribute {
         this.count = array.length / itemSize;
     }
 
-    public Uint32BufferAttribute Clone(){
+    public Uint32BufferAttribute clone(){
         return this;
     }
 
-    public int GetX(int index){
+    public int getX(int index){
         return this.array.get(index * this.itemSize);
     }
 
-    public int GetY(int index){
+    public int getY(int index){
         return this.array.get(index * this.itemSize + 1);
     }
 
-    public int GetZ(int index){
+    public int getZ(int index){
         return this.array.get(index * this.itemSize + 2);
     }
 

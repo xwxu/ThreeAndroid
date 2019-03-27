@@ -23,7 +23,7 @@ public class OrthographicCamera extends Camera{
         this.bottom = -1;
         this.near = 0.1f;
         this.far = 2000;
-        this.UpdateProjectionMatrix();
+        this.updateProjectionMatrix();
     }
 
     public OrthographicCamera(float left, float right, float top, float bottom, float near, float far){
@@ -37,10 +37,10 @@ public class OrthographicCamera extends Camera{
         this.bottom = bottom;
         this.near = near;
         this.far = far;
-        this.UpdateProjectionMatrix();
+        this.updateProjectionMatrix();
     }
 
-    public void UpdateProjectionMatrix(){
+    public void updateProjectionMatrix(){
         float dx = ( this.right - this.left ) / ( 2 * this.zoom );
         float dy = ( this.top - this.bottom ) / ( 2 * this.zoom );
         float cx = ( this.right + this.left ) / 2;
@@ -63,11 +63,11 @@ public class OrthographicCamera extends Camera{
             bottom = top - scaleH * ( this.view.height / zoomH );
         }
 
-        this.projectionMatrix.MakeOrthographic( left, right, top, bottom, this.near, this.far );
-        this.projectionMatrixInverse.GetInverse( this.projectionMatrix );
+        this.projectionMatrix.makeOrthographic( left, right, top, bottom, this.near, this.far );
+        this.projectionMatrixInverse.getInverse( this.projectionMatrix );
     }
 
-    public OrthographicCamera Copy(OrthographicCamera source){
+    public OrthographicCamera copy(OrthographicCamera source){
         this.left = source.left;
         this.right = source.right;
         this.top = source.top;
@@ -80,7 +80,7 @@ public class OrthographicCamera extends Camera{
         return this;
     }
 
-    public void SetViewOffset(int fullWidth, int fullHeight,
+    public void setViewOffset(int fullWidth, int fullHeight,
                               int x, int y, int width, int height){
         if ( this.view == null ) {
             this.view = new ViewInfo();
@@ -94,7 +94,7 @@ public class OrthographicCamera extends Camera{
         this.view.width = width;
         this.view.height = height;
 
-        this.UpdateProjectionMatrix();
+        this.updateProjectionMatrix();
     }
 
 }

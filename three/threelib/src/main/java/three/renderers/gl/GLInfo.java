@@ -15,7 +15,7 @@ public class GLInfo {
         this.render = new RenderInfo();
     }
 
-    public void Update(int count, int mode, int instanceCount){
+    public void update(int count, int mode, int instanceCount){
         this.render.calls ++;
         switch (mode){
             case GLES20.GL_TRIANGLES:
@@ -45,7 +45,7 @@ public class GLInfo {
         }
     }
 
-    public void Reset(){
+    public void reset(){
         render.frame ++;
         render.calls = 0;
         render.triangles = 0;

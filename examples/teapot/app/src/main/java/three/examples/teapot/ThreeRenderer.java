@@ -24,6 +24,7 @@ import three.materials.parameters.MeshNormalParameters;
 import three.materials.parameters.MeshPhongParameters;
 import three.math.Color;
 import three.math.Vector3;
+import three.misc.controls.TrackballControls;
 import three.objects.Line;
 import three.objects.Mesh;
 import three.renderers.GLRenderer;
@@ -41,6 +42,7 @@ public class ThreeRenderer implements GLSurfaceView.Renderer {
     private PerspectiveCamera camera;
     private Scene scene;
     private Mesh mesh;
+    public TrackballControls controls;
 
     @Override
     public void onSurfaceCreated(GL10 gl, EGLConfig config) {
@@ -49,17 +51,18 @@ public class ThreeRenderer implements GLSurfaceView.Renderer {
         renderer = new GLRenderer(rendererParameters);
 
         camera = new PerspectiveCamera( 45, 0.7f, 1, 80000 );
-        camera.position.Set(-0, 200, 3300);
+        camera.position.set(-0, 200, 3300);
 
         scene = new Scene();
+        controls = new TrackballControls(camera);
         //scene.background = new Color( 0x050505 );
         //scene.fog = new Fog(  new Color( 0x050505 ), 2000, 3500 );
 
-        scene.Add( new AmbientLight( new Color (0.2f, 0.2f, 0.2f ), 1 ));
+        scene.add( new AmbientLight( new Color (0.2f, 0.2f, 0.2f ), 1 ));
 
         DirectionalLight light1 = new DirectionalLight( new Color(0xffffff), 1.0f );
-        light1.position.Set( 0.32f, 0.39f, 0.7f );
-        scene.Add( light1 );
+        light1.position.set( 0.32f, 0.39f, 0.7f );
+        scene.add( light1 );
 
 //        DirectionalLight light2 = new DirectionalLight( new Color(0xffffff), 1.5f );
 //        light2.position.Set( 0, - 1, 0 );
@@ -79,19 +82,20 @@ public class ThreeRenderer implements GLSurfaceView.Renderer {
         MeshPhongMaterial material = new MeshPhongMaterial(parameters);
 
 //        MeshLambertParameters parameters =  new MeshLambertParameters();
-//        parameters.color = new Color(0xdddddd);
+//        parameters.color = new Color (0xdddddd);
 //        MeshLambertMaterial material = new MeshLambertMaterial(parameters);
 
 
         mesh = new Mesh( geometry, material );
-        scene.Add( mesh );
+        scene.add( mesh );
     }
 
     @Override
     public void onSurfaceChanged(GL10 gl, int width, int height) {
         camera.aspect = (float)width / height;
-        camera.UpdateProjectionMatrix();
-        renderer.SetSize(width, height);
+        camera.updateProjectionMatrix();
+        controls.handleResize(width, height);
+        renderer.setSize(width, height);
 
     }
 
@@ -100,8 +104,9 @@ public class ThreeRenderer implements GLSurfaceView.Renderer {
         try {
             //mesh.rotation.x += 0.25;
             //mesh.rotation.y += 0.5;
-            mesh.RotateOnAxis(new Vector3(0,1,0), 0.1f);
-            renderer.Render(scene, camera, null, true);
+            //mesh.RotateOnAxis(new Vector3(0,1,0), 0.1f);
+            controls.update();
+            renderer.render(scene, camera, null, true);
         } catch (IllegalAccessException e) {
         }
 

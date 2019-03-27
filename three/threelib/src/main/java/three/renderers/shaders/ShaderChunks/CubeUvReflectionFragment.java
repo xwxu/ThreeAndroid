@@ -33,7 +33,7 @@ public class CubeUvReflectionFragment {
             "\tvec3 dx = dFdx( vec * scale * dxRoughness );\n" +
             "\tvec3 dy = dFdy( vec * scale * dyRoughness );\n" +
             "\tfloat d = max( dot( dx, dx ), dot( dy, dy ) );\n" +
-            "\t// Clamp the value to the max mip level counts. hard coded to 6 mips\n" +
+            "\t// clamp the value to the max mip level counts. hard coded to 6 mips\n" +
             "\td = clamp(d, 1.0, cubeUV_rangeClamp);\n" +
             "\tfloat mipLevel = 0.5 * log2(d);\n" +
             "\treturn vec2(floor(mipLevel), fract(mipLevel));\n" +

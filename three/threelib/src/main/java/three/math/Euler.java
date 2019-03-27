@@ -26,60 +26,60 @@ public class Euler {
         this.isEuler = true;
     }
 
-    public Euler Set(float x, float y, float z, String order){
+    public Euler set(float x, float y, float z, String order){
         this.x = x;
         this.y = y;
         this.z = z;
         this.order = order;
-        this.OnChangeCallback();
+        this.onChangeCallback();
         return this;
     }
 
-    public void SetX(float x){
+    public void setX(float x){
         this.x = x;
-        OnChangeCallback();
+        onChangeCallback();
     }
 
-    public void SetY(float y){
+    public void setY(float y){
         this.y = y;
-        OnChangeCallback();
+        onChangeCallback();
     }
 
-    public void SetZ(float z){
+    public void setZ(float z){
         this.z = z;
-        OnChangeCallback();
+        onChangeCallback();
     }
 
-    public void SetOrder(String order){
+    public void setOrder(String order){
         this.order = order;
-        OnChangeCallback();
+        onChangeCallback();
     }
 
-    public void SetOnchangeCallback(Quaternion q){
+    public void setOnchangeCallback(Quaternion q){
         this.onChangeQuaternion = q;
     }
 
-    private void OnChangeCallback(){
+    private void onChangeCallback(){
         if(this.onChangeQuaternion != null){
-            this.onChangeQuaternion.SetFromEuler( this, false );
+            this.onChangeQuaternion.setFromEuler( this, false );
         }
     }
 
-    public Euler Clone(){
+    public Euler clone(){
         return new Euler(this.x, this.y, this.z, this.order);
     }
 
-    public Euler Copy(Euler euler){
+    public Euler copy(Euler euler){
         this.x = euler.x;
         this.y = euler.y;
         this.z = euler.z;
         this.order = euler.order;
 
-        this.OnChangeCallback();
+        this.onChangeCallback();
         return this;
     }
 
-    public Euler SetFromRotationMatrix(Matrix4 m, String order, boolean update){
+    public Euler setFromRotationMatrix(Matrix4 m, String order, boolean update){
 
         // assumes the upper 3x3 of m is a pure rotation matrix (i.e, unscaled)
         float[] te = m.elements;
@@ -88,7 +88,7 @@ public class Euler {
         float m31 = te[ 2 ], m32 = te[ 6 ], m33 = te[ 10 ];
 
         if (order.equals("XYZ")) {
-            this.y = (float)Math.asin( Math_.Clamp( m13, - 1, 1 ) );
+            this.y = (float)Math.asin( Math_.clamp( m13, - 1, 1 ) );
             if ( Math.abs( m13 ) < 0.99999 ) {
                 this.x = (float)Math.atan2( - m23, m33 );
                 this.z = (float)Math.atan2( - m12, m11 );
@@ -98,7 +98,7 @@ public class Euler {
             }
 
         } else if (order.equals("YXZ")) {
-            this.x = (float)Math.asin( - Math_.Clamp( m23, - 1, 1 ) );
+            this.x = (float)Math.asin( - Math_.clamp( m23, - 1, 1 ) );
             if ( Math.abs( m23 ) < 0.99999 ) {
                 this.y = (float)Math.atan2( m13, m33 );
                 this.z = (float)Math.atan2( m21, m22 );
@@ -108,7 +108,7 @@ public class Euler {
             }
 
         } else if (order.equals("ZXY")) {
-            this.x = (float)Math.asin( Math_.Clamp( m32, - 1, 1 ) );
+            this.x = (float)Math.asin( Math_.clamp( m32, - 1, 1 ) );
             if ( Math.abs( m32 ) < 0.99999 ) {
                 this.y = (float)Math.atan2( - m31, m33 );
                 this.z = (float)Math.atan2( - m12, m22 );
@@ -118,7 +118,7 @@ public class Euler {
             }
 
         } else if (order.equals("ZYX")) {
-            this.y = (float)Math.asin( - Math_.Clamp( m31, - 1, 1 ) );
+            this.y = (float)Math.asin( - Math_.clamp( m31, - 1, 1 ) );
             if ( Math.abs( m31 ) < 0.99999 ) {
                 this.x = (float)Math.atan2( m32, m33 );
                 this.z = (float)Math.atan2( m21, m11 );
@@ -128,7 +128,7 @@ public class Euler {
             }
 
         } else if (order.equals("YZX")) {
-            this.z = (float)Math.asin( Math_.Clamp( m21, - 1, 1 ) );
+            this.z = (float)Math.asin( Math_.clamp( m21, - 1, 1 ) );
             if ( Math.abs( m21 ) < 0.99999 ) {
                 this.x = (float)Math.atan2( - m23, m22 );
                 this.y = (float)Math.atan2( - m31, m11 );
@@ -138,7 +138,7 @@ public class Euler {
             }
 
         } else if (order.equals("XZY")) {
-            this.z = (float)Math.asin( - Math_.Clamp( m12, - 1, 1 ) );
+            this.z = (float)Math.asin( - Math_.clamp( m12, - 1, 1 ) );
             if ( Math.abs( m12 ) < 0.99999 ) {
                 this.x = (float)Math.atan2( m32, m22 );
                 this.y = (float)Math.atan2( m13, m11 );
@@ -151,39 +151,39 @@ public class Euler {
 
         this.order = order;
 
-        if (update) this.OnChangeCallback();
+        if (update) this.onChangeCallback();
         return this;
     }
 
-    public Euler SetFromQuaternion(Quaternion q, String order, boolean update){
+    public Euler setFromQuaternion(Quaternion q, String order, boolean update){
         Matrix4 matrix = new Matrix4();
-        matrix.MakeRotationFromQuaternion( q );
-        return this.SetFromRotationMatrix( matrix, order, update );
+        matrix.makeRotationFromQuaternion( q );
+        return this.setFromRotationMatrix( matrix, order, update );
     }
 
-    public Euler SetFromVector3(Vector3 v, String order){
-        return this.Set( v.x, v.y, v.z, order );
+    public Euler setFromVector3(Vector3 v, String order){
+        return this.set( v.x, v.y, v.z, order );
     }
 
-    public Euler Reorder(String newOrder){
+    public Euler reorder(String newOrder){
         Quaternion q = new Quaternion();
-        q.SetFromEuler( this, false );
-        return this.SetFromQuaternion( q, newOrder, false );
+        q.setFromEuler( this, false );
+        return this.setFromQuaternion( q, newOrder, false );
     }
 
-    public boolean Equals(Euler euler){
-        return ( euler.x == this.x ) && ( euler.y == this.y ) && ( euler.z == this.z ) && ( euler.order == this.order );
+    public boolean equals(Euler euler){
+        return ( euler.x == this.x ) && ( euler.y == this.y ) && ( euler.z == this.z ) && (euler.order.equals(this.order));
     }
 
-    public Euler FromArray(float[] array){
+    public Euler fromArray(float[] array){
         this.x = array[ 0 ];
         this.y = array[ 1 ];
         this.z = array[ 2 ];
-        this.OnChangeCallback();
+        this.onChangeCallback();
         return this;
     }
 
-    public float[] ToArray(float[] array, int offset){
+    public float[] toArray(float[] array, int offset){
         array[ offset ] = this.x;
         array[ offset + 1 ] = this.y;
         array[ offset + 2 ] = this.z;
@@ -191,7 +191,7 @@ public class Euler {
         return array;
     }
 
-    public Vector3 ToVector3(){
+    public Vector3 toVector3(){
         return new Vector3( this.x, this.y, this.z );
     }
 

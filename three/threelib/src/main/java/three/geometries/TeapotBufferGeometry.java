@@ -1,11 +1,5 @@
 package three.geometries;
 
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
-import java.nio.FloatBuffer;
-import java.nio.IntBuffer;
-import java.util.ArrayList;
-
 import three.bufferAttribute.Float32BufferAttribute;
 import three.bufferAttribute.Uint32BufferAttribute;
 import three.core.BufferGeometry;
@@ -374,7 +368,7 @@ public class TeapotBufferGeometry extends BufferGeometry {
 
         // Bezier form
         Matrix4 ms = new Matrix4();
-        ms.Set(
+        ms.set(
                 - 1.0f, 3.0f, - 3.0f, 1.0f,
                 3.0f, - 6.0f, 3.0f, 0.0f,
                 - 3.0f, 3.0f, 0.0f, 0.0f,
@@ -417,8 +411,8 @@ public class TeapotBufferGeometry extends BufferGeometry {
         Vector3 vsdir = new Vector3();
         Vector3 vtdir = new Vector3();
 
-        Matrix4 mst = ms.Clone();
-        mst.Transpose();
+        Matrix4 mst = ms.clone();
+        mst.transpose();
 
         for ( int i = 0; i < 3; i ++ ) {
             mgm[i] = new Matrix4();
@@ -465,10 +459,10 @@ public class TeapotBufferGeometry extends BufferGeometry {
                         }
                     }
 
-                    gmx.Set( g[ 0 ], g[ 1 ], g[ 2 ], g[ 3 ], g[ 4 ], g[ 5 ], g[ 6 ], g[ 7 ], g[ 8 ], g[ 9 ], g[ 10 ], g[ 11 ], g[ 12 ], g[ 13 ], g[ 14 ], g[ 15 ] );
+                    gmx.set( g[ 0 ], g[ 1 ], g[ 2 ], g[ 3 ], g[ 4 ], g[ 5 ], g[ 6 ], g[ 7 ], g[ 8 ], g[ 9 ], g[ 10 ], g[ 11 ], g[ 12 ], g[ 13 ], g[ 14 ], g[ 15 ] );
 
-                    tmtx.MultiplyMatrices( gmx, ms );
-                    mgm[i].MultiplyMatrices( mst, tmtx );
+                    tmtx.multiplyMatrices( gmx, ms );
+                    mgm[i].multiplyMatrices( mst, tmtx );
                 }
 
                 // step along, get points, and output
@@ -496,41 +490,41 @@ public class TeapotBufferGeometry extends BufferGeometry {
                             }
                         }
 
-                        vsp.FromArray( sp, 0 );
-                        vtp.FromArray( tp, 0 );
-                        vdsp.FromArray( dsp, 0 );
-                        vdtp.FromArray( dtp, 0 );
+                        vsp.fromArray( sp, 0 );
+                        vtp.fromArray( tp, 0 );
+                        vdsp.fromArray( dsp, 0 );
+                        vdtp.fromArray( dtp, 0 );
 
                         // do for x,y,z
                         for ( int i = 0; i < 3; i ++ ) {
                             // multiply power vectors times matrix to get value
                             tcoord = vsp.Clone();
-                            tcoord.ApplyMatrix4( mgm[i] );
-                            vert[ i ] = tcoord.Dot( vtp );
+                            tcoord.applyMatrix4( mgm[i] );
+                            vert[ i ] = tcoord.dot( vtp );
 
                             // get s and t tangent vectors
                             tcoord = vdsp.Clone();
-                            tcoord.ApplyMatrix4( mgm[i] );
-                            sdir[ i ] = tcoord.Dot( vtp );
+                            tcoord.applyMatrix4( mgm[i] );
+                            sdir[ i ] = tcoord.dot( vtp );
 
                             tcoord = vsp.Clone();
-                            tcoord.ApplyMatrix4( mgm[i] );
-                            tdir[ i ] = tcoord.Dot( vdtp );
+                            tcoord.applyMatrix4( mgm[i] );
+                            tdir[ i ] = tcoord.dot( vdtp );
                         }
 
                         // find normal
-                        vsdir.FromArray( sdir, 0 );
-                        vtdir.FromArray( tdir, 0 );
-                        norm.CrossVectors( vtdir, vsdir );
-                        norm.Normalize();
+                        vsdir.fromArray( sdir, 0 );
+                        vtdir.fromArray( tdir, 0 );
+                        norm.crossVectors( vtdir, vsdir );
+                        norm.normalize();
 
                         // if X and Z length is 0, at the cusp, so point the normal up or down, depending on patch number
                         if ( vert[ 0 ] == 0 && vert[ 1 ] == 0 ) {
                             // if above the middle of the teapot, normal points up, else down
-                            normOut.Set( 0, vert[ 2 ] > maxHeight2 ? 1 : - 1, 0 );
+                            normOut.set( 0, vert[ 2 ] > maxHeight2 ? 1 : - 1, 0 );
                         } else {
                             // standard output: rotate on X axis
-                            normOut.Set( norm.x, norm.z, - norm.y );
+                            normOut.set( norm.x, norm.z, - norm.y );
                         }
 
                         // store it all
@@ -557,12 +551,12 @@ public class TeapotBufferGeometry extends BufferGeometry {
 
                         // Normals and UVs cannot be shared. Without clone(), you can see the consequences
                         // of sharing if you call geometry.applyMatrix( matrix ).
-                        if ( NotDegenerate( vertices, v1, v2, v3 ) && indexCount < indices.length) {
+                        if ( notDegenerate( vertices, v1, v2, v3 ) && indexCount < indices.length) {
                             indices[ indexCount ++ ] = v1;
                             indices[ indexCount ++ ] = v2;
                             indices[ indexCount ++ ] = v3;
                         }
-                        if ( NotDegenerate( vertices, v1, v3, v4 ) && indexCount < indices.length ) {
+                        if ( notDegenerate( vertices, v1, v3, v4 ) && indexCount < indices.length ) {
                             indices[ indexCount ++ ] = v1;
                             indices[ indexCount ++ ] = v3;
                             indices[ indexCount ++ ] = v4;
@@ -575,15 +569,15 @@ public class TeapotBufferGeometry extends BufferGeometry {
             }
         }
 
-        this.SetIndex( new Uint32BufferAttribute( indices, 1 ) );
-        this.AddAttribute( "position", new Float32BufferAttribute( vertices, 3 ) );
-        this.AddAttribute( "normal", new Float32BufferAttribute( normals, 3 ) );
-        this.AddAttribute( "uv", new Float32BufferAttribute( uvs, 2 ) );
+        this.setIndex( new Uint32BufferAttribute( indices, 1 ) );
+        this.addAttribute( "position", new Float32BufferAttribute( vertices, 3 ) );
+        this.addAttribute( "normal", new Float32BufferAttribute( normals, 3 ) );
+        this.addAttribute( "uv", new Float32BufferAttribute( uvs, 2 ) );
 
-        this.ComputeBoundingSphere();
+        this.computeBoundingSphere();
     }
 
-    private boolean NotDegenerate(float[] vertices, int vtx1, int vtx2, int vtx3){
+    private boolean notDegenerate(float[] vertices, int vtx1, int vtx2, int vtx3){
         // if any vertex matches, return false
         return ! ( ( ( vertices[vtx1 * 3] == vertices[ vtx2 * 3 ] ) &&
                 ( vertices[ vtx1 * 3 + 1 ] == vertices[ vtx2 * 3 + 1 ] ) &&

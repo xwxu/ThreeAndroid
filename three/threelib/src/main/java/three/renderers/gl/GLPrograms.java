@@ -5,9 +5,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import three.core.Object3D;
-import three.lights.Light;
 import three.materials.Material;
-import three.materials.RawShaderMaterial;
 import three.materials.ShaderMaterial;
 import three.renderers.GLRenderTarget;
 import three.renderers.GLRenderer;
@@ -17,8 +15,6 @@ import three.textures.Texture;
 import three.util.Parameters;
 
 import static three.constants.BackSide;
-import static three.constants.CubeUVReflectionMapping;
-import static three.constants.CubeUVRefractionMapping;
 import static three.constants.DoubleSide;
 import static three.constants.GammaEncoding;
 import static three.constants.LinearEncoding;
@@ -64,50 +60,50 @@ public class GLPrograms {
         this.capabilities = capabilities;
     }
 
-    public Parameters GetParameters(Material material, GLLights lights, ArrayList shadows,
+    public Parameters getParameters(Material material, GLLights lights, ArrayList shadows,
                                     Fog fog, int nClipPlanes, int nClipIntersection, Object3D object){
 
         int maxBones = 0;
-        GLRenderTarget currentRenderTarget = renderer.GetRenderTarget();
+        GLRenderTarget currentRenderTarget = renderer.getRenderTarget();
 
         Parameters  parameters = new Parameters();
         String shaderId = shaderIDs.get(material.type);
         parameters.shaderID = shaderId;
         parameters.precision = material.precision != null ? material.precision : capabilities.maxPrecision;
         parameters.supportsVertexTextures = capabilities.vertexTextures;
-        parameters.outputEncoding = GetTextureEncodingFromMap(material, "", renderer.gammaOutput);
+        parameters.outputEncoding = getTextureEncodingFromMap(material, "", renderer.gammaOutput);
 
-        parameters.map = material.CheckFieldValid("map");
-        parameters.mapEncoding = GetTextureEncodingFromMap(material, "map", renderer.gammaInput);
+        parameters.map = material.checkFieldValid("map");
+        parameters.mapEncoding = getTextureEncodingFromMap(material, "map", renderer.gammaInput);
 
-        parameters.matcap = material.CheckFieldValid("matcap");
+        parameters.matcap = material.checkFieldValid("matcap");
 
-        parameters.matcapEncoding = GetTextureEncodingFromMap(material, "matcap", renderer.gammaInput);
+        parameters.matcapEncoding = getTextureEncodingFromMap(material, "matcap", renderer.gammaInput);
         parameters.envMap = material.envMap != null;
         //parameters.envMapMode = CheckFieldExist(material, "envMap") ? (material.envMap.mapping > 0) : false;
-        parameters.envMapEncoding = GetTextureEncodingFromMap(material, "envMap", renderer.gammaInput);
+        parameters.envMapEncoding = getTextureEncodingFromMap(material, "envMap", renderer.gammaInput);
         //parameters.envMapCubeUv =  CheckFieldExist(material, "envMap") &&
         //        ((material.envMap.mapping == CubeUVReflectionMapping) || (material.envMap.mapping == CubeUVRefractionMapping));
 
-        parameters.lightMap = material.CheckFieldValid("lightMap");
-        parameters.aoMap = material.CheckFieldValid("aoMap");
-        parameters.emissiveMap = material.CheckFieldValid("emissiveMap");
-        parameters.emissiveMapEncoding = GetTextureEncodingFromMap(material, "emissiveMap", renderer.gammaInput);
-        Field bumpMapField = material.GetProperty("bumpMap");
-        parameters.bumpMap = material.CheckFieldValid("bumpMap");
-        parameters.normalMap = material.CheckFieldValid("normalMap");
+        parameters.lightMap = material.checkFieldValid("lightMap");
+        parameters.aoMap = material.checkFieldValid("aoMap");
+        parameters.emissiveMap = material.checkFieldValid("emissiveMap");
+        parameters.emissiveMapEncoding = getTextureEncodingFromMap(material, "emissiveMap", renderer.gammaInput);
+        Field bumpMapField = material.getProperty("bumpMap");
+        parameters.bumpMap = material.checkFieldValid("bumpMap");
+        parameters.normalMap = material.checkFieldValid("normalMap");
         parameters.objectSpaceNormalMap = material.normalMapType == ObjectSpaceNormalMap;
 
-        parameters.displacementMap = material.CheckFieldValid("displacementMap");
-        parameters.roughnessMap = material.CheckFieldValid("roughnessMap");
-        parameters.metalnessMap = material.CheckFieldValid("metalnessMap");
-        parameters.specularMap = material.CheckFieldValid("specularMap");
-        parameters.alphaMap = material.CheckFieldValid("alphaMap");
-        parameters.gradientMap = material.CheckFieldValid("gradientMap");
+        parameters.displacementMap = material.checkFieldValid("displacementMap");
+        parameters.roughnessMap = material.checkFieldValid("roughnessMap");
+        parameters.metalnessMap = material.checkFieldValid("metalnessMap");
+        parameters.specularMap = material.checkFieldValid("specularMap");
+        parameters.alphaMap = material.checkFieldValid("alphaMap");
+        parameters.gradientMap = material.checkFieldValid("gradientMap");
         parameters.combine = material.combine;
         parameters.vertexColors = material.vertexColors;
         parameters.fog = fog != null;
-        Field useFogField = material.GetProperty("fog");
+        Field useFogField = material.getProperty("fog");
         try {
             parameters.useFog = useFogField != null && useFogField.getBoolean(material);
         } catch (IllegalAccessException e) {
@@ -143,7 +139,7 @@ public class GLPrograms {
         return parameters;
     }
 
-    private int GetTextureEncodingFromMap(Material material, String map, boolean gammaOverrideLinear){
+    private int getTextureEncodingFromMap(Material material, String map, boolean gammaOverrideLinear){
         int encoding = LinearEncoding;
 
         Class cls = material.getClass();
@@ -170,7 +166,7 @@ public class GLPrograms {
         return encoding;
     }
 
-    public String GetProgramCode(Material material, Parameters parameters){
+    public String getProgramCode(Material material, Parameters parameters){
 
         String code = "";
         String delimeter = ",";
@@ -194,7 +190,7 @@ public class GLPrograms {
         return code;
     }
 
-    public GLProgram AcquireProgram(Material material, ShaderObject shader, Parameters parameters, String code) {
+    public GLProgram acquireProgram(Material material, ShaderObject shader, Parameters parameters, String code) {
         GLProgram program = null;
 
         // Check if code has been already compiled

@@ -33,18 +33,18 @@ public class ColorBuffer {
             r *= a; g *= a; b *= a;
         }
 
-        this.color.Set( r, g, b, a );
+        this.color.set( r, g, b, a );
 
-        if (!this.currentColorClear.Equals(color)) {
+        if (!this.currentColorClear.equals(color)) {
             GLES20.glClearColor( r, g, b, a );
-            this.currentColorClear.Copy( color );
+            this.currentColorClear.copy( color );
         }
     }
 
     public void Reset(){
         this.locked = false;
         this.currentColorMask = false;
-        this.currentColorClear.Set(-1, 0, 0, 0);
+        this.currentColorClear.set(-1, 0, 0, 0);
     }
 
 }

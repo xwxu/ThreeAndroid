@@ -3,9 +3,6 @@ package three.renderers.gl;
 import android.opengl.GLES20;
 
 import java.nio.Buffer;
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
-import java.nio.IntBuffer;
 import java.util.HashMap;
 
 import three.bufferAttribute.BufferAttribute;
@@ -23,7 +20,7 @@ public class GLAttributes {
 
     }
 
-    private BufferData CreateBuffer(BufferAttribute attribute, int bufferType){
+    private BufferData createBuffer(BufferAttribute attribute, int bufferType){
         int usage = attribute.dynamic ? GLES20.GL_DYNAMIC_DRAW : GLES20.GL_STATIC_DRAW;
 
         final int[] bufferNames = new int[1];
@@ -55,7 +52,7 @@ public class GLAttributes {
         return new BufferData(bufferNames, type, bytesPerElement, attribute.version);
     }
 
-    private void UpdateBuffer(int[] buffer, BufferAttribute attribute, int bufferType){
+    private void updateBuffer(int[] buffer, BufferAttribute attribute, int bufferType){
         Buffer array = null;
         if(attribute instanceof Float32BufferAttribute){
             array = ((Float32BufferAttribute) attribute).array;
@@ -88,29 +85,28 @@ public class GLAttributes {
         }
     }
 
-    public BufferData Get(BufferAttribute attribute){
+    public BufferData get(BufferAttribute attribute){
         return this.buffers.get(attribute);
     }
 
-    public void Update(BufferAttribute attribute, int bufferType){
+    public void update(BufferAttribute attribute, int bufferType){
         //if ( attribute.isInterleavedBufferAttribute ) attribute = attribute.data;
 
         BufferData data = buffers.get( attribute );
 
         if ( data == null ) {
 
-            buffers.put( attribute, CreateBuffer( attribute, bufferType ) );
+            buffers.put( attribute, createBuffer( attribute, bufferType ) );
 
         } else if ( data.version < attribute.version ) {
 
-            UpdateBuffer( data.buffer, attribute, bufferType );
+            updateBuffer( data.buffer, attribute, bufferType );
             data.version = attribute.version;
 
         }
     }
 
-    public void Remove(BufferAttribute attribute){
-
+    public void remove(BufferAttribute attribute){
         BufferData data = this.buffers.get(attribute);
         if(data != null){
             GLES20.glDeleteBuffers(1, data.buffer, 0);

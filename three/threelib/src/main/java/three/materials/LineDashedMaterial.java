@@ -16,8 +16,8 @@ public class LineDashedMaterial extends LineMaterial{
         gapSize = parameters.gapSize;
     }
 
-    public LineDashedMaterial Copy(LineDashedMaterial source){
-        super.Copy(source);
+    public LineDashedMaterial copy(LineDashedMaterial source){
+        super.copy(source);
         this.scale = source.scale;
         this.dashSize = source.dashSize;
         this.gapSize = source.gapSize;

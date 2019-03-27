@@ -12,7 +12,7 @@ public class LightUniformCache {
 
     HashMap<Integer, UniformsObject> lights = new HashMap<>();
 
-    public UniformsObject Get(Light light){
+    public UniformsObject get(Light light){
 
         UniformsObject uniforms = lights.get(light.id);
         if ( uniforms != null ) {

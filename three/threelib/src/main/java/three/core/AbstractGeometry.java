@@ -15,7 +15,7 @@ public abstract class AbstractGeometry {
     public AbstractGeometry(){
         type = "AbstractGeometry";
         //id = geometryId ++;
-        uuid = Math_.GenerateUUID();
+        uuid = Math_.generateUUID();
         name = "";
         this.subject = PublishSubject.create();
     }

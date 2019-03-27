@@ -21,9 +21,9 @@ public class PointsMaterial extends Material {
         morphTargets = parameters.morphTargets;
     }
 
-    public PointsMaterial Copy(PointsMaterial source){
-        super.Copy(source);
-        this.color.Copy( source.color );
+    public PointsMaterial copy(PointsMaterial source){
+        super.copy(source);
+        this.color.copy( source.color );
 
         this.map = source.map;
 

@@ -14,62 +14,62 @@ import three.util.Intersect;
 import three.util.IntersectComparator;
 
 public class Raycaster {
-    public Ray ray;
+    public Ray set;
     public float near;
     public float far;
     public float linePrecision;
 
     public Raycaster(Vector3 origin, Vector3 direction, float near, float far){
-        this.ray = new Ray(origin, direction);
+        this.set = new Ray(origin, direction);
         this.near = near;
         this.far = far;
         this.linePrecision = 1;
     }
 
-    private void IntersectObject_(Object3D object, Raycaster raycaster,
+    private void intersectObject_(Object3D object, Raycaster raycaster,
                                   ArrayList<Intersect> intersects, boolean recursive){
 
         if ( object.visible == false ) return;
-        object.Raycast( raycaster, intersects );
+        object.raycast( raycaster, intersects );
 
-        if ( recursive == true ) {
+        if (recursive) {
             ArrayList<Object3D> children = object.children;
             for ( int i = 0, l = children.size(); i < l; i ++ ) {
-                IntersectObject_( children.get(i), raycaster, intersects, true );
+                intersectObject_( children.get(i), raycaster, intersects, true );
             }
         }
     }
 
 
-    public void Set(Vector3 origin, Vector3 direction){
-        this.ray.Set(origin, direction);
+    public void set(Vector3 origin, Vector3 direction){
+        this.set.set(origin, direction);
     }
 
-    public void SetFromCamera(Vector2 coords, Camera camera){
+    public void setFromCamera(Vector2 coords, Camera camera){
         if(camera instanceof PerspectiveCamera){
-            this.ray.origin.SetFromMatrixPosition( camera.matrixWorld );
-            this.ray.direction.Set( coords.x, coords.y, 0.5f ).Unproject( camera ).Sub( this.ray.origin ).Normalize();
+            this.set.origin.setFromMatrixPosition( camera.matrixWorld );
+            this.set.direction.set( coords.x, coords.y, 0.5f ).unproject( camera ).sub( this.set.origin ).normalize();
         }else if(camera instanceof OrthographicCamera){
             OrthographicCamera orthographicCamera = (OrthographicCamera)camera;
-            this.ray.origin.Set( coords.x, coords.y, ( orthographicCamera.near + orthographicCamera.far ) / ( orthographicCamera.near - orthographicCamera.far ) ).Unproject( camera ); // set origin in plane of camera
-            this.ray.direction.Set( 0, 0, - 1 ).TransformDirection( camera.matrixWorld );
+            this.set.origin.set( coords.x, coords.y, ( orthographicCamera.near + orthographicCamera.far ) / ( orthographicCamera.near - orthographicCamera.far ) ).unproject( camera ); // set origin in plane of camera
+            this.set.direction.set( 0, 0, - 1 ).transformDirection( camera.matrixWorld );
         }
     }
 
-    public ArrayList<Intersect> IntersectObject(Object3D object, boolean recursive){
+    public ArrayList<Intersect> intersectObject(Object3D object, boolean recursive){
         ArrayList<Intersect> intersects = new ArrayList<Intersect>();
-        IntersectObject_( object, this, intersects, recursive );
+        intersectObject_( object, this, intersects, recursive );
         // sort
         Comparator c = new IntersectComparator();
         Collections.sort(intersects, c);
         return intersects;
     }
 
-    public ArrayList<Intersect> IntersectObjects(ArrayList<Object3D> objects, boolean recursive){
+    public ArrayList<Intersect> intersectObjects(ArrayList<Object3D> objects, boolean recursive){
         ArrayList<Intersect> intersects = new ArrayList<Intersect>();
 
         for ( int i = 0, l = objects.size(); i < l; i ++ ) {
-            IntersectObject_( objects.get(i), this, intersects, recursive );
+            intersectObject_( objects.get(i), this, intersects, recursive );
         }
         // sort
         Comparator c = new IntersectComparator();

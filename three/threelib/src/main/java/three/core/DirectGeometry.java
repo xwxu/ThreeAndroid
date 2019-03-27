@@ -26,7 +26,7 @@ public class DirectGeometry {
     public boolean groupsNeedUpdate = false;
 
     // TODO: inclde morphs and skins
-    public DirectGeometry FromGeometry(Geometry geometry) {
+    public DirectGeometry fromGeometry(Geometry geometry) {
         ArrayList<Face3> faces = geometry.faces;
         ArrayList<Vector3> vertices = geometry.vertices;
         ArrayList<ArrayList<ArrayList<Vector2>>> faceVertexUvs = geometry.faceVertexUvs;
@@ -102,7 +102,7 @@ public class DirectGeometry {
             }
         }
 
-        this.ComputeGroups( geometry );
+        this.computeGroups( geometry );
 
         this.verticesNeedUpdate = geometry.verticesNeedUpdate;
         this.normalsNeedUpdate = geometry.normalsNeedUpdate;
@@ -112,7 +112,7 @@ public class DirectGeometry {
         return this;
     }
 
-    public void ComputeGroups(Geometry geometry) {
+    public void computeGroups(Geometry geometry) {
         GeoMatGroup group = null;
         ArrayList<GeoMatGroup> groups = new ArrayList<>();
         int materialIndex = -1;

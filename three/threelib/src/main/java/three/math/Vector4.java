@@ -21,11 +21,11 @@ public class Vector4 {
         w = 1;
     }
 
-    public boolean Equals(Vector4 v) {
+    public boolean equals(Vector4 v) {
         return ( ( v.x == this.x ) && ( v.y == this.y ) && ( v.z == this.z ) && ( v.w == this.w ) );
     }
 
-    public Vector4 Set(float x, float y, float z, float w) {
+    public Vector4 set(float x, float y, float z, float w) {
         this.x = x;
         this.y = y;
         this.z = z;
@@ -34,7 +34,7 @@ public class Vector4 {
         return this;
     }
 
-    public Vector4 Copy(Vector4 v) {
+    public Vector4 copy(Vector4 v) {
         this.x = v.x;
         this.y = v.y;
         this.z = v.z;
@@ -42,7 +42,7 @@ public class Vector4 {
         return this;
     }
 
-    public float[] ToArray(float[] array, int offset) {
+    public float[] toArray(float[] array, int offset) {
 
         array[ offset ] = this.x;
         array[ offset + 1 ] = this.y;
@@ -57,7 +57,7 @@ public class Vector4 {
     }
 
 
-    public Vector4 MultiplyScalar(float scalar){
+    public Vector4 multiplyScalar(float scalar){
         this.x *= scalar;
         this.y *= scalar;
         this.z *= scalar;
@@ -65,7 +65,7 @@ public class Vector4 {
         return this;
     }
 
-    public Vector4 FromArray(float[] array, int offset) {
+    public Vector4 fromArray(float[] array, int offset) {
         this.x = array[ offset ];
         this.y = array[ offset + 1 ];
         this.z = array[ offset + 2 ];
@@ -74,11 +74,11 @@ public class Vector4 {
         return this;
     }
 
-    public float Dot(Vector4 v) {
+    public float dot(Vector4 v) {
         return this.x * v.x + this.y * v.y + this.z * v.z + this.w * v.w;
     }
 
-    public Vector4 ApplyMatrix4(Matrix4 m) {
+    public Vector4 applyMatrix4(Matrix4 m) {
         float x = this.x, y = this.y, z = this.z, w = this.w;
         float[] e = m.elements;
 

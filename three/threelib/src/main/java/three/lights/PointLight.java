@@ -23,12 +23,11 @@ public class PointLight extends Light {
         this.decay = decay;
     }
 
-    public PointLight Copy(PointLight source){
-        super.Copy(source);
+    public PointLight copy(PointLight source){
+        super.copy(source);
         this.distance = source.distance;
         this.decay = source.decay;
-
-        this.shadow = source.shadow.Clone();
+        this.shadow = source.shadow.clone();
 
         return this;
     }

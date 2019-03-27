@@ -9,5 +9,5 @@ public abstract class AbstractUniform {
         this.id = id;
     }
 
-    public void SetValue(Object value, GLRenderer renderer){}
+    public void setValue(Object value, GLRenderer renderer){}
 }

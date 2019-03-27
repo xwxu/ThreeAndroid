@@ -30,7 +30,7 @@ public class BufferAttribute {
         }
     }
 
-    public BufferAttribute Clone(){
+    public BufferAttribute clone(){
         return this;
     }
 }

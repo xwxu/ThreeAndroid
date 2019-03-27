@@ -29,11 +29,11 @@ public class GLTextures {
         this.info = info;
     }
 
-    public void UpdateRenderTargetMipmap(GLRenderTarget renderTarget) {
+    public void updateRenderTargetMipmap(GLRenderTarget renderTarget) {
     }
 
-    public void SetTexture2D(Texture texture, int slot) {
-        TextureProperties textureProperties = properties.GetTexture( texture );
+    public void setTexture2D(Texture texture, int slot) {
+        TextureProperties textureProperties = properties.getTexture( texture );
 
         // TODO: update video texture
 
@@ -43,17 +43,17 @@ public class GLTextures {
             if ( image == null ) {
                 System.out.println( "Texture marked for update but image is undefined" );
             } else {
-                UploadTexture( textureProperties, texture, slot );
+                uploadTexture( textureProperties, texture, slot );
                 return;
             }
         }
 
-        state.ActiveTexture( GLES20.GL_TEXTURE0 + slot );
-        state.BindTexture( GLES20.GL_TEXTURE_2D, textureProperties.__glTexture);
+        state.activeTexture( GLES20.GL_TEXTURE0 + slot );
+        state.bindTexture( GLES20.GL_TEXTURE_2D, textureProperties.__glTexture);
 
     }
 
-    private void UploadTexture(TextureProperties textureProperties, Texture texture, int slot) {
+    private void uploadTexture(TextureProperties textureProperties, Texture texture, int slot) {
         int textureType;
 
         if ( false ) {
@@ -75,22 +75,22 @@ public class GLTextures {
             info.memory.textures ++;
 
         }
-        state.ActiveTexture( GLES20.GL_TEXTURE0 + slot );
+        state.activeTexture( GLES20.GL_TEXTURE0 + slot );
 
 
-        state.BindTexture( textureType, textureProperties.__glTexture);
+        state.bindTexture( textureType, textureProperties.__glTexture);
 
         // GLES20 doesnt have UNPACK_FLIP_Y && UNPACK_PREMULTIPLY_ALPHA
         GLES20.glPixelStorei( GLES20.GL_UNPACK_ALIGNMENT, texture.unpackAlignment );
 
 
-        boolean isPowerOfTwoImage = true;//IsPowerOfTwo( image );
+        boolean isPowerOfTwoImage = true;//isPowerOfTwo( image );
 
-        int glFormat = GLUtils.Convert( texture.format );
-        int glType = GLUtils.Convert( texture.type );
-        int glInternalFormat = GetInternalFormat( glFormat, glType );
+        int glFormat = GLUtils.convert( texture.format );
+        int glType = GLUtils.convert( texture.type );
+        int glInternalFormat = getInternalFormat( glFormat, glType );
 
-        SetTextureParameters( textureType, texture, isPowerOfTwoImage );
+        setTextureParameters( textureType, texture, isPowerOfTwoImage );
 
         //var mipmap, mipmaps = texture.mipmaps;
 
@@ -118,7 +118,7 @@ public class GLTextures {
 
             } else {
 
-                state.TexImage2D( GLES20.GL_TEXTURE_2D, 0, glInternalFormat, glType, texture.image );
+                state.texImage2D( GLES20.GL_TEXTURE_2D, 0, glInternalFormat, glType, texture.image );
                 textureProperties.__maxMipLevel = 0;
 
             }
@@ -131,14 +131,14 @@ public class GLTextures {
 
     }
 
-    private void SetTextureParameters(int textureType, Texture texture, boolean isPowerOfTwoImage) {
+    private void setTextureParameters(int textureType, Texture texture, boolean isPowerOfTwoImage) {
         if ( isPowerOfTwoImage ) {
 
-            GLES20.glTexParameteri( textureType, GLES20.GL_TEXTURE_WRAP_S, GLUtils.Convert( texture.wrapS ) );
-            GLES20.glTexParameteri( textureType, GLES20.GL_TEXTURE_WRAP_T, GLUtils.Convert( texture.wrapT ) );
+            GLES20.glTexParameteri( textureType, GLES20.GL_TEXTURE_WRAP_S, GLUtils.convert( texture.wrapS ) );
+            GLES20.glTexParameteri( textureType, GLES20.GL_TEXTURE_WRAP_T, GLUtils.convert( texture.wrapT ) );
 
-            GLES20.glTexParameteri( textureType, GLES20.GL_TEXTURE_MAG_FILTER, GLUtils.Convert( texture.magFilter ) );
-            GLES20.glTexParameteri( textureType, GLES20.GL_TEXTURE_MIN_FILTER, GLUtils.Convert( texture.minFilter ) );
+            GLES20.glTexParameteri( textureType, GLES20.GL_TEXTURE_MAG_FILTER, GLUtils.convert( texture.magFilter ) );
+            GLES20.glTexParameteri( textureType, GLES20.GL_TEXTURE_MIN_FILTER, GLUtils.convert( texture.minFilter ) );
 
         } else {
 
@@ -161,20 +161,20 @@ public class GLTextures {
         return GLES20.GL_LINEAR;
     }
 
-    public void SetTexture3D(Texture texture, int slot) {
+    public void setTexture3D(Texture texture, int slot) {
     }
 
 
-    public void SetTextureCube(CubeTexture texture, int slot) {
+    public void setTextureCube(CubeTexture texture, int slot) {
     }
 
-    private int GetInternalFormat(int glFormat, int glType){
+    private int getInternalFormat(int glFormat, int glType){
         return glFormat;
     }
 
-    public void SetupRenderTarget(GLRenderTarget renderTarget) {
-        RenderTargetProperties renderTargetProperties = properties.GetRenderTarget( renderTarget );
-        TextureProperties textureProperties = properties.GetTexture( renderTarget.texture );
+    public void setupRenderTarget(GLRenderTarget renderTarget) {
+        RenderTargetProperties renderTargetProperties = properties.getRenderTarget( renderTarget );
+        TextureProperties textureProperties = properties.getTexture( renderTarget.texture );
 
         //todo: add dispose listener
 
@@ -187,7 +187,7 @@ public class GLTextures {
         boolean isCube = ( renderTarget instanceof GLRenderTargetCube );
         boolean isTargetPowerOfTwo = false; //isPowerOfTwo( renderTarget );
 
-        // Setup framebuffer
+        // setup framebuffer
         if ( isCube ) {
             renderTargetProperties.__glFramebuffers = new int[6];
 
@@ -203,37 +203,37 @@ public class GLTextures {
             renderTargetProperties.__glFramebuffer = buf[0];
         }
 
-        // Setup color buffer
+        // setup color buffer
 
         if ( isCube ) {
             // TODO
         } else {
 
-            state.BindTexture( GLES20.GL_TEXTURE_2D, textureProperties.__glTexture );
-            SetTextureParameters( GLES20.GL_TEXTURE_2D, renderTarget.texture, isTargetPowerOfTwo );
-            SetupFrameBufferTexture( renderTargetProperties.__glFramebuffer, renderTarget, GLES20.GL_COLOR_ATTACHMENT0, GLES20.GL_TEXTURE_2D );
+            state.bindTexture( GLES20.GL_TEXTURE_2D, textureProperties.__glTexture );
+            setTextureParameters( GLES20.GL_TEXTURE_2D, renderTarget.texture, isTargetPowerOfTwo );
+            setupFrameBufferTexture( renderTargetProperties.__glFramebuffer, renderTarget, GLES20.GL_COLOR_ATTACHMENT0, GLES20.GL_TEXTURE_2D );
 
             // todo: generate mipmaps
 
-            state.BindTexture( GLES20.GL_TEXTURE_2D, -1 );
+            state.bindTexture( GLES20.GL_TEXTURE_2D, 0 );
 
         }
 
-        // Setup depth and stencil buffers
+        // setup depth and stencil buffers
 
         if ( renderTarget.depthBuffer ) {
-            SetupDepthRenderbuffer( renderTarget );
+            setupDepthRenderbuffer( renderTarget );
         }
 
     }
 
-    private void SetupDepthRenderbuffer(GLRenderTarget renderTarget) {
-        RenderTargetProperties renderTargetProperties = properties.GetRenderTarget( renderTarget );
+    private void setupDepthRenderbuffer(GLRenderTarget renderTarget) {
+        RenderTargetProperties renderTargetProperties = properties.getRenderTarget( renderTarget );
 
         boolean isCube = renderTarget instanceof GLRenderTargetCube;
 
         if ( renderTarget.depthTexture != null ) {
-            SetupDepthTexture( renderTargetProperties.__glFramebuffer, renderTarget );
+            setupDepthTexture( renderTargetProperties.__glFramebuffer, renderTarget );
         } else {
 
             if ( isCube ) {
@@ -243,14 +243,14 @@ public class GLTextures {
                 int[] buf = new int[1];
                 GLES20.glGenRenderbuffers(1, buf, 0);
                 renderTargetProperties.__glDepthbuffer = buf[0];
-                SetupRenderBufferStorage( renderTargetProperties.__glDepthbuffer, renderTarget );
+                setupRenderBufferStorage( renderTargetProperties.__glDepthbuffer, renderTarget );
             }
         }
 
-        GLES20.glBindFramebuffer( GLES20.GL_FRAMEBUFFER, -1 );
+        GLES20.glBindFramebuffer( GLES20.GL_FRAMEBUFFER, 0 );
     }
 
-    private void SetupRenderBufferStorage(int renderbuffer, GLRenderTarget renderTarget) {
+    private void setupRenderBufferStorage(int renderbuffer, GLRenderTarget renderTarget) {
         GLES20.glBindRenderbuffer( GLES20.GL_RENDERBUFFER, renderbuffer );
 
         if ( renderTarget.depthBuffer && ! renderTarget.stencilBuffer ) {
@@ -270,10 +270,10 @@ public class GLTextures {
 
         }
 
-        GLES20.glBindRenderbuffer( GLES20.GL_RENDERBUFFER, -1 );
+        GLES20.glBindRenderbuffer( GLES20.GL_RENDERBUFFER, 0 );
     }
 
-    private void SetupDepthTexture(int framebuffer, GLRenderTarget renderTarget) {
+    private void setupDepthTexture(int framebuffer, GLRenderTarget renderTarget) {
         boolean isCube = renderTarget instanceof GLRenderTargetCube;
 
         GLES20.glBindFramebuffer( GLES20.GL_FRAMEBUFFER, framebuffer );
@@ -283,7 +283,7 @@ public class GLTextures {
         }
 
         // upload an empty depth texture with framebuffer size
-//        if ( ! properties.GetTexture( renderTarget.depthTexture ).__glTexture ||
+//        if ( ! properties.getTexture( renderTarget.depthTexture ).__glTexture ||
 //                renderTarget.depthTexture.image.width != renderTarget.width ||
 //                renderTarget.depthTexture.image.height != renderTarget.height ) {
 //
@@ -292,9 +292,9 @@ public class GLTextures {
 //            renderTarget.depthTexture.needsUpdate = true;
 //        }
 
-        SetTexture2D( renderTarget.depthTexture, 0 );
+        setTexture2D( renderTarget.depthTexture, 0 );
 
-        int glDepthTexture = properties.GetTexture( renderTarget.depthTexture ).__glTexture;
+        int glDepthTexture = properties.getTexture( renderTarget.depthTexture ).__glTexture;
 
         if ( renderTarget.depthTexture.format == DepthFormat ) {
 
@@ -309,13 +309,13 @@ public class GLTextures {
         }
     }
 
-    private void SetupFrameBufferTexture(int framebuffer, GLRenderTarget renderTarget, int attachment, int textureTarget) {
-        int glFormat = GLUtils.Convert( renderTarget.texture.format );
-        int glType = GLUtils.Convert( renderTarget.texture.type );
-        int glInternalFormat = GetInternalFormat( glFormat, glType );
-        state.TexImage2D( textureTarget, 0, glInternalFormat, renderTarget.width, renderTarget.height, 0, glFormat, glType, null );
+    private void setupFrameBufferTexture(int framebuffer, GLRenderTarget renderTarget, int attachment, int textureTarget) {
+        int glFormat = GLUtils.convert( renderTarget.texture.format );
+        int glType = GLUtils.convert( renderTarget.texture.type );
+        int glInternalFormat = getInternalFormat( glFormat, glType );
+        state.texImage2D( textureTarget, 0, glInternalFormat, renderTarget.width, renderTarget.height, 0, glFormat, glType, null );
         GLES20.glBindFramebuffer( GLES20.GL_FRAMEBUFFER, framebuffer );
-        GLES20.glFramebufferTexture2D( GLES20.GL_FRAMEBUFFER, attachment, textureTarget, properties.GetTexture( renderTarget.texture ).__glTexture, 0 );
-        GLES20.glBindFramebuffer( GLES20.GL_FRAMEBUFFER, -1 );
+        GLES20.glFramebufferTexture2D( GLES20.GL_FRAMEBUFFER, attachment, textureTarget, properties.getTexture( renderTarget.texture ).__glTexture, 0 );
+        GLES20.glBindFramebuffer( GLES20.GL_FRAMEBUFFER, 0 );
     }
 }

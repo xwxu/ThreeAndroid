@@ -188,7 +188,7 @@ public class ShaderChunk {
         shaderChunks.put("worldpos_vertex", WorldPosVertex.code);
     }
 
-    public String Get(String name){
+    public String get(String name){
         return shaderChunks.get(name);
     }
 }

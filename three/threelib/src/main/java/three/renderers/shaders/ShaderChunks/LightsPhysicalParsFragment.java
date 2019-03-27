@@ -18,7 +18,7 @@ public class LightsPhysicalParsFragment {
             "#define MAXIMUM_SPECULAR_COEFFICIENT 0.16\n" +
             "#define DEFAULT_SPECULAR_COEFFICIENT 0.04\n" +
             "\n" +
-            "// Clear coat directional hemishperical reflectance (this approximation should be improved)\n" +
+            "// clear coat directional hemishperical reflectance (this approximation should be improved)\n" +
             "float clearCoatDHRApprox( const in float roughness, const in float dotNL ) {\n" +
             "\n" +
             "\treturn DEFAULT_SPECULAR_COEFFICIENT + ( 1.0 - DEFAULT_SPECULAR_COEFFICIENT ) * ( pow( 1.0 - dotNL, 5.0 ) * pow( 1.0 - roughness, 2.0 ) );\n" +
