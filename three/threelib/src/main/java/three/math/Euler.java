@@ -65,7 +65,7 @@ public class Euler {
         }
     }
 
-    public Euler clone(){
+    public Euler clone_(){
         return new Euler(this.x, this.y, this.z, this.order);
     }
 

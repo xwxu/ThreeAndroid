@@ -135,9 +135,9 @@ public class Geometry extends AbstractGeometry{
                          int a, int b, int c, int materialIndex){
         ArrayList<Color> vertexColors = new ArrayList<Color>();
         if(colors != null){
-            vertexColors.add(this.colors.get(a).clone());
-            vertexColors.add(this.colors.get(b).clone());
-            vertexColors.add(this.colors.get(c).clone());
+            vertexColors.add(this.colors.get(a).clone_());
+            vertexColors.add(this.colors.get(b).clone_());
+            vertexColors.add(this.colors.get(c).clone_());
         }
 
         ArrayList<Vector3> vertexNormals = new ArrayList<Vector3>();
@@ -228,11 +228,11 @@ public class Geometry extends AbstractGeometry{
         this.computeFaceNormals();
 
         if ( geometry.boundingBox != null ) {
-            this.boundingBox = geometry.boundingBox.clone();
+            this.boundingBox = geometry.boundingBox.clone_();
         }
 
         if ( geometry.boundingSphere != null ) {
-            this.boundingSphere = geometry.boundingSphere.Clone();
+            this.boundingSphere = geometry.boundingSphere.clone_();
         }
 
         return this;
@@ -404,7 +404,7 @@ public class Geometry extends AbstractGeometry{
         return this;
     }
 
-    public Geometry clone(){
+    public Geometry clone_(){
         return new Geometry().copy(this);
     }
 
@@ -430,13 +430,13 @@ public class Geometry extends AbstractGeometry{
         // colors
         ArrayList<Color> colors = source.colors;
         for ( int i = 0, il = colors.size(); i < il; i ++ ) {
-            this.colors.add( colors.get(i).clone() );
+            this.colors.add( colors.get(i).clone_() );
         }
 
         // faces
         ArrayList<Face3> faces = source.faces;
         for ( int i = 0, il = faces.size(); i < il; i ++ ) {
-            this.faces.add( faces.get(i).clone() );
+            this.faces.add( faces.get(i).clone_() );
         }
 
         // face vertex uvs
@@ -451,7 +451,7 @@ public class Geometry extends AbstractGeometry{
                 ArrayList<Vector2> uvsCopy = new ArrayList<Vector2>();
                 for ( int k = 0, kl = uvs.size(); k < kl; k ++ ) {
                     Vector2 uv = uvs.get(k);
-                    uvsCopy.add( uv.Clone() );
+                    uvsCopy.add( uv.clone_() );
                 }
                 this.faceVertexUvs.get(i).add( uvsCopy );
             }

@@ -55,7 +55,7 @@ public class Color {
         return this;
     }
 
-    public Color clone(){
+    public Color clone_(){
         return new Color(this.r, this.g, this.b);
     }
 

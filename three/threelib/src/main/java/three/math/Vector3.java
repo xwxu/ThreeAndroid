@@ -394,7 +394,7 @@ public class Vector3 {
         return Math.abs( this.x - v.x ) + Math.abs( this.y - v.y ) + Math.abs( this.z - v.z );
     }
 
-    public Vector3 setFromSphericacl(Spherical s){
+    public Vector3 setFromSpherical(Spherical s){
         return this.setFromSphericalCoords( s.radius, s.phi, s.theta );
     }
 

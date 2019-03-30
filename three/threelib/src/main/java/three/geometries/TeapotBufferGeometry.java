@@ -411,7 +411,7 @@ public class TeapotBufferGeometry extends BufferGeometry {
         Vector3 vsdir = new Vector3();
         Vector3 vtdir = new Vector3();
 
-        Matrix4 mst = ms.clone();
+        Matrix4 mst = ms.clone_();
         mst.transpose();
 
         for ( int i = 0; i < 3; i ++ ) {
@@ -498,16 +498,16 @@ public class TeapotBufferGeometry extends BufferGeometry {
                         // do for x,y,z
                         for ( int i = 0; i < 3; i ++ ) {
                             // multiply power vectors times matrix to get value
-                            tcoord = vsp.Clone();
+                            tcoord = vsp.clone_();
                             tcoord.applyMatrix4( mgm[i] );
                             vert[ i ] = tcoord.dot( vtp );
 
                             // get s and t tangent vectors
-                            tcoord = vdsp.Clone();
+                            tcoord = vdsp.clone_();
                             tcoord.applyMatrix4( mgm[i] );
                             sdir[ i ] = tcoord.dot( vtp );
 
-                            tcoord = vsp.Clone();
+                            tcoord = vsp.clone_();
                             tcoord.applyMatrix4( mgm[i] );
                             tdir[ i ] = tcoord.dot( vdtp );
                         }
@@ -549,7 +549,7 @@ public class TeapotBufferGeometry extends BufferGeometry {
                         int v3 = v2 + vertPerRow;
                         int v4 = v1 + vertPerRow;
 
-                        // Normals and UVs cannot be shared. Without clone(), you can see the consequences
+                        // Normals and UVs cannot be shared. Without clone_(), you can see the consequences
                         // of sharing if you call geometry.applyMatrix( matrix ).
                         if ( notDegenerate( vertices, v1, v2, v3 ) && indexCount < indices.length) {
                             indices[ indexCount ++ ] = v1;

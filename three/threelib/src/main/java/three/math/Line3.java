@@ -20,7 +20,7 @@ public class Line3 {
         return this;
     }
 
-    public Line3 clone(){
+    public Line3 clone_(){
         Line3 clone = new Line3();
         clone.copy(this);
         return clone;

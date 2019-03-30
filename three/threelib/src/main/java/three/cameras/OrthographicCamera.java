@@ -3,7 +3,6 @@ package three.cameras;
 import three.util.ViewInfo;
 
 public class OrthographicCamera extends Camera{
-    public float zoom;
     public ViewInfo view;
     public float left;
     public float right;
@@ -15,7 +14,6 @@ public class OrthographicCamera extends Camera{
     public OrthographicCamera(){
         super();
         this.type = "OrthographicCamera";
-        this.zoom = 1;
         this.view = null;
         this.left = -1;
         this.right = 1;
@@ -40,6 +38,7 @@ public class OrthographicCamera extends Camera{
         this.updateProjectionMatrix();
     }
 
+    @Override
     public void updateProjectionMatrix(){
         float dx = ( this.right - this.left ) / ( 2 * this.zoom );
         float dy = ( this.top - this.bottom ) / ( 2 * this.zoom );

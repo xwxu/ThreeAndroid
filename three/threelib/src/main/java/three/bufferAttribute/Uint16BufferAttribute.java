@@ -18,7 +18,7 @@ public class Uint16BufferAttribute extends BufferAttribute{
         this.count = array.length / itemSize;
     }
 
-    public Uint16BufferAttribute clone(){
+    public Uint16BufferAttribute clone_(){
         return this;
     }
 

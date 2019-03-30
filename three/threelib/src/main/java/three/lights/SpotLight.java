@@ -48,8 +48,8 @@ public class SpotLight extends Light {
         this.angle = source.angle;
         this.penumbra = source.penumbra;
         this.decay = source.decay;
-        this.target = source.target.clone(false);
-        this.shadow = source.shadow.clone();
+        this.target = source.target.clone_(false);
+        this.shadow = source.shadow.clone_();
 
         return this;
     }

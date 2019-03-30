@@ -54,7 +54,7 @@ public class Vector2 {
         this.y = value;
     }
 
-    public Vector2 Clone(){
+    public Vector2 clone_(){
         return new Vector2(this.x, this.y);
     }
 

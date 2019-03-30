@@ -111,7 +111,7 @@ public class Box3 {
         return this.expandByObject( object );
     }
 
-    public Box3 clone(){
+    public Box3 clone_(){
         return new Box3().copy(this);
     }
 

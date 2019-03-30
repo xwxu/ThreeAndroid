@@ -8,6 +8,7 @@ public class Camera extends Object3D {
     public Matrix4 matrixWorldInverse;
     public Matrix4 projectionMatrix;
     public Matrix4 projectionMatrixInverse;
+    public float zoom;
 
     public Camera(){
         super();
@@ -15,6 +16,7 @@ public class Camera extends Object3D {
         this.matrixWorldInverse = new Matrix4();
         this.projectionMatrix = new Matrix4();
         this.projectionMatrixInverse = new Matrix4();
+        this.zoom = 1;
     }
 
     public Camera copy(Camera source){
@@ -38,7 +40,9 @@ public class Camera extends Object3D {
         this.matrixWorldInverse.getInverse(this.matrixWorld);
     }
 
-    public Camera clone(){
+    public void updateProjectionMatrix(){}
+
+    public Camera clone_(){
         return new Camera().copy(this);
     }
 }

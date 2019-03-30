@@ -7,7 +7,6 @@ public class PerspectiveCamera extends Camera{
 
     public String type = "PerspectiveCamera";
     public float fov;
-    public float zoom = 1;
     public float near;
     public float far;
     public float focus = 10;
@@ -88,6 +87,7 @@ public class PerspectiveCamera extends Camera{
     }
 
 
+    @Override
     public void updateProjectionMatrix() {
         float near = this.near;
         float top = near * (float) Math.tan( Math_.DEG2RAD * 0.5f * this.fov ) / this.zoom;

@@ -19,8 +19,8 @@ public class DirectionalLight extends Light {
     public DirectionalLight copy(DirectionalLight source){
         super.copy(source);
         this.type = "DirectionalLight";
-        this.target = source.target.clone(false);
-        this.shadow = source.shadow.clone();
+        this.target = source.target.clone_(false);
+        this.shadow = source.shadow.clone_();
 
         return this;
     }

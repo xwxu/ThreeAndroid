@@ -26,7 +26,7 @@ public class Plane {
         return this;
     }
 
-    public Plane clone(){
+    public Plane clone_(){
         return new Plane().copy(this);
     }
 

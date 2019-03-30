@@ -168,7 +168,7 @@ public class Material {
         if ( srcPlanes != null ) {
             dstPlanes = new ArrayList<Plane>();
             for ( int i = 0; i < srcPlanes.size(); ++ i ){
-                dstPlanes.set(i, srcPlanes.get(i).clone());
+                dstPlanes.set(i, srcPlanes.get(i).clone_());
             }
         }
 

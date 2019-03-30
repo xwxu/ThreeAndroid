@@ -21,7 +21,7 @@ public class Ray {
         return this;
     }
 
-    public Ray Clone(){
+    public Ray clone_(){
         return new Ray().copy( this );
     }
 

@@ -19,7 +19,7 @@ public class LightShadow {
     }
 
     public LightShadow copy(LightShadow source){
-        this.camera = source.camera.clone();
+        this.camera = source.camera.clone_();
         this.bias = source.bias;
         this.radius = source.radius;
 
@@ -28,7 +28,7 @@ public class LightShadow {
         return this;
     }
 
-    public LightShadow clone(){
+    public LightShadow clone_(){
         return new LightShadow(this.camera).copy(this);
     }
 }

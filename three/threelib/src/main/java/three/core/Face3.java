@@ -43,7 +43,7 @@ public class Face3 {
         this.materialIndex = materialIndex;
     }
 
-    public Face3 clone(){
+    public Face3 clone_(){
         return new Face3().copy(this);
     }
 
@@ -62,7 +62,7 @@ public class Face3 {
         }
 
         for ( int i = 0, il = source.vertexColors.size(); i < il; i ++ ) {
-            this.vertexColors.set(i, source.vertexColors.get(i).clone());
+            this.vertexColors.set(i, source.vertexColors.get(i).clone_());
         }
 
         return this;

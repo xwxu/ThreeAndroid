@@ -30,7 +30,7 @@ public class Matrix3 {
         return this;
     }
 
-    public Matrix3 clone(){
+    public Matrix3 clone_(){
         return new Matrix3().fromArray(this.elements, 0);
     }
 

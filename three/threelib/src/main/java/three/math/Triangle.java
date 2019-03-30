@@ -28,7 +28,7 @@ public class Triangle {
         return this;
     }
 
-    public Triangle Clone(){
+    public Triangle clone_(){
         return this;
     }
 

@@ -191,11 +191,11 @@ public class BufferGeometry extends AbstractGeometry{
             }
 
             if ( geometry.boundingSphere != null ) {
-                this.boundingSphere = geometry.boundingSphere.Clone();
+                this.boundingSphere = geometry.boundingSphere.clone_();
             }
 
             if ( geometry.boundingBox != null ) {
-                this.boundingBox = geometry.boundingBox.clone();
+                this.boundingBox = geometry.boundingBox.clone_();
             }
 
         } else if ( object instanceof Mesh) {
@@ -374,11 +374,11 @@ public class BufferGeometry extends AbstractGeometry{
         this.groups = geometry.groups;
 
         if ( geometry.boundingSphere != null ) {
-            this.boundingSphere = geometry.boundingSphere.Clone();
+            this.boundingSphere = geometry.boundingSphere.clone_();
         }
 
         if ( geometry.boundingBox != null ) {
-            this.boundingBox = geometry.boundingBox.clone();
+            this.boundingBox = geometry.boundingBox.clone_();
         }
 
         return this;
@@ -426,7 +426,7 @@ public class BufferGeometry extends AbstractGeometry{
         }
     }
 
-    public BufferGeometry clone(){
+    public BufferGeometry clone_(){
         return new BufferGeometry().copy(this);
     }
 
@@ -443,7 +443,7 @@ public class BufferGeometry extends AbstractGeometry{
         // index
         BufferAttribute index = source.index;
         if ( index != null ) {
-            this.setIndex( index.clone() );
+            this.setIndex( index.clone_() );
         }
 
         Iterator iterator = source.attributes.entrySet().iterator();
@@ -459,14 +459,14 @@ public class BufferGeometry extends AbstractGeometry{
         Box3 boundingBox = source.boundingBox;
 
         if ( boundingBox != null ) {
-            this.boundingBox = boundingBox.clone();
+            this.boundingBox = boundingBox.clone_();
         }
 
         // bounding sphere
         Sphere boundingSphere = source.boundingSphere;
 
         if ( boundingSphere != null ) {
-            this.boundingSphere = boundingSphere.Clone();
+            this.boundingSphere = boundingSphere.clone_();
         }
 
         return this;

@@ -27,7 +27,7 @@ public class PointLight extends Light {
         super.copy(source);
         this.distance = source.distance;
         this.decay = source.decay;
-        this.shadow = source.shadow.clone();
+        this.shadow = source.shadow.clone_();
 
         return this;
     }

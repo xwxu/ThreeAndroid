@@ -290,7 +290,7 @@ public class Mesh extends Object3D {
         return intersection;
     }
 
-    public Mesh Clone(){
+    public Mesh clone_(){
         Mesh mesh = new Mesh();
         mesh.geometry = this.geometry;
         mesh.material = this.material;

@@ -34,7 +34,7 @@ public class Matrix4 {
         return this;
     }
 
-    public Matrix4 clone(){
+    public Matrix4 clone_(){
         return new Matrix4().fromArray(this.elements, 0);
     }
 

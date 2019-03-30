@@ -3,7 +3,6 @@ package three.renderers.shaders;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.Map;
 
 import three.math.Color;
 import three.math.Matrix3;
@@ -46,22 +45,22 @@ public class UniformUtils {
 
             UniformState newUniform = new UniformState();
             if (uniformState.value instanceof Color) {
-                newUniform.value = ((Color) uniformState.value).clone();
+                newUniform.value = ((Color) uniformState.value).clone_();
 
             } else if (uniformState.value instanceof Matrix3) {
-                newUniform.value = ((Matrix3) uniformState.value).clone();
+                newUniform.value = ((Matrix3) uniformState.value).clone_();
 
             } else if (uniformState.value instanceof Matrix4) {
-                newUniform.value = ((Matrix4) uniformState.value).clone();
+                newUniform.value = ((Matrix4) uniformState.value).clone_();
 
             } else if (uniformState.value instanceof Vector2) {
-                newUniform.value = ((Vector2) uniformState.value).Clone();
+                newUniform.value = ((Vector2) uniformState.value).clone_();
 
             } else if (uniformState.value instanceof Vector3) {
                 newUniform.value = ((Vector3) uniformState.value).Clone();
 
             } else if (uniformState.value instanceof Vector4) {
-                newUniform.value = ((Vector4) uniformState.value).Clone();
+                newUniform.value = ((Vector4) uniformState.value).clone_();
 
             } else if (uniformState.value instanceof Texture) {
                 newUniform.value = ((Texture) uniformState.value).Clone();

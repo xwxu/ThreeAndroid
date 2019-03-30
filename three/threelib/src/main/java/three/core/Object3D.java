@@ -325,7 +325,7 @@ public class Object3D extends Observable {
         }
     }
 
-    public Object3D clone(boolean recursive){
+    public Object3D clone_(boolean recursive){
         return new Object3D().copy( this, recursive );
     }
 
@@ -355,7 +355,7 @@ public class Object3D extends Observable {
         if (recursive) {
             for ( int i = 0; i < source.children.size(); i ++ ) {
                 Object3D child = source.children.get(i);
-                this.add( child.clone(true) );
+                this.add( child.clone_(true) );
             }
         }
 

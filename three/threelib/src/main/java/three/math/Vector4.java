@@ -52,7 +52,7 @@ public class Vector4 {
         return array;
     }
 
-    public Vector4 Clone() {
+    public Vector4 clone_() {
         return new Vector4(this.x, this.y, this.z, this.w);
     }
 

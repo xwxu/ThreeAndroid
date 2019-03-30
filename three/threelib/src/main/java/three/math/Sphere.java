@@ -37,7 +37,7 @@ public class Sphere {
         return this;
     }
 
-    public Sphere Clone(){
+    public Sphere clone_(){
 
         return this;
     }

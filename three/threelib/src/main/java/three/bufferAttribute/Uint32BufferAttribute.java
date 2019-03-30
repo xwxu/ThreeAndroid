@@ -19,7 +19,7 @@ public class Uint32BufferAttribute extends BufferAttribute {
         this.count = array.length / itemSize;
     }
 
-    public Uint32BufferAttribute clone(){
+    public Uint32BufferAttribute clone_(){
         return this;
     }
 
